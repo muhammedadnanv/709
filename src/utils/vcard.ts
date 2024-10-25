@@ -11,7 +11,7 @@ N:${lastName};${firstName};;;
 FN:${cardData.name}
 TITLE:${cardData.title}`;
 
-  // Only add company and department if they exist
+  // Add all contact information
   if (cardData.company) {
     vcard += `\nORG:${cardData.company}`;
   }
@@ -23,6 +23,24 @@ TITLE:${cardData.title}`;
   }
   if (cardData.location) {
     vcard += `\nADR:;;${cardData.location};;;;`;
+  }
+  if (cardData.phone) {
+    vcard += `\nTEL;TYPE=CELL:${cardData.phone}`;
+  }
+  if (cardData.email) {
+    vcard += `\nEMAIL:${cardData.email}`;
+  }
+  if (cardData.website) {
+    vcard += `\nURL:${cardData.website}`;
+  }
+  if (cardData.linkedin) {
+    vcard += `\nX-SOCIALPROFILE;TYPE=linkedin:${cardData.linkedin}`;
+  }
+  if (cardData.instagram) {
+    vcard += `\nX-SOCIALPROFILE;TYPE=instagram:${cardData.instagram}`;
+  }
+  if (cardData.facebook) {
+    vcard += `\nX-SOCIALPROFILE;TYPE=facebook:${cardData.facebook}`;
   }
 
   if (hasWirelessConnectivity) {
