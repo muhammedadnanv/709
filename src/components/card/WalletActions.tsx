@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Wallet, Loader2, Watch, Smartphone } from "lucide-react";
+import { Wallet, Loader2, Watch, Smartphone, Nfc } from "lucide-react";
 import { useState } from "react";
 import { addToAppleWallet, addToGoogleWallet, WalletPass } from "@/utils/walletIntegration";
 import { CardData } from "@/hooks/useCardData";
@@ -52,7 +52,10 @@ export const WalletActions = ({ cardData, qrCodeUrl }: WalletActionsProps) => {
   return (
     <Card className="p-4 space-y-4">
       <div className="text-center space-y-2">
-        <h3 className="font-semibold">Quick Access on Your Devices</h3>
+        <div className="flex items-center justify-center gap-2">
+          <h3 className="font-semibold">Quick Access on Your Devices</h3>
+          <Nfc className="h-4 w-4 text-primary" />
+        </div>
         <p className="text-sm text-muted-foreground">
           Add your business card to your digital wallet for easy sharing on your phone or smart watch
         </p>
@@ -69,7 +72,10 @@ export const WalletActions = ({ cardData, qrCodeUrl }: WalletActionsProps) => {
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Wallet className="h-4 w-4" />
+              <>
+                <Wallet className="h-4 w-4" />
+                <Nfc className="h-3 w-3" />
+              </>
             )}
             Add to Apple Wallet
           </Button>
@@ -90,7 +96,10 @@ export const WalletActions = ({ cardData, qrCodeUrl }: WalletActionsProps) => {
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Wallet className="h-4 w-4" />
+              <>
+                <Wallet className="h-4 w-4" />
+                <Nfc className="h-3 w-3" />
+              </>
             )}
             Add to Google Wallet
           </Button>
