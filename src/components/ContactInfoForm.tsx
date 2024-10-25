@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, Globe } from "lucide-react";
+import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 import { CardData } from "@/hooks/useCardData";
 
 interface ContactInfoFormProps {
@@ -24,9 +24,13 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               onChange={handleInputChange}
               className="pl-10 h-12 text-base"
               placeholder="+1 (555) 000-0000"
+              type="tel"
+              pattern="[0-9+\-\(\)\s]*"
+              title="Please enter a valid phone number"
             />
           </div>
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="email" className="text-base">Email Address</Label>
           <div className="relative">
@@ -39,9 +43,13 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               className="pl-10 h-12 text-base"
               placeholder="john@example.com"
               type="email"
+              required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              title="Please enter a valid email address"
             />
           </div>
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="website" className="text-base">Website</Label>
           <div className="relative">
@@ -54,6 +62,62 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               className="pl-10 h-12 text-base"
               placeholder="https://example.com"
               type="url"
+              pattern="https?://.+"
+              title="Please include http:// or https://"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="linkedin" className="text-base">LinkedIn Profile</Label>
+          <div className="relative">
+            <Linkedin className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="linkedin"
+              name="linkedin"
+              value={cardData.linkedin}
+              onChange={handleInputChange}
+              className="pl-10 h-12 text-base"
+              placeholder="https://linkedin.com/in/username"
+              type="url"
+              pattern="https?://(www\.)?linkedin\.com/.*"
+              title="Please enter a valid LinkedIn URL"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="instagram" className="text-base">Instagram Profile</Label>
+          <div className="relative">
+            <Instagram className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="instagram"
+              name="instagram"
+              value={cardData.instagram}
+              onChange={handleInputChange}
+              className="pl-10 h-12 text-base"
+              placeholder="https://instagram.com/username"
+              type="url"
+              pattern="https?://(www\.)?instagram\.com/.*"
+              title="Please enter a valid Instagram URL"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="facebook" className="text-base">Facebook Profile</Label>
+          <div className="relative">
+            <Facebook className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="facebook"
+              name="facebook"
+              value={cardData.facebook}
+              onChange={handleInputChange}
+              className="pl-10 h-12 text-base"
+              placeholder="https://facebook.com/username"
+              type="url"
+              pattern="https?://(www\.)?facebook\.com/.*"
+              title="Please enter a valid Facebook URL"
             />
           </div>
         </div>

@@ -30,6 +30,10 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             placeholder="John Doe"
             className="h-12 text-base"
             required
+            minLength={2}
+            maxLength={100}
+            pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$"
+            title="Please enter a valid name"
           />
         </div>
 
@@ -61,6 +65,8 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             placeholder="Software Engineer"
             className="h-12 text-base"
             required
+            minLength={2}
+            maxLength={100}
           />
         </div>
 
@@ -73,6 +79,7 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             onChange={handleInputChange}
             placeholder="Company Name"
             className="h-12 text-base"
+            maxLength={100}
           />
         </div>
 
@@ -85,6 +92,7 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             onChange={handleInputChange}
             placeholder="Engineering"
             className="h-12 text-base"
+            maxLength={100}
           />
         </div>
 
@@ -97,6 +105,7 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             onChange={handleInputChange}
             placeholder="City, Country"
             className="h-12 text-base"
+            maxLength={200}
           />
         </div>
       </div>
