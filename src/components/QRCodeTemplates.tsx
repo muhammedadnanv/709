@@ -37,13 +37,15 @@ const QRCodeTemplates = ({
   cardData,
   isPremium = false
 }: QRCodeTemplatesProps) => {
-  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [qrData, setQrData] = useState<string>('');
+  const [apiQrUrl, setApiQrUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const generateQR = async () => {
       const { qrData, qrDataUrl } = await generateQRData(cardData, connectivityData, isPremium);
+      setQrData(qrData);
       if (qrDataUrl) {
-        setQrDataUrl(qrDataUrl);
+        setApiQrUrl(qrDataUrl);
       }
       await previewQRInTerminal(qrData);
     };
@@ -59,9 +61,9 @@ const QRCodeTemplates = ({
         connectivityData={connectivityData}
         cardData={cardData}
       />
-      {qrDataUrl && (
+      {apiQrUrl && (
         <div className="mb-4">
-          <img src={qrDataUrl} alt="API Generated QR Code" className="mx-auto w-32 h-32" />
+          <img src={apiQrUrl} alt="API Generated QR Code" className="mx-auto w-32 h-32" />
         </div>
       )}
       <ScrollArea className="h-[300px] pr-4">
@@ -80,7 +82,7 @@ const QRCodeTemplates = ({
                 style={{ background: template.style.background }}
               >
                 <QRCodeSVG
-                  value={qrDataUrl || 'Loading...'}
+                  value={qrData || 'Loading...'}
                   size={80}
                   bgColor={template.style.background}
                   fgColor={template.style.foreground}
