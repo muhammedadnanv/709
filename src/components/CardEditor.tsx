@@ -11,7 +11,6 @@ import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
-import { User, Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 
 interface CardEditorProps {
   onSave: () => void;
@@ -121,9 +120,6 @@ URL;type=Facebook:${cardData.facebook}`;
                 <div className="text-center space-y-4 w-full">
                   {cardData.name && (
                     <div className="space-y-2">
-                      <div className="w-16 h-16 mx-auto rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                        <User className="w-8 h-8" />
-                      </div>
                       <h4 className="font-semibold text-lg">{cardData.name}</h4>
                       {cardData.title && (
                         <p className="text-sm opacity-80">{cardData.title}</p>
@@ -131,48 +127,27 @@ URL;type=Facebook:${cardData.facebook}`;
                     </div>
                   )}
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full px-4">
+                  <div className="grid grid-cols-1 gap-3 w-full px-4">
                     {cardData.phone && (
-                      <div className="flex items-center gap-2 justify-center sm:justify-start">
-                        <div className="w-8 h-8 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                          <Phone className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm truncate">{cardData.phone}</span>
-                      </div>
+                      <span className="text-sm">{cardData.phone}</span>
                     )}
                     {cardData.email && (
-                      <div className="flex items-center gap-2 justify-center sm:justify-start">
-                        <div className="w-8 h-8 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                          <Mail className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm truncate">{cardData.email}</span>
-                      </div>
+                      <span className="text-sm">{cardData.email}</span>
                     )}
                     {cardData.website && (
-                      <div className="flex items-center gap-2 justify-center sm:justify-start">
-                        <div className="w-8 h-8 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                          <Globe className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm truncate">{cardData.website}</span>
-                      </div>
+                      <span className="text-sm">{cardData.website}</span>
                     )}
                   </div>
 
                   <div className="flex justify-center gap-4">
                     {cardData.linkedin && (
-                      <div className="w-10 h-10 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                        <Linkedin className="w-5 h-5" />
-                      </div>
+                      <span className="text-sm">LinkedIn</span>
                     )}
                     {cardData.instagram && (
-                      <div className="w-10 h-10 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                        <Instagram className="w-5 h-5" />
-                      </div>
+                      <span className="text-sm">Instagram</span>
                     )}
                     {cardData.facebook && (
-                      <div className="w-10 h-10 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
-                        <Facebook className="w-5 h-5" />
-                      </div>
+                      <span className="text-sm">Facebook</span>
                     )}
                   </div>
 
