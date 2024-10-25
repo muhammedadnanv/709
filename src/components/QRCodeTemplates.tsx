@@ -2,17 +2,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
-
-interface QRTemplate {
-  id: number;
-  name: string;
-  style: {
-    background: string;
-    foreground: string;
-    cornerColor: string;
-    layout: "modern" | "classic" | "minimal" | "bold";
-  };
-}
+import { QRTemplate } from "@/types/qrTypes";
 
 const generateQRTemplates = (): QRTemplate[] => {
   const layouts = ["modern", "classic", "minimal", "bold"] as const;

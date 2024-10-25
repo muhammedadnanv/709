@@ -1,16 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { DndContext } from "@dnd-kit/core";
 import { QRCodeSVG } from "qrcode.react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useState, useMemo, useRef } from "react";
-import { Mail, Phone, Globe, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import QRCodeTemplates from "./QRCodeTemplates";
 import { useToast } from "@/components/ui/use-toast";
 import html2canvas from "html2canvas";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
+import { QRTemplate } from "@/types/qrTypes";
 
 const CardEditor = () => {
   const { toast } = useToast();
@@ -26,14 +25,14 @@ const CardEditor = () => {
     facebook: "",
   });
 
-  const [selectedQRTemplate, setSelectedQRTemplate] = useState({
+  const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
     id: 1,
     name: "Default",
     style: {
       background: "#FFFFFF",
       foreground: "#000000",
       cornerColor: "#000000",
-      layout: "modern" as const,
+      layout: "modern",
     },
   });
 
@@ -132,7 +131,7 @@ END:VCARD`;
 
             <QRCodeTemplates
               value={vCardData}
-              onSelectTemplate={(template) => setSelectedQRTemplate(template)}
+              onSelectTemplate={setSelectedQRTemplate}
               selectedTemplate={selectedQRTemplate}
               userName={cardData.name}
             />
