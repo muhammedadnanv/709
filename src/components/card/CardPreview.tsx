@@ -104,23 +104,24 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             )}
           </div>
 
-        <div className="flex-1 flex items-center justify-center py-4">
-          <a href={vCardData.dataUrl} download={vCardData.downloadFilename}>
-            <QRCodeSVG
-              value={vCardData.vcard}
-              size={Math.min(200, window.innerWidth * 0.4)}
-              bgColor={qrStyle.background}
-              fgColor={qrStyle.foreground}
-              level="M"
-              includeMargin={false}
-            />
-          </a>
+          <div className="flex-1 flex items-center justify-center py-4">
+            <a href={vCardData.dataUrl} download={vCardData.downloadFilename}>
+              <QRCodeSVG
+                value={vCardData.vcard}
+                size={Math.min(200, window.innerWidth * 0.4)}
+                bgColor={qrStyle.background}
+                fgColor={qrStyle.foreground}
+                level="M"
+                includeMargin={false}
+              />
+            </a>
+          </div>
+          <p className="text-sm dark:text-gray-300">Scan to save contact</p>
+          
+          <p className="text-xs opacity-70 mt-4" style={{ color: qrStyle.foreground }}>
+            Powered by: Splex
+          </p>
         </div>
-        <p className="text-sm dark:text-gray-300">Scan to save contact</p>
-        
-        <p className="text-xs opacity-70 mt-4" style={{ color: qrStyle.foreground }}>
-          Powered by: Splex
-        </p>
       </div>
       
       <WalletActions 
