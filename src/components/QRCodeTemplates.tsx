@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { QRTemplate } from "@/types/qrTypes";
 import { generateVCard, generateWiFiConfig, generateBluetoothConfig } from "@/utils/connectivityUtils";
+import { Facebook, Instagram, Linkedin, Wifi, Bluetooth } from "lucide-react";
 
 const generateQRTemplates = (): QRTemplate[] => {
   const layouts = ["modern", "classic", "minimal", "bold"] as const;
@@ -112,8 +113,13 @@ interface QRCodeTemplatesProps {
   selectedTemplate: QRTemplate;
   userName?: string;
   connectivityData?: {
-    wifi?: { ssid: string; password: string };
-    bluetooth?: { deviceName: string; mac: string };
+    wifi: { ssid: string; password: string };
+    bluetooth: { deviceName: string; mac: string };
+  };
+  cardData: {
+    facebook?: string;
+    instagram?: string;
+    linkedin?: string;
   };
 }
 
@@ -122,11 +128,12 @@ const QRCodeTemplates = ({
   onSelectTemplate, 
   selectedTemplate, 
   userName,
-  connectivityData 
+  connectivityData,
+  cardData 
 }: QRCodeTemplatesProps) => {
-  const getEnhancedQRValue = (baseValue: string) => {
+  const getEnhancedQRValue = () => {
     const data = {
-      vcard: baseValue,
+      vcard: value,
       ...(connectivityData?.wifi && {
         wifi: generateWiFiConfig(
           connectivityData.wifi.ssid,
@@ -145,7 +152,32 @@ const QRCodeTemplates = ({
 
   return (
     <Card className="p-4">
-      <h3 className="font-semibold mb-4">Choose from 440 QR Code Styles</h3>
+      <h3 className="font-semibold mb-4">Choose QR Code Style</h3>
+      <div className="flex gap-4 mb-4">
+        {connectivityData?.wifi && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Wifi className="h-4 w-4" />
+            <span>WiFi Ready</span>
+          </div>
+        )}
+        {connectivityData?.bluetooth && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Bluetooth className="h-4 w-4" />
+            <span>Bluetooth Ready</span>
+          </div>
+        )}
+      </div>
+      <div className="flex gap-4 mb-4">
+        {cardData.facebook && (
+          <Facebook className="h-4 w-4 text-muted-foreground" />
+        )}
+        {cardData.instagram && (
+          <Instagram className="h-4 w-4 text-muted-foreground" />
+        )}
+        {cardData.linkedin && (
+          <Linkedin className="h-4 w-4 text-muted-foreground" />
+        )}
+      </div>
       <ScrollArea className="h-[300px] pr-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {qrTemplates.map((template) => (
@@ -160,7 +192,7 @@ const QRCodeTemplates = ({
               <div className="w-full h-full flex flex-col items-center justify-center space-y-2 rounded-lg" 
                    style={{ background: template.style.background }}>
                 <QRCodeSVG
-                  value={getEnhancedQRValue(value)}
+                  value={getEnhancedQRValue()}
                   size={80}
                   bgColor={template.style.background}
                   fgColor={template.style.foreground}
@@ -168,7 +200,7 @@ const QRCodeTemplates = ({
                   includeMargin={false}
                 />
                 <span className="text-xs" style={{ color: template.style.foreground }}>
-                  {userName || 'Style ' + template.id}
+                  {userName || 'Scan to Connect'}
                 </span>
               </div>
             </Button>

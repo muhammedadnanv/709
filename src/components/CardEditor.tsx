@@ -1,5 +1,4 @@
 import { useState, useMemo, useRef } from "react";
-import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -124,6 +123,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
           selectedTemplate={selectedQRTemplate}
           userName={cardData.name}
           connectivityData={connectivityData}
+          cardData={cardData}
         />
       </div>
     </div>
