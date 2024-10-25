@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 export interface CardData {
   name: string;
@@ -32,7 +32,13 @@ const initialCardData: CardData = {
   location: "",
 };
 
-export const useCardData = () => {
+interface UseCardDataReturn {
+  cardData: CardData;
+  setCardData: Dispatch<SetStateAction<CardData>>;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export const useCardData = (): UseCardDataReturn => {
   const [cardData, setCardData] = useState<CardData>(() => {
     try {
       const savedData = localStorage.getItem(STORAGE_KEY);
@@ -60,5 +66,5 @@ export const useCardData = () => {
     cardData,
     setCardData,
     handleInputChange,
-  } as const;
+  };
 };

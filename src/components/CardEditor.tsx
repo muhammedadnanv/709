@@ -7,19 +7,23 @@ import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
 import { ProfileImageUpload } from "./ProfileImageUpload";
-import { useCardData } from "@/hooks/useCardData";
+import { useCardData, CardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
 
-const CardEditor = ({ onSave }: { onSave: () => void }) => {
+interface CardEditorProps {
+  onSave: () => void;
+}
+
+const CardEditor = ({ onSave }: CardEditorProps) => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
   const { cardData, handleInputChange, setCardData } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const handleSelectChange = (field: string, value: string) => {
-    setCardData((prev) => ({ ...prev, [field]: value }));
+    setCardData((prev: CardData) => ({ ...prev, [field]: value }));
   };
 
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
