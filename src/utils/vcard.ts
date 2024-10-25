@@ -1,6 +1,6 @@
-import { CardData } from "@/types/qrTypes";
+import { CardData, VCardData } from "@/types/qrTypes";
 
-export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: boolean) => {
+export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: boolean): VCardData => {
   const nameParts = cardData.name.split(" ");
   const firstName = nameParts[0] || "";
   const lastName = nameParts.slice(1).join(" ") || "";

@@ -31,3 +31,9 @@ export interface CardData {
   location?: string;
   customButtons: CustomButton[];
 }
+
+export interface VCardData {
+  vcard: string;
+  dataUrl: string;
+  downloadFilename: string;
+}

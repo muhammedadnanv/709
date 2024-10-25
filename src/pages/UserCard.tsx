@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CardPreview } from "@/components/card/CardPreview";
 import { generateVCardData } from "@/utils/vcard";
-import { CardData } from "@/hooks/useCardData";
+import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "@/components/card/WalletActions";
 
 const fetchUserCard = async (userId: string): Promise<CardData> => {

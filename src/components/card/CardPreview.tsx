@@ -1,6 +1,6 @@
 import { QRCodeSVG } from "qrcode.react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { CardData } from "@/hooks/useCardData";
+import { CardData, VCardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
 import { Linkedin, Instagram, Facebook, Nfc, Clock, Calendar, MessageCircle } from "lucide-react";
@@ -9,11 +9,7 @@ import { format, addYears } from "date-fns";
 interface CardPreviewProps {
   cardData: CardData;
   profileImage: string | null;
-  vCardData: {
-    vcard: string;
-    dataUrl: string;
-    downloadFilename: string;
-  };
+  vCardData: VCardData;
   qrStyle: {
     background: string;
     foreground: string;

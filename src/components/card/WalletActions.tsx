@@ -11,7 +11,7 @@ interface WalletActionsProps {
   qrCodeUrl: string;
 }
 
-export const WalletActions = ({ cardData }: WalletActionsProps) => {
+export const WalletActions = ({ cardData, qrCodeUrl }: WalletActionsProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
