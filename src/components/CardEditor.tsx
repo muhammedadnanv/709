@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { DndContext } from "@dnd-kit/core";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import QRCodeTemplates from "./QRCodeTemplates";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";

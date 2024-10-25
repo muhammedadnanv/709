@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
+import { useState } from "react";
 
 interface CardActionsProps {
   qrCodeRef: React.RefObject<HTMLDivElement>;
