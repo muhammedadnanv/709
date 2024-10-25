@@ -75,6 +75,11 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             />
           </div>
           <p className="text-sm dark:text-gray-300">Scan to Connect</p>
+          
+          {/* Added branding footer */}
+          <p className="text-xs opacity-70 mt-4" style={{ color: qrStyle.foreground }}>
+            Powered by: Splex
+          </p>
         </div>
       </div>
       
