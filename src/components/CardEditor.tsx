@@ -10,6 +10,7 @@ import html2canvas from "html2canvas";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import { QRTemplate } from "@/types/qrTypes";
+import { User, Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 
 interface CardEditorProps {
   onSave: () => void;
@@ -108,10 +109,50 @@ END:VCARD`;
                   color: selectedQRTemplate.style.foreground 
                 }}
               >
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-4 w-full">
                   {cardData.name && (
-                    <h4 className="font-semibold">{cardData.name}</h4>
+                    <div className="space-y-2">
+                      <User className="w-12 h-12 mx-auto" />
+                      <h4 className="font-semibold text-lg">{cardData.name}</h4>
+                      {cardData.title && (
+                        <p className="text-sm opacity-80">{cardData.title}</p>
+                      )}
+                    </div>
                   )}
+                  
+                  <div className="grid grid-cols-2 gap-2 mb-4 px-4">
+                    {cardData.phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        <span className="text-xs truncate">{cardData.phone}</span>
+                      </div>
+                    )}
+                    {cardData.email && (
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        <span className="text-xs truncate">{cardData.email}</span>
+                      </div>
+                    )}
+                    {cardData.website && (
+                      <div className="flex items-center gap-2">
+                        <Globe className="w-4 h-4" />
+                        <span className="text-xs truncate">{cardData.website}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-center gap-4 mb-4">
+                    {cardData.linkedin && (
+                      <Linkedin className="w-5 h-5" />
+                    )}
+                    {cardData.instagram && (
+                      <Instagram className="w-5 h-5" />
+                    )}
+                    {cardData.facebook && (
+                      <Facebook className="w-5 h-5" />
+                    )}
+                  </div>
+
                   <QRCodeSVG
                     value={vCardData}
                     size={Math.min(200, window.innerWidth * 0.5)}
@@ -120,7 +161,7 @@ END:VCARD`;
                     level="M"
                     includeMargin={false}
                   />
-                  <p className="text-sm">Scan to Connect</p>
+                  <p className="text-sm mt-2">Scan to Connect</p>
                 </div>
               </div>
               <Button 
