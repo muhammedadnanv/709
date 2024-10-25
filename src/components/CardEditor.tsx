@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useState, useMemo } from "react";
 import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
+import QRCodeTemplates from "./QRCodeTemplates";
 
 const CardEditor = () => {
   const [cardData, setCardData] = useState({
@@ -17,6 +18,17 @@ const CardEditor = () => {
     linkedin: "",
     instagram: "",
     facebook: "",
+  });
+
+  const [selectedQRTemplate, setSelectedQRTemplate] = useState({
+    id: 1,
+    name: "Default",
+    style: {
+      background: "#FFFFFF",
+      foreground: "#000000",
+      cornerColor: "#000000",
+      layout: "modern" as const,
+    },
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,62 +136,27 @@ END:VCARD`;
 
           <div className="space-y-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Social Media Links</h3>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="linkedin">LinkedIn Profile</Label>
-                  <div className="relative">
-                    <Linkedin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="linkedin"
-                      name="linkedin"
-                      value={cardData.linkedin}
-                      onChange={handleInputChange}
-                      className="pl-10"
-                      placeholder="https://linkedin.com/in/username"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="instagram">Instagram Profile</Label>
-                  <div className="relative">
-                    <Instagram className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="instagram"
-                      name="instagram"
-                      value={cardData.instagram}
-                      onChange={handleInputChange}
-                      className="pl-10"
-                      placeholder="https://instagram.com/username"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="facebook">Facebook Profile</Label>
-                  <div className="relative">
-                    <Facebook className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="facebook"
-                      name="facebook"
-                      value={cardData.facebook}
-                      onChange={handleInputChange}
-                      className="pl-10"
-                      placeholder="https://facebook.com/username"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Contact Card QR Code</h3>
-              <div className="aspect-square bg-white rounded-lg flex items-center justify-center border">
-                <QRCodeSVG value={vCardData} size={200} />
+              <h3 className="text-lg font-semibold">QR Code Style</h3>
+              <div className="aspect-square bg-white rounded-lg flex items-center justify-center border p-4" style={{ background: selectedQRTemplate.style.background }}>
+                <QRCodeSVG
+                  value={vCardData}
+                  size={200}
+                  bgColor={selectedQRTemplate.style.background}
+                  fgColor={selectedQRTemplate.style.foreground}
+                  level="M"
+                  includeMargin={false}
+                />
               </div>
               <Button className="w-full" variant="outline">
-                Contact Me
+                Download QR Code
               </Button>
             </div>
+
+            <QRCodeTemplates
+              value={vCardData}
+              onSelectTemplate={setSelectedQRTemplate}
+              selectedTemplate={selectedQRTemplate}
+            />
           </div>
         </div>
       </Card>
