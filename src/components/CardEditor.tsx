@@ -11,9 +11,10 @@ import { useCardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
+import { CardData } from "@/hooks/useCardData";
 
 interface CardEditorProps {
-  onSave: () => void;
+  onSave: (cardData: CardData) => void;
 }
 
 const CardEditor = ({ onSave }: CardEditorProps) => {
@@ -34,6 +35,10 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
   });
 
   const vCardData = generateVCardData(cardData, hasWirelessConnectivity);
+
+  const handleSaveClick = () => {
+    onSave(cardData);
+  };
 
   return (
     <DndContext>

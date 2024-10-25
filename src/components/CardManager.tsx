@@ -4,9 +4,10 @@ import { Plus } from "lucide-react";
 import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import CardEditor from "./CardEditor";
+import { CardData } from "@/hooks/useCardData";
 
 export const CardManager = () => {
-  const [cards, setCards] = useState<Array<any>>([]);
+  const [cards, setCards] = useState<CardData[]>([]);
   const { toast } = useToast();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -14,7 +15,7 @@ export const CardManager = () => {
     setIsCreating(true);
   };
 
-  const handleSaveCard = (cardData: any) => {
+  const handleSaveCard = (cardData: CardData) => {
     setCards([...cards, cardData]);
     setIsCreating(false);
     toast({
