@@ -1,6 +1,6 @@
-import { Card } from "@/components/ui/card";
 import { DndContext } from "@dnd-kit/core";
 import { useRef, useState } from "react";
+import { Card } from "@/components/ui/card";
 import QRCodeTemplates from "./QRCodeTemplates";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
@@ -10,8 +10,6 @@ import { ProfileImageUpload } from "./ProfileImageUpload";
 import { useCardData, CardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
-import { CardAnalytics } from "./card/CardAnalytics";
-import { CardSharing } from "./card/CardSharing";
 import { generateVCardData } from "@/utils/vcard";
 import { CustomButtonsManager } from "./CustomButtonsManager";
 
@@ -44,7 +42,6 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
   };
 
   const vCardData = generateVCardData(cardData, hasWirelessConnectivity);
-  const cardUrl = `${window.location.origin}/card/${cardData.id}`;
 
   const handleSaveClick = () => {
     onSave(cardData);
@@ -88,9 +85,6 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
                   />
                 </div>
                 <CardActions qrCodeRef={qrCodeRef} cardData={cardData} />
-                <CardAnalytics cardId={cardData.id} />
-                <CardSharing cardId={cardData.id} cardUrl={cardUrl} />
-
                 <QRCodeTemplates
                   value={vCardData}
                   onSelectTemplate={setSelectedQRTemplate}
