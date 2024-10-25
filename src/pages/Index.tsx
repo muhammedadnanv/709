@@ -8,14 +8,57 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useRef } from "react";
+import html2canvas from "html2canvas";
 
 const Index = () => {
   const { toast } = useToast();
+  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const [cardData, setCardData] = useState({
+    name: "",
+    title: "",
+    phone: "",
+    email: "",
+    website: "",
+    linkedin: "",
+    instagram: "",
+    facebook: "",
+  });
 
   const handleSave = () => {
+    // Generate vCard data
+    const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:${cardData?.name || ''}
+TITLE:${cardData?.title || ''}
+TEL:${cardData?.phone || ''}
+EMAIL:${cardData?.email || ''}
+URL:${cardData?.website || ''}
+END:VCARD`;
+
+    // Create and download vCard file
+    const vCardBlob = new Blob([vCardData], { type: 'text/vcard' });
+    const vCardUrl = window.URL.createObjectURL(vCardBlob);
+    const vCardLink = document.createElement('a');
+    vCardLink.href = vCardUrl;
+    vCardLink.download = `${cardData?.name || 'contact'}.vcf`;
+    vCardLink.click();
+    window.URL.revokeObjectURL(vCardUrl);
+
+    // Also trigger the QR code download from CardEditor
+    if (qrCodeRef.current) {
+      html2canvas(qrCodeRef.current).then((canvas) => {
+        const url = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `${cardData?.name || 'qr-code'}-card.png`;
+        link.href = url;
+        link.click();
+      });
+    }
+
     toast({
-      title: "Card saved successfully!",
-      description: "You can find it in your dashboard.",
+      title: "Success!",
+      description: "Your digital card and QR code have been saved.",
     });
   };
 
@@ -80,7 +123,7 @@ const Index = () => {
             </div>
           </div>
 
-          <CardEditor />
+          <CardEditor onSave={handleSave} />
         </div>
       </main>
     </div>

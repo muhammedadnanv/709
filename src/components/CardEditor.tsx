@@ -11,7 +11,11 @@ import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import { QRTemplate } from "@/types/qrTypes";
 
-const CardEditor = () => {
+interface CardEditorProps {
+  onSave: () => void;
+}
+
+const CardEditor = ({ onSave }: CardEditorProps) => {
   const { toast } = useToast();
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const [cardData, setCardData] = useState({
