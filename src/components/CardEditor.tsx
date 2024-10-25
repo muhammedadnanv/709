@@ -2,8 +2,8 @@ import { Card } from "@/components/ui/card";
 import { DndContext } from "@dnd-kit/core";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
-import { useState, useMemo, useRef } from "react";
-import { Download, Upload } from "lucide-react";
+import { useRef } from "react";
+import { Download } from "lucide-react";
 import QRCodeTemplates from "./QRCodeTemplates";
 import { useToast } from "@/components/ui/use-toast";
 import html2canvas from "html2canvas";
@@ -11,6 +11,9 @@ import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
+import { useState, useMemo } from "react";
+import { ProfileImageUpload } from "./ProfileImageUpload";
+import { useCardData } from "@/hooks/useCardData";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface CardEditorProps {
@@ -20,39 +23,8 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const { toast } = useToast();
   const qrCodeRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [cardData, setCardData] = useState({
-    name: "",
-    title: "",
-    phone: "",
-    email: "",
-    website: "",
-    linkedin: "",
-    instagram: "",
-    facebook: "",
-  });
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast({
-          title: "Error",
-          description: "Image size should be less than 5MB",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfileImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const { cardData, handleInputChange } = useCardData();
 
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
     id: 1,
@@ -119,29 +91,7 @@ URL;type=Facebook:${cardData.facebook}`;
       <Card className="aspect-auto bg-white dark:bg-gray-950 p-4 sm:p-8">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-6">
-            <div className="flex flex-col items-center gap-4">
-              <Avatar className="w-32 h-32">
-                <AvatarImage src={profileImage || ""} alt="Profile" />
-                <AvatarFallback className="text-lg">
-                  {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
-                </AvatarFallback>
-              </Avatar>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-              <Button 
-                variant="outline" 
-                onClick={() => fileInputRef.current?.click()}
-                className="gap-2"
-              >
-                <Upload className="w-4 h-4" />
-                Upload Profile Picture
-              </Button>
-            </div>
+            <ProfileImageUpload userName={cardData.name} />
             <PersonalInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
@@ -159,17 +109,15 @@ URL;type=Facebook:${cardData.facebook}`;
                 }}
               >
                 <div className="text-center space-y-4 w-full">
-                  {(cardData.name || profileImage) && (
+                  {cardData.name && (
                     <div className="space-y-2">
                       <Avatar className="w-24 h-24 mx-auto">
-                        <AvatarImage src={profileImage || ""} alt="Profile" />
+                        <AvatarImage src="" alt="Profile" />
                         <AvatarFallback className="text-xl">
                           {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
                         </AvatarFallback>
                       </Avatar>
-                      {cardData.name && (
-                        <h4 className="font-semibold text-lg">{cardData.name}</h4>
-                      )}
+                      <h4 className="font-semibold text-lg">{cardData.name}</h4>
                       {cardData.title && (
                         <p className="text-sm opacity-80">{cardData.title}</p>
                       )}
