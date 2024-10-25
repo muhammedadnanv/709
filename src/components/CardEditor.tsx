@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import html2canvas from "html2canvas";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
+import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
 import { User, Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 
@@ -19,6 +20,7 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const { toast } = useToast();
   const qrCodeRef = useRef<HTMLDivElement>(null);
+  const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
   const [cardData, setCardData] = useState({
     name: "",
     title: "",
@@ -51,7 +53,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
     const firstName = nameParts[0] || "";
     const lastName = nameParts.slice(1).join(" ") || "";
     
-    return `BEGIN:VCARD
+    let vcard = `BEGIN:VCARD
 VERSION:3.0
 N:${lastName};${firstName};;;
 FN:${cardData.name}
@@ -61,9 +63,15 @@ EMAIL:${cardData.email}
 URL:${cardData.website}
 URL;type=LinkedIn:${cardData.linkedin}
 URL;type=Instagram:${cardData.instagram}
-URL;type=Facebook:${cardData.facebook}
-END:VCARD`;
-  }, [cardData]);
+URL;type=Facebook:${cardData.facebook}`;
+
+    if (hasWirelessConnectivity) {
+      vcard += '\nX-WIRELESS-ENABLED:true';
+    }
+
+    vcard += '\nEND:VCARD';
+    return vcard;
+  }, [cardData, hasWirelessConnectivity]);
 
   const handleDownload = async () => {
     if (qrCodeRef.current) {
@@ -96,6 +104,7 @@ END:VCARD`;
           <div className="space-y-6">
             <PersonalInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
+            <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
           </div>
 
           <div className="space-y-6">
