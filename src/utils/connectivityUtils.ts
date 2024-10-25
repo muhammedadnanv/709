@@ -1,4 +1,5 @@
 import { QRTemplate } from "@/types/qrTypes";
+import qrcodeTerminal from 'qrcode-terminal';
 
 export const generateVCard = (cardData: any) => {
   const vcard = [
@@ -43,6 +44,19 @@ export const generateQRData = (cardData: any, connectivityData: any, isPremium: 
       );
     }
   }
+
+  // Generate terminal QR code
+  qrcodeTerminal.generate(qrData, { small: true }, (qr) => {
+    console.log('\nTerminal QR Code:');
+    console.log(qr);
+  });
   
   return qrData;
+};
+
+export const previewQRInTerminal = (data: string) => {
+  qrcodeTerminal.generate(data, { small: true }, (qr) => {
+    console.log('\nQR Code Preview:');
+    console.log(qr);
+  });
 };

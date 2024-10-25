@@ -3,9 +3,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { QRTemplate } from "@/types/qrTypes";
-import { generateQRData } from "@/utils/connectivityUtils";
+import { generateQRData, previewQRInTerminal } from "@/utils/connectivityUtils";
 import { QRConnectivityStatus } from "./QRConnectivityStatus";
 import { qrTemplates } from "@/data/qrTemplates";
+import { useEffect } from "react";
 
 interface QRCodeTemplatesProps {
   onSelectTemplate: (template: QRTemplate) => void;
@@ -37,6 +38,11 @@ const QRCodeTemplates = ({
   isPremium = false
 }: QRCodeTemplatesProps) => {
   const qrValue = generateQRData(cardData, connectivityData, isPremium);
+
+  useEffect(() => {
+    // Preview QR code in terminal whenever the value changes
+    previewQRInTerminal(qrValue);
+  }, [qrValue]);
 
   return (
     <Card className="p-4">
