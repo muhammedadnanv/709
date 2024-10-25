@@ -8,8 +8,9 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
+import { createGIF } from 'gifshot';
 
 const Index = () => {
   const { toast } = useToast();
@@ -26,7 +27,7 @@ const Index = () => {
   });
 
   const handleSave = () => {
-    // Generate vCard data
+    // Generate vCard data with networking focus
     const vCardData = `BEGIN:VCARD
 VERSION:3.0
 FN:${cardData?.name || ''}
@@ -34,6 +35,10 @@ TITLE:${cardData?.title || ''}
 TEL:${cardData?.phone || ''}
 EMAIL:${cardData?.email || ''}
 URL:${cardData?.website || ''}
+URL;type=LinkedIn:${cardData?.linkedin || ''}
+URL;type=Instagram:${cardData?.instagram || ''}
+URL;type=Facebook:${cardData?.facebook || ''}
+NOTE:Professional Networking Contact
 END:VCARD`;
 
     // Create and download vCard file
@@ -45,22 +50,40 @@ END:VCARD`;
     vCardLink.click();
     window.URL.revokeObjectURL(vCardUrl);
 
-    // Also trigger the QR code download from CardEditor
+    // Save as PNG
     if (qrCodeRef.current) {
       html2canvas(qrCodeRef.current).then((canvas) => {
-        const url = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `${cardData?.name || 'qr-code'}-card.png`;
-        link.href = url;
-        link.click();
+        // Save PNG
+        const pngUrl = canvas.toDataURL("image/png");
+        const pngLink = document.createElement("a");
+        pngLink.download = `${cardData?.name || 'qr-code'}-card.png`;
+        pngLink.href = pngUrl;
+        pngLink.click();
+
+        // Create and save GIF
+        createGIF({
+          images: [canvas.toDataURL()],
+          gifWidth: canvas.width,
+          gifHeight: canvas.height,
+          interval: 1,
+        }, (obj) => {
+          if (!obj.error) {
+            const gifLink = document.createElement('a');
+            gifLink.href = obj.image;
+            gifLink.download = `${cardData?.name || 'qr-code'}-card.gif`;
+            gifLink.click();
+          }
+        });
       });
     }
 
     toast({
       title: "Success!",
-      description: "Your digital card and QR code have been saved.",
+      description: "Your digital networking card has been saved in multiple formats.",
     });
   };
+
+  // ... keep existing code (header and layout structure)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -110,7 +133,7 @@ END:VCARD`;
       <main className="container mx-auto px-4 py-8">
         <div className="space-y-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-2xl sm:text-3xl font-bold">Create Your Digital Card</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold">Create Your Digital Networking Card</h2>
             <div className="hidden md:flex gap-2 self-end sm:self-auto">
               <Button onClick={handleSave} className="gap-2">
                 <Save className="h-4 w-4" />
