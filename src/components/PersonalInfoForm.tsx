@@ -11,6 +11,12 @@ import { CardData } from "@/hooks/useCardData";
 import { useToast } from "@/hooks/use-toast";
 import { useCallback, memo } from "react";
 
+interface PersonalInfoFormProps {
+  cardData: CardData;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSelectChange: (field: keyof CardData, value: string) => void;
+}
+
 const PersonalInfoFields = [
   {
     id: "name",
