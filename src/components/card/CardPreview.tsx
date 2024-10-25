@@ -28,6 +28,21 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
     }
   };
 
+  // Calculate a contrasting gold color based on the background
+  const getGoldShade = () => {
+    // Convert background to RGB to check its brightness
+    const hex = qrStyle.background.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calculate perceived brightness
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    
+    // Return darker gold for light backgrounds, lighter gold for dark backgrounds
+    return brightness > 128 ? '#B8860B' : '#FFD700';
+  };
+
   return (
     <div className="space-y-4">
       <div 
@@ -117,7 +132,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           
           <p className="text-[8px] sm:text-[10px] mt-1"
              style={{ 
-               color: '#FFD700',
+               color: getGoldShade(),
                opacity: 0.9
              }}>
             Powered by: Splex
