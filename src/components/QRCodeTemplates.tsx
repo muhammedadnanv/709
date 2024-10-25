@@ -6,7 +6,7 @@ import { QRTemplate } from "@/types/qrTypes";
 import { generateQRData, previewQRInTerminal } from "@/utils/connectivityUtils";
 import { QRConnectivityStatus } from "./QRConnectivityStatus";
 import { qrTemplates } from "@/data/qrTemplates";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface QRCodeTemplatesProps {
   onSelectTemplate: (template: QRTemplate) => void;
@@ -37,12 +37,19 @@ const QRCodeTemplates = ({
   cardData,
   isPremium = false
 }: QRCodeTemplatesProps) => {
-  const qrValue = generateQRData(cardData, connectivityData, isPremium);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    // Preview QR code in terminal whenever the value changes
-    previewQRInTerminal(qrValue);
-  }, [qrValue]);
+    const generateQR = async () => {
+      const { qrData, qrDataUrl } = await generateQRData(cardData, connectivityData, isPremium);
+      if (qrDataUrl) {
+        setQrDataUrl(qrDataUrl);
+      }
+      await previewQRInTerminal(qrData);
+    };
+
+    generateQR();
+  }, [cardData, connectivityData, isPremium]);
 
   return (
     <Card className="p-4">
@@ -52,6 +59,11 @@ const QRCodeTemplates = ({
         connectivityData={connectivityData}
         cardData={cardData}
       />
+      {qrDataUrl && (
+        <div className="mb-4">
+          <img src={qrDataUrl} alt="API Generated QR Code" className="mx-auto w-32 h-32" />
+        </div>
+      )}
       <ScrollArea className="h-[300px] pr-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {qrTemplates.map((template) => (
@@ -68,7 +80,7 @@ const QRCodeTemplates = ({
                 style={{ background: template.style.background }}
               >
                 <QRCodeSVG
-                  value={qrValue}
+                  value={qrDataUrl || 'Loading...'}
                   size={80}
                   bgColor={template.style.background}
                   fgColor={template.style.foreground}

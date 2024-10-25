@@ -1,5 +1,4 @@
-import { QRTemplate } from "@/types/qrTypes";
-import qrcodeTerminal from 'qrcode-terminal';
+import QRCode from 'qrcode';
 
 export const generateVCard = (cardData: any) => {
   const vcard = [
@@ -26,7 +25,7 @@ export const generateWiFiConfig = (ssid: string, password: string) =>
 export const generateBluetoothConfig = (deviceName: string, mac: string) =>
   `BT:DN:${deviceName};MAC:${mac};;`;
 
-export const generateQRData = (cardData: any, connectivityData: any, isPremium: boolean) => {
+export const generateQRData = async (cardData: any, connectivityData: any, isPremium: boolean) => {
   let qrData = generateVCard(cardData);
   
   if (isPremium && connectivityData) {
@@ -45,18 +44,23 @@ export const generateQRData = (cardData: any, connectivityData: any, isPremium: 
     }
   }
 
-  // Generate terminal QR code
-  qrcodeTerminal.generate(qrData, { small: true }, (qr) => {
-    console.log('\nTerminal QR Code:');
-    console.log(qr);
-  });
-  
-  return qrData;
+  try {
+    // Generate QR code as data URL
+    const qrDataUrl = await QRCode.toDataURL(qrData);
+    console.log('QR Code generated:', qrDataUrl.substring(0, 50) + '...');
+    return { qrData, qrDataUrl };
+  } catch (err) {
+    console.error('Error generating QR code:', err);
+    return { qrData, qrDataUrl: null };
+  }
 };
 
-export const previewQRInTerminal = (data: string) => {
-  qrcodeTerminal.generate(data, { small: true }, (qr) => {
+export const previewQRInTerminal = async (data: string) => {
+  try {
+    const qrString = await QRCode.toString(data, { type: 'terminal' });
     console.log('\nQR Code Preview:');
-    console.log(qr);
-  });
+    console.log(qrString);
+  } catch (err) {
+    console.error('Error previewing QR code:', err);
+  }
 };
