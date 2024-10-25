@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -9,7 +9,6 @@ import { ContactInfoForm } from "./ContactInfoForm";
 import { ConnectivityForm } from "./ConnectivityForm";
 import { QRTemplate } from "@/types/qrTypes";
 import { CardPreview } from "./CardPreview";
-import { generateVCard } from "@/utils/connectivityUtils";
 
 interface CardEditorProps {
   onSave: () => void;
@@ -66,8 +65,6 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
     }));
   };
 
-  const vCardData = useMemo(() => generateVCard(cardData), [cardData]);
-
   const handleDownload = async () => {
     if (qrCodeRef.current) {
       try {
@@ -120,7 +117,6 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
         </Button>
 
         <QRCodeTemplates
-          value={vCardData}
           onSelectTemplate={setSelectedQRTemplate}
           selectedTemplate={selectedQRTemplate}
           userName={cardData.name}
