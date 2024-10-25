@@ -7,6 +7,7 @@ export interface CustomButton {
 }
 
 export interface CardData {
+  id: string;
   name: string;
   title: string;
   phone: string;
@@ -25,6 +26,7 @@ export interface CardData {
 const STORAGE_KEY = 'splex-card-data';
 
 const initialCardData: CardData = {
+  id: crypto.randomUUID(),
   name: "",
   title: "",
   phone: "",
