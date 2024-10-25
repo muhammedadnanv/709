@@ -1,152 +1,87 @@
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { CardData } from "@/hooks/useCardData";
-import { useToast } from "@/hooks/use-toast";
-import { useCallback, memo } from "react";
 
 interface PersonalInfoFormProps {
   cardData: CardData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSelectChange: (field: keyof CardData, value: string) => void;
+  handleSelectChange: (field: keyof CardData, value: any) => void;
 }
 
-const PersonalInfoFields = [
-  {
-    id: "name",
-    label: "Full Name",
-    placeholder: "John Doe",
-    required: true,
-    pattern: "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
-    title: "Please enter a valid name (letters and basic punctuation only)",
-    maxLength: 100,
-  },
-  {
-    id: "title",
-    label: "Professional Title",
-    placeholder: "Software Engineer",
-    required: true,
-    maxLength: 100,
-    title: "Please enter your professional title",
-  },
-  {
-    id: "company",
-    label: "Company",
-    placeholder: "Company Name",
-    maxLength: 100,
-  },
-  {
-    id: "department",
-    label: "Department",
-    placeholder: "Engineering",
-    maxLength: 100,
-  },
-  {
-    id: "location",
-    label: "Location",
-    placeholder: "City, Country",
-    maxLength: 200,
-  },
-];
-
-const FormField = memo(({ 
-  field, 
-  value, 
-  onValidatedInput 
-}: { 
-  field: typeof PersonalInfoFields[0],
-  value: string,
-  onValidatedInput: (e: React.ChangeEvent<HTMLInputElement>) => void
-}) => (
-  <div className="space-y-2">
-    <Label 
-      htmlFor={field.id} 
-      className="text-sm font-medium flex items-center gap-1"
-    >
-      {field.label}
-      {field.required && (
-        <span className="text-destructive">*</span>
-      )}
-    </Label>
-    <Input
-      id={field.id}
-      name={field.id}
-      value={value}
-      onChange={onValidatedInput}
-      placeholder={field.placeholder}
-      className="h-10 text-base transition-colors focus:ring-2 focus:ring-ring"
-      required={field.required}
-      maxLength={field.maxLength}
-      pattern={field.pattern}
-      title={field.title}
-    />
-  </div>
-));
-FormField.displayName = "FormField";
-
-export const PersonalInfoForm = ({ 
-  cardData, 
-  handleInputChange, 
-  handleSelectChange 
+export const PersonalInfoForm = ({
+  cardData,
+  handleInputChange,
+  handleSelectChange,
 }: PersonalInfoFormProps) => {
-  const { toast } = useToast();
-
-  const handleValidatedInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { validity, title } = e.target;
-    
-    if (!validity.valid) {
-      toast({
-        title: "Invalid Input",
-        description: title || `Please check the field`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    handleInputChange(e);
-  }, [handleInputChange, toast]);
-
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between border-b pb-4">
-        <h3 className="text-xl font-semibold">Personal Information</h3>
-        <span className="text-sm text-muted-foreground">* Required fields</span>
-      </div>
-
-      <div className="grid gap-6">
-        {PersonalInfoFields.map((field) => (
-          <FormField
-            key={field.id}
-            field={field}
-            value={cardData[field.id as keyof CardData] || ''}
-            onValidatedInput={handleValidatedInput}
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Personal Information</h3>
+      
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Full Name</Label>
+          <Input
+            id="name"
+            name="name"
+            value={cardData.name}
+            onChange={handleInputChange}
+            placeholder="John Doe"
           />
-        ))}
+        </div>
 
         <div className="space-y-2">
-          <Label htmlFor="pronouns" className="text-sm font-medium">
-            Pronouns
-          </Label>
-          <Select 
-            onValueChange={(value) => handleSelectChange('pronouns', value)}
-            value={cardData.pronouns || ''}
-          >
-            <SelectTrigger id="pronouns" className="h-10">
-              <SelectValue placeholder="Select your pronouns" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="he/him">He/Him</SelectItem>
-              <SelectItem value="she/her">She/Her</SelectItem>
-              <SelectItem value="they/them">They/Them</SelectItem>
-              <SelectItem value="prefer-not">Prefer not to say</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label htmlFor="title">Job Title</Label>
+          <Input
+            id="title"
+            name="title"
+            value={cardData.title}
+            onChange={handleInputChange}
+            placeholder="Software Engineer"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="company">Company</Label>
+          <Input
+            id="company"
+            name="company"
+            value={cardData.company}
+            onChange={handleInputChange}
+            placeholder="Acme Inc."
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="department">Department</Label>
+          <Input
+            id="department"
+            name="department"
+            value={cardData.department}
+            onChange={handleInputChange}
+            placeholder="Engineering"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="pronouns">Pronouns</Label>
+          <Input
+            id="pronouns"
+            name="pronouns"
+            value={cardData.pronouns}
+            onChange={handleInputChange}
+            placeholder="they/them"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="location">Location</Label>
+          <Input
+            id="location"
+            name="location"
+            value={cardData.location}
+            onChange={handleInputChange}
+            placeholder="San Francisco, CA"
+          />
         </div>
       </div>
     </div>

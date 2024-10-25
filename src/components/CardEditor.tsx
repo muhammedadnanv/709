@@ -7,12 +7,11 @@ import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
 import { ProfileImageUpload } from "./ProfileImageUpload";
-import { useCardData } from "@/hooks/useCardData";
+import { useCardData, CardData, CustomButton } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
 import { CustomButtonsManager } from "./CustomButtonsManager";
-import { CardData } from "@/hooks/useCardData";
 
 interface CardEditorProps {
   onSave: (cardData: CardData) => void;
@@ -21,7 +20,7 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState<boolean>(false);
-  const { cardData, handleInputChange, handleSelectChange } = useCardData();
+  const { cardData, handleInputChange, handleSelectChange, setCardData } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
@@ -34,6 +33,13 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
       layout: "modern",
     },
   });
+
+  const handleCustomButtonsChange = (buttons: CustomButton[]) => {
+    setCardData(prev => ({
+      ...prev,
+      customButtons: buttons
+    }));
+  };
 
   const vCardData = generateVCardData(cardData, hasWirelessConnectivity);
 
@@ -59,9 +65,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <CustomButtonsManager
               buttons={cardData.customButtons || []}
-              onChange={(buttons) => {
-                handleSelectChange('customButtons', buttons);
-              }}
+              onChange={handleCustomButtonsChange}
             />
             <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
           </div>
