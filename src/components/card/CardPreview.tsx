@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { CardData } from "@/hooks/useCardData";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Linkedin, Instagram, Facebook, Nfc, Clock, Calendar } from "lucide-react";
+import { Linkedin, Instagram, Facebook, Nfc, Clock, Calendar, MessageCircle } from "lucide-react";
 import { format, addYears } from "date-fns";
 
 interface CardPreviewProps {
@@ -20,6 +20,15 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
   // Calculate expiration date (2 years from creation)
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
+
+  const handleWhatsAppClick = () => {
+    if (cardData.phone) {
+      // Remove any non-numeric characters from the phone number
+      const cleanPhone = cardData.phone.replace(/\D/g, '');
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I got your contact from your digital business card.`;
+      window.open(whatsappUrl, '_blank');
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -66,6 +75,15 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
 
           <div className="flex justify-center gap-4">
+            {cardData.phone && (
+              <button 
+                onClick={handleWhatsAppClick}
+                className="hover:opacity-80 dark:text-gray-200"
+                title="Connect on WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5" style={{ color: qrStyle.foreground }} />
+              </button>
+            )}
             {cardData.linkedin && (
               <a href={cardData.linkedin} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 dark:text-gray-200">
                 <Linkedin className="h-5 w-5" style={{ color: qrStyle.foreground }} />
