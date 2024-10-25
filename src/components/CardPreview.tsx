@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { User, Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 import { QRTemplate } from "@/types/qrTypes";
+import { generateVCard } from "@/utils/connectivityUtils";
 
 interface CardPreviewProps {
   cardData: {
@@ -19,6 +20,8 @@ interface CardPreviewProps {
 
 export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
   ({ cardData, selectedTemplate }, ref) => {
+    const qrData = generateVCard(cardData);
+
     return (
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Your Digital Card</h3>
@@ -93,6 +96,17 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
                   <Facebook className="w-5 h-5" />
                 </div>
               )}
+            </div>
+
+            <div className="mt-4">
+              <QRCodeSVG
+                value={qrData}
+                size={120}
+                bgColor={selectedTemplate.style.background}
+                fgColor={selectedTemplate.style.foreground}
+                level="H"
+                includeMargin={false}
+              />
             </div>
           </div>
         </div>
