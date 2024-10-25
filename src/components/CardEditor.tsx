@@ -103,7 +103,7 @@ END:VCARD`;
               <h3 className="text-lg font-semibold">Your Digital Card</h3>
               <div 
                 ref={qrCodeRef}
-                className="aspect-[3/4] rounded-lg flex flex-col items-center justify-center p-4 sm:p-8 border shadow-lg mx-auto max-w-sm"
+                className="aspect-[3/4] rounded-lg flex flex-col items-center justify-between p-4 sm:p-8 border shadow-lg mx-auto max-w-sm"
                 style={{ 
                   background: selectedQRTemplate.style.background,
                   color: selectedQRTemplate.style.foreground 
@@ -112,7 +112,9 @@ END:VCARD`;
                 <div className="text-center space-y-4 w-full">
                   {cardData.name && (
                     <div className="space-y-2">
-                      <User className="w-12 h-12 mx-auto" />
+                      <div className="w-16 h-16 mx-auto rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                        <User className="w-8 h-8" />
+                      </div>
                       <h4 className="font-semibold text-lg">{cardData.name}</h4>
                       {cardData.title && (
                         <p className="text-sm opacity-80">{cardData.title}</p>
@@ -120,48 +122,62 @@ END:VCARD`;
                     </div>
                   )}
                   
-                  <div className="grid grid-cols-2 gap-2 mb-4 px-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full px-4">
                     {cardData.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
-                        <span className="text-xs truncate">{cardData.phone}</span>
+                      <div className="flex items-center gap-2 justify-center sm:justify-start">
+                        <div className="w-8 h-8 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                          <Phone className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm truncate">{cardData.phone}</span>
                       </div>
                     )}
                     {cardData.email && (
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        <span className="text-xs truncate">{cardData.email}</span>
+                      <div className="flex items-center gap-2 justify-center sm:justify-start">
+                        <div className="w-8 h-8 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                          <Mail className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm truncate">{cardData.email}</span>
                       </div>
                     )}
                     {cardData.website && (
-                      <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4" />
-                        <span className="text-xs truncate">{cardData.website}</span>
+                      <div className="flex items-center gap-2 justify-center sm:justify-start">
+                        <div className="w-8 h-8 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                          <Globe className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm truncate">{cardData.website}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex justify-center gap-4 mb-4">
+                  <div className="flex justify-center gap-4">
                     {cardData.linkedin && (
-                      <Linkedin className="w-5 h-5" />
+                      <div className="w-10 h-10 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                        <Linkedin className="w-5 h-5" />
+                      </div>
                     )}
                     {cardData.instagram && (
-                      <Instagram className="w-5 h-5" />
+                      <div className="w-10 h-10 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                        <Instagram className="w-5 h-5" />
+                      </div>
                     )}
                     {cardData.facebook && (
-                      <Facebook className="w-5 h-5" />
+                      <div className="w-10 h-10 rounded-full bg-opacity-10 flex items-center justify-center" style={{ backgroundColor: selectedQRTemplate.style.foreground }}>
+                        <Facebook className="w-5 h-5" />
+                      </div>
                     )}
                   </div>
 
-                  <QRCodeSVG
-                    value={vCardData}
-                    size={Math.min(200, window.innerWidth * 0.5)}
-                    bgColor={selectedQRTemplate.style.background}
-                    fgColor={selectedQRTemplate.style.foreground}
-                    level="M"
-                    includeMargin={false}
-                  />
-                  <p className="text-sm mt-2">Scan to Connect</p>
+                  <div className="flex-1 flex items-center justify-center py-4">
+                    <QRCodeSVG
+                      value={vCardData}
+                      size={Math.min(200, window.innerWidth * 0.4)}
+                      bgColor={selectedQRTemplate.style.background}
+                      fgColor={selectedQRTemplate.style.foreground}
+                      level="M"
+                      includeMargin={false}
+                    />
+                  </div>
+                  <p className="text-sm">Scan to Connect</p>
                 </div>
               </div>
               <Button 
