@@ -7,46 +7,59 @@ import { QRTemplate } from "@/types/qrTypes";
 const generateQRTemplates = (): QRTemplate[] => {
   const layouts = ["modern", "classic", "minimal", "bold"] as const;
   
-  // Extended color palette
+  // Extended color palette with mixed colors
   const colors = [
     // Professional colors
     { bg: "#FFFFFF", fg: "#000000", corner: "#000000" },
     { bg: "#001F3F", fg: "#FFFFFF", corner: "#7FDBFF" },
     { bg: "#0074D9", fg: "#FFFFFF", corner: "#7FDBFF" },
     { bg: "#39CCCC", fg: "#FFFFFF", corner: "#7FDBFF" },
-    // Nature colors
+    // Nature & Mixed colors
     { bg: "#2ECC40", fg: "#FFFFFF", corner: "#01FF70" },
     { bg: "#3D9970", fg: "#FFFFFF", corner: "#01FF70" },
     { bg: "#01FF70", fg: "#000000", corner: "#2ECC40" },
-    // Warm colors
+    { bg: "#88D498", fg: "#2D3047", corner: "#1B998B" },
+    { bg: "#C6DABF", fg: "#3D5A80", corner: "#98C1D9" },
+    // Warm & Mixed colors
     { bg: "#FF4136", fg: "#FFFFFF", corner: "#FF851B" },
     { bg: "#FF851B", fg: "#000000", corner: "#FF4136" },
     { bg: "#FFDC00", fg: "#000000", corner: "#FF851B" },
-    // Cool colors
+    { bg: "#E76F51", fg: "#FFFFFF", corner: "#F4A261" },
+    { bg: "#E9C46A", fg: "#264653", corner: "#2A9D8F" },
+    // Cool & Mixed colors
     { bg: "#7FDBFF", fg: "#000000", corner: "#001F3F" },
     { bg: "#B10DC9", fg: "#FFFFFF", corner: "#F012BE" },
     { bg: "#F012BE", fg: "#FFFFFF", corner: "#B10DC9" },
-    // Neutral colors
+    { bg: "#BDE0FE", fg: "#023047", corner: "#8ECAE6" },
+    { bg: "#A2D2FF", fg: "#023047", corner: "#FFB5A7" },
+    // Neutral & Mixed colors
     { bg: "#AAAAAA", fg: "#FFFFFF", corner: "#111111" },
     { bg: "#DDDDDD", fg: "#000000", corner: "#111111" },
+    { bg: "#CCD5AE", fg: "#2B2D42", corner: "#E9EDC9" },
+    { bg: "#FAEDCD", fg: "#403D39", corner: "#CCD5AE" },
     // Gradient-like combinations
     { bg: "#85144b", fg: "#FFFFFF", corner: "#B10DC9" },
     { bg: "#3D9970", fg: "#FFFFFF", corner: "#39CCCC" },
     { bg: "#2ECC40", fg: "#000000", corner: "#01FF70" },
     { bg: "#001f3f", fg: "#FFFFFF", corner: "#0074D9" },
     { bg: "#FF4136", fg: "#FFFFFF", corner: "#FF851B" },
-    // Modern combinations
+    // Modern & Mixed combinations
     { bg: "#F8F9FA", fg: "#212529", corner: "#343A40" },
     { bg: "#E9ECEF", fg: "#212529", corner: "#343A40" },
     { bg: "#DEE2E6", fg: "#212529", corner: "#343A40" },
     { bg: "#CED4DA", fg: "#212529", corner: "#343A40" },
     { bg: "#ADB5BD", fg: "#212529", corner: "#343A40" },
-    // Dark mode combinations
+    // Dark mode & Mixed combinations
     { bg: "#212529", fg: "#F8F9FA", corner: "#E9ECEF" },
     { bg: "#343A40", fg: "#F8F9FA", corner: "#E9ECEF" },
     { bg: "#495057", fg: "#F8F9FA", corner: "#E9ECEF" },
     { bg: "#6C757D", fg: "#F8F9FA", corner: "#E9ECEF" },
-    { bg: "#1A1A1A", fg: "#FFFFFF", corner: "#333333" }
+    { bg: "#1A1A1A", fg: "#FFFFFF", corner: "#333333" },
+    // Pastel & Mixed combinations
+    { bg: "#FFE5D9", fg: "#6D6875", corner: "#B5838D" },
+    { bg: "#E5989B", fg: "#FFFFFF", corner: "#B5838D" },
+    { bg: "#FFB4A2", fg: "#6D6875", corner: "#E5989B" },
+    { bg: "#FFCDB2", fg: "#6D6875", corner: "#FFB4A2" }
   ];
 
   // Generate 440 templates by combining colors and layouts with variations
@@ -62,12 +75,20 @@ const generateQRTemplates = (): QRTemplate[] => {
       const g = parseInt(hex.slice(3, 5), 16);
       const b = parseInt(hex.slice(5, 7), 16);
       
-      return `#${Math.min(255, Math.max(0, Math.floor(r * factor))).toString(16).padStart(2, '0')}${
-        Math.min(255, Math.max(0, Math.floor(g * factor))).toString(16).padStart(2, '0')}${
-        Math.min(255, Math.max(0, Math.floor(b * factor))).toString(16).padStart(2, '0')}`;
+      // Add some color mixing for more variety
+      const mix = (a: number, b: number, factor: number) => 
+        Math.min(255, Math.max(0, Math.floor(a * factor + b * (1 - factor))));
+      
+      const mixR = mix(r, g, factor);
+      const mixG = mix(g, b, factor);
+      const mixB = mix(b, r, factor);
+      
+      return `#${mixR.toString(16).padStart(2, '0')}${
+        mixG.toString(16).padStart(2, '0')}${
+        mixB.toString(16).padStart(2, '0')}`;
     };
 
-    const variationFactor = 0.8 + (variation * 0.1);
+    const variationFactor = 0.7 + (variation * 0.15); // Increased range for more variety
     
     return {
       id: i + 1,
