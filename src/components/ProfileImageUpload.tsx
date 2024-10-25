@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Upload, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 interface ProfileImageUploadProps {
   userName: string;
@@ -11,7 +11,6 @@ interface ProfileImageUploadProps {
 }
 
 export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: ProfileImageUploadProps) => {
-  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
