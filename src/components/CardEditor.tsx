@@ -4,7 +4,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 
 const CardEditor = () => {
@@ -23,6 +23,25 @@ const CardEditor = () => {
     const { name, value } = e.target;
     setCardData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const vCardData = useMemo(() => {
+    const nameParts = cardData.name.split(" ");
+    const firstName = nameParts[0] || "";
+    const lastName = nameParts.slice(1).join(" ") || "";
+    
+    return `BEGIN:VCARD
+VERSION:3.0
+N:${lastName};${firstName};;;
+FN:${cardData.name}
+TITLE:${cardData.title}
+TEL;TYPE=CELL:${cardData.phone}
+EMAIL:${cardData.email}
+URL:${cardData.website}
+URL;type=LinkedIn:${cardData.linkedin}
+URL;type=Instagram:${cardData.instagram}
+URL;type=Facebook:${cardData.facebook}
+END:VCARD`;
+  }, [cardData]);
 
   return (
     <DndContext>
@@ -79,7 +98,6 @@ const CardEditor = () => {
                     <Input
                       id="email"
                       name="email"
-                      value={cardData.email}
                       onChange={handleInputChange}
                       className="pl-10"
                       placeholder="john@example.com"
@@ -156,9 +174,7 @@ const CardEditor = () => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">QR Code Preview</h3>
               <div className="aspect-square bg-white rounded-lg flex items-center justify-center border">
-                {cardData.website && (
-                  <QRCodeSVG value={cardData.website} size={200} />
-                )}
+                <QRCodeSVG value={vCardData} size={200} />
               </div>
               <Button className="w-full" variant="outline">
                 Contact Me
