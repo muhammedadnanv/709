@@ -25,6 +25,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
   const { cardData, handleInputChange } = useCardData();
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
     id: 1,
@@ -91,7 +92,11 @@ URL;type=Facebook:${cardData.facebook}`;
       <Card className="aspect-auto bg-white dark:bg-gray-950 p-4 sm:p-8">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-6">
-            <ProfileImageUpload userName={cardData.name} />
+            <ProfileImageUpload 
+              userName={cardData.name} 
+              profileImage={profileImage}
+              setProfileImage={setProfileImage}
+            />
             <PersonalInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
@@ -112,7 +117,7 @@ URL;type=Facebook:${cardData.facebook}`;
                   {cardData.name && (
                     <div className="space-y-2">
                       <Avatar className="w-24 h-24 mx-auto">
-                        <AvatarImage src="" alt="Profile" />
+                        <AvatarImage src={profileImage || ""} alt="Profile" />
                         <AvatarFallback className="text-xl">
                           {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
                         </AvatarFallback>
