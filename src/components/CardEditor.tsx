@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useRef, useState, useMemo } from "react";
 import { Download, Loader2 } from "lucide-react";
 import QRCodeTemplates from "./QRCodeTemplates";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
