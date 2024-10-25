@@ -15,23 +15,25 @@ export const PersonalInfoForm = ({ cardData, handleInputChange }: PersonalInfoFo
       <h3 className="text-lg font-semibold">Personal Information</h3>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Full Name</Label>
+          <Label htmlFor="name" className="text-base">Full Name</Label>
           <Input
             id="name"
             name="name"
             value={cardData.name}
             onChange={handleInputChange}
             placeholder="John Doe"
+            className="h-12 text-base"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="title">Professional Title</Label>
+          <Label htmlFor="title" className="text-base">Professional Title</Label>
           <Input
             id="title"
             name="title"
             value={cardData.title}
             onChange={handleInputChange}
             placeholder="Software Engineer"
+            className="h-12 text-base"
           />
         </div>
       </div>

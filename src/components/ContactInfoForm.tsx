@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
+import { Mail, Phone, Globe } from "lucide-react";
 
 interface ContactInfoFormProps {
   cardData: {
@@ -20,43 +20,43 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
       <h3 className="text-lg font-semibold">Contact Information</h3>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
+          <Label htmlFor="phone" className="text-base">Phone Number</Label>
           <div className="relative">
-            <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Phone className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
             <Input
               id="phone"
               name="phone"
               value={cardData.phone}
               onChange={handleInputChange}
-              className="pl-10"
+              className="pl-10 h-12 text-base"
               placeholder="+1 (555) 000-0000"
             />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email" className="text-base">Email Address</Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Mail className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
             <Input
               id="email"
               name="email"
               value={cardData.email}
               onChange={handleInputChange}
-              className="pl-10"
+              className="pl-10 h-12 text-base"
               placeholder="john@example.com"
             />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="website">Website</Label>
+          <Label htmlFor="website" className="text-base">Website</Label>
           <div className="relative">
-            <Globe className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Globe className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
             <Input
               id="website"
               name="website"
               value={cardData.website}
               onChange={handleInputChange}
-              className="pl-10"
+              className="pl-10 h-12 text-base"
               placeholder="https://example.com"
             />
           </div>

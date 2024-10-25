@@ -86,8 +86,8 @@ END:VCARD`;
 
   return (
     <DndContext>
-      <Card className="aspect-auto bg-white dark:bg-gray-950 p-8">
-        <div className="grid md:grid-cols-2 gap-8">
+      <Card className="aspect-auto bg-white dark:bg-gray-950 p-4 sm:p-8">
+        <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-6">
             <PersonalInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
@@ -98,7 +98,7 @@ END:VCARD`;
               <h3 className="text-lg font-semibold">Your Digital Card</h3>
               <div 
                 ref={qrCodeRef}
-                className="aspect-[3/4] rounded-lg flex flex-col items-center justify-center p-8 border shadow-lg"
+                className="aspect-[3/4] rounded-lg flex flex-col items-center justify-center p-4 sm:p-8 border shadow-lg mx-auto max-w-sm"
                 style={{ 
                   background: selectedQRTemplate.style.background,
                   color: selectedQRTemplate.style.foreground 
@@ -110,7 +110,7 @@ END:VCARD`;
                   )}
                   <QRCodeSVG
                     value={vCardData}
-                    size={200}
+                    size={Math.min(200, window.innerWidth * 0.5)}
                     bgColor={selectedQRTemplate.style.background}
                     fgColor={selectedQRTemplate.style.foreground}
                     level="M"
