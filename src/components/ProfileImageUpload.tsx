@@ -1,8 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Upload } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { Upload, Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 
 interface ProfileImageUploadProps {
   userName: string;
@@ -13,25 +13,53 @@ interface ProfileImageUploadProps {
 export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: ProfileImageUploadProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "Error",
-          description: "Image size should be less than 5MB",
-          variant: "destructive",
-        });
-        return;
-      }
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfileImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Error",
+        description: "Image size should be less than 5MB",
+        variant: "destructive",
+      });
+      return;
     }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Error",
+        description: "Please upload a valid image file (JPEG, PNG, or GIF)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      setProfileImage(e.target?.result as string);
+      setIsLoading(false);
+      toast({
+        title: "Success",
+        description: "Profile picture updated successfully",
+      });
+    };
+
+    reader.onerror = () => {
+      setIsLoading(false);
+      toast({
+        title: "Error",
+        description: "Failed to upload image. Please try again.",
+        variant: "destructive",
+      });
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -46,16 +74,21 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
         type="file"
         ref={fileInputRef}
         onChange={handleImageUpload}
-        accept="image/*"
+        accept="image/jpeg,image/png,image/gif"
         className="hidden"
       />
       <Button 
         variant="outline" 
         onClick={() => fileInputRef.current?.click()}
         className="gap-2"
+        disabled={isLoading}
       >
-        <Upload className="w-4 h-4" />
-        Upload Profile Picture
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Upload className="h-4 w-4" />
+        )}
+        {isLoading ? "Uploading..." : "Upload Profile Picture"}
       </Button>
     </div>
   );

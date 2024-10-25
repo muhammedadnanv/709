@@ -2,16 +2,15 @@ import { Card } from "@/components/ui/card";
 import { DndContext } from "@dnd-kit/core";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
-import { useRef } from "react";
-import { Download } from "lucide-react";
+import { useRef, useState, useMemo } from "react";
+import { Download, Loader2 } from "lucide-react";
 import QRCodeTemplates from "./QRCodeTemplates";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/toast";
 import html2canvas from "html2canvas";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
-import { useState, useMemo } from "react";
 import { ProfileImageUpload } from "./ProfileImageUpload";
 import { useCardData } from "@/hooks/useCardData";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -23,6 +22,7 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const { toast } = useToast();
   const qrCodeRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
   const { cardData, handleInputChange } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -64,26 +64,36 @@ URL;type=Facebook:${cardData.facebook}`;
   }, [cardData, hasWirelessConnectivity]);
 
   const handleDownload = async () => {
-    if (qrCodeRef.current) {
-      try {
-        const canvas = await html2canvas(qrCodeRef.current);
-        const url = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `${cardData.name || 'qr-code'}-card.png`;
-        link.href = url;
-        link.click();
-        
-        toast({
-          title: "Success!",
-          description: "Your QR code card has been downloaded.",
-        });
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to download QR code card.",
-          variant: "destructive",
-        });
-      }
+    if (!qrCodeRef.current) {
+      toast({
+        title: "Error",
+        description: "Could not generate QR code. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const canvas = await html2canvas(qrCodeRef.current);
+      const url = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `${cardData.name || 'qr-code'}-card.png`;
+      link.href = url;
+      link.click();
+      
+      toast({
+        title: "Success!",
+        description: "Your QR code card has been downloaded.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to download QR code card.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,13 +141,13 @@ URL;type=Facebook:${cardData.facebook}`;
                   
                   <div className="grid grid-cols-1 gap-3 w-full px-4">
                     {cardData.phone && (
-                      <span className="text-sm">{cardData.phone}</span>
+                      <span className="text-sm truncate">{cardData.phone}</span>
                     )}
                     {cardData.email && (
-                      <span className="text-sm">{cardData.email}</span>
+                      <span className="text-sm truncate">{cardData.email}</span>
                     )}
                     {cardData.website && (
-                      <span className="text-sm">{cardData.website}</span>
+                      <span className="text-sm truncate">{cardData.website}</span>
                     )}
                   </div>
 
@@ -170,9 +180,14 @@ URL;type=Facebook:${cardData.facebook}`;
                 onClick={handleDownload} 
                 className="w-full gap-2"
                 variant="outline"
+                disabled={isLoading}
               >
-                <Download className="h-4 w-4" />
-                Download Card
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                {isLoading ? "Downloading..." : "Download Card"}
               </Button>
             </div>
 
