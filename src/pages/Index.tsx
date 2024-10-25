@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import CardEditor from "@/components/CardEditor";
-import { Menu, Save, Share2, User } from "lucide-react";
+import { Menu, Save, Share2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Sheet,
@@ -11,6 +11,7 @@ import {
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import { createGIF } from 'gifshot';
+import { AuthHeader } from "@/components/AuthHeader";
 
 const Index = () => {
   const { toast } = useToast();
@@ -83,8 +84,6 @@ END:VCARD`;
     });
   };
 
-  // ... keep existing code (header and layout structure)
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm dark:bg-gray-950/80">
@@ -102,10 +101,7 @@ END:VCARD`;
                 </SheetTrigger>
                 <SheetContent>
                   <div className="flex flex-col gap-4 mt-8">
-                    <Button variant="outline" className="w-full gap-2">
-                      <User className="h-4 w-4" />
-                      Sign In
-                    </Button>
+                    <AuthHeader />
                     <Button onClick={handleSave} className="w-full gap-2">
                       <Save className="h-4 w-4" />
                       Save
@@ -121,10 +117,7 @@ END:VCARD`;
 
             {/* Desktop buttons */}
             <div className="hidden md:flex gap-2">
-              <Button variant="outline" className="gap-2">
-                <User className="h-4 w-4" />
-                Sign In
-              </Button>
+              <AuthHeader />
             </div>
           </div>
         </div>
