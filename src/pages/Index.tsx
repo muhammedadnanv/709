@@ -4,13 +4,24 @@ import { PricingPlans } from "@/components/PricingPlans";
 import { SignIn } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useUser } from "@clerk/clerk-react";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
   const [showAuthDialog, setShowAuthDialog] = useState(true);
+  const { isLoaded, isSignedIn } = useUser();
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
+      <Dialog open={showAuthDialog && !isSignedIn} onOpenChange={setShowAuthDialog}>
         <DialogContent className="sm:max-w-md">
           <SignIn afterSignInUrl="/" signUpUrl="/sign-up" />
         </DialogContent>

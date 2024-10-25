@@ -1,9 +1,17 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
 import { Button } from "./ui/button";
-import { User } from "lucide-react";
+import { User, Loader2 } from "lucide-react";
 
 export const AuthHeader = () => {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, user, isLoaded } = useUser();
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center gap-2">
+        <Loader2 className="h-4 w-4 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-2">
