@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import { Card } from "./ui/card";
@@ -12,35 +12,18 @@ export const CardManager = () => {
   const { toast } = useToast();
   const [isCreating, setIsCreating] = useState(false);
 
-  // Load cards from localStorage on component mount
-  useEffect(() => {
-    const savedCards = localStorage.getItem('saved-cards');
-    if (savedCards) {
-      setCards(JSON.parse(savedCards));
-    }
-  }, []);
-
-  // Save cards to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('saved-cards', JSON.stringify(cards));
-  }, [cards]);
-
   const handleCreateCard = () => {
     setIsCreating(true);
   };
 
   const handleSaveCard = (cardData: CardData) => {
+    // In a real implementation, this would also save the userId
     const cardWithId = { ...cardData, id: crypto.randomUUID() };
     setCards([...cards, cardWithId]);
     setIsCreating(false);
-    
-    // Save to localStorage immediately
-    const updatedCards = [...cards, cardWithId];
-    localStorage.setItem('saved-cards', JSON.stringify(updatedCards));
-    
     toast({
       title: "Success!",
-      description: "Your card has been created and saved successfully.",
+      description: "Your card has been created successfully.",
     });
   };
 
@@ -60,7 +43,7 @@ export const CardManager = () => {
           {cards.map((card) => (
             <Link 
               key={card.id} 
-              to={`/c/${card.id}`}
+              to={`/users/${card.id}`}
               className="block hover:opacity-80 transition-opacity"
             >
               <Card className="p-6">
