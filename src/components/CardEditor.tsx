@@ -10,6 +10,7 @@ import { ContactInfoForm } from "./ContactInfoForm";
 import { ConnectivityForm } from "./ConnectivityForm";
 import { QRTemplate } from "@/types/qrTypes";
 import { CardPreview } from "./CardPreview";
+import { generateVCard } from "@/utils/connectivityUtils";
 
 interface CardEditorProps {
   onSave: () => void;
@@ -64,6 +65,8 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
       [type]: { ...prev[type as keyof typeof prev], [field]: value },
     }));
   };
+
+  const vCardData = useMemo(() => generateVCard(cardData), [cardData]);
 
   const handleDownload = async () => {
     if (qrCodeRef.current) {
