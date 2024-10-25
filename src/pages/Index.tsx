@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import CardEditor from "@/components/CardEditor";
-import CardTemplates from "@/components/CardTemplates";
 import { Save, Share2, User } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -28,28 +27,22 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[1fr,300px] gap-8">
-          <div className="space-y-8">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold">Create Your Digital Card</h2>
-              <div className="flex gap-2">
-                <Button onClick={handleSave} className="gap-2">
-                  <Save className="h-4 w-4" />
-                  Save
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <Share2 className="h-4 w-4" />
-                  Share
-                </Button>
-              </div>
+        <div className="space-y-8">
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold">Create Your Digital Card</h2>
+            <div className="flex gap-2">
+              <Button onClick={handleSave} className="gap-2">
+                <Save className="h-4 w-4" />
+                Save
+              </Button>
+              <Button variant="outline" className="gap-2">
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
             </div>
-
-            <CardEditor />
           </div>
 
-          <div className="space-y-6">
-            <CardTemplates />
-          </div>
+          <CardEditor />
         </div>
       </main>
     </div>
