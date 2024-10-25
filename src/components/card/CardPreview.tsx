@@ -9,7 +9,11 @@ import { format, addYears } from "date-fns";
 interface CardPreviewProps {
   cardData: CardData;
   profileImage: string | null;
-  vCardData: string;
+  vCardData: {
+    vcard: string;
+    dataUrl: string;
+    downloadFilename: string;
+  };
   qrStyle: {
     background: string;
     foreground: string;
@@ -23,7 +27,6 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
 
   const handleWhatsAppClick = () => {
     if (cardData.phone) {
-      // Remove any non-numeric characters from the phone number
       const cleanPhone = cardData.phone.replace(/\D/g, '');
       const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I got your contact from your digital business card.`;
       window.open(whatsappUrl, '_blank');
@@ -101,27 +104,28 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             )}
           </div>
 
-          <div className="flex-1 flex items-center justify-center py-4">
+        <div className="flex-1 flex items-center justify-center py-4">
+          <a href={vCardData.dataUrl} download={vCardData.downloadFilename}>
             <QRCodeSVG
-              value={vCardData}
+              value={vCardData.vcard}
               size={Math.min(200, window.innerWidth * 0.4)}
               bgColor={qrStyle.background}
               fgColor={qrStyle.foreground}
               level="M"
               includeMargin={false}
             />
-          </div>
-          <p className="text-sm dark:text-gray-300">Scan to Connect</p>
-          
-          <p className="text-xs opacity-70 mt-4" style={{ color: qrStyle.foreground }}>
-            Powered by: Splex
-          </p>
+          </a>
         </div>
+        <p className="text-sm dark:text-gray-300">Scan to save contact</p>
+        
+        <p className="text-xs opacity-70 mt-4" style={{ color: qrStyle.foreground }}>
+          Powered by: Splex
+        </p>
       </div>
       
       <WalletActions 
         cardData={cardData}
-        qrCodeUrl={vCardData}
+        qrCodeUrl={vCardData.vcard}
       />
     </div>
   );

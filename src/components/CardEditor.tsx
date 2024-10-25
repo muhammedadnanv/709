@@ -87,7 +87,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
                 </div>
                 <CardActions qrCodeRef={qrCodeRef} cardData={cardData} />
                 <QRCodeTemplates
-                  value={vCardData}
+                  value={vCardData.vcard}
                   onSelectTemplate={setSelectedQRTemplate}
                   selectedTemplate={selectedQRTemplate}
                   userName={cardData.name}

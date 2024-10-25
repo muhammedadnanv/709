@@ -1,10 +1,11 @@
-import { CardData } from "@/hooks/useCardData";
+import { CardData } from "@/types/qrTypes";
 
 export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: boolean) => {
   const nameParts = cardData.name.split(" ");
   const firstName = nameParts[0] || "";
   const lastName = nameParts.slice(1).join(" ") || "";
   
+  // Create a downloadable vCard format
   let vcard = `BEGIN:VCARD
 VERSION:3.0
 N:${lastName};${firstName};;;
@@ -48,5 +49,14 @@ TITLE:${cardData.title}`;
   }
 
   vcard += '\nEND:VCARD';
-  return vcard;
+
+  // Create a data URL for direct download
+  const blob = new Blob([vcard], { type: 'text/vcard' });
+  const dataUrl = URL.createObjectURL(blob);
+  
+  return {
+    vcard,
+    dataUrl,
+    downloadFilename: `${cardData.name.replace(/\s+/g, '_')}_contact.vcf`
+  };
 };
