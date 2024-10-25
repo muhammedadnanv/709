@@ -115,10 +115,9 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           
           <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
           
-          <p className="text-[8px] sm:text-[10px] mt-1 animate-pulse"
+          <p className="text-[8px] sm:text-[10px] mt-1"
              style={{ 
                color: '#FFD700',
-               textShadow: '0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 15px #FFD700',
                opacity: 0.9
              }}>
             Powered by: Splex
