@@ -1,5 +1,11 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
+export interface CustomButton {
+  id: string;
+  label: string;
+  url: string;
+}
+
 export interface CardData {
   name: string;
   title: string;
@@ -13,6 +19,7 @@ export interface CardData {
   department?: string;
   pronouns?: string;
   location?: string;
+  customButtons: CustomButton[];
 }
 
 const STORAGE_KEY = 'splex-card-data';
@@ -30,6 +37,7 @@ const initialCardData: CardData = {
   department: "",
   pronouns: "",
   location: "",
+  customButtons: [],
 };
 
 interface UseCardDataReturn {

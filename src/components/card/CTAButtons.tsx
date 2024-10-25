@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Globe, Mail, Phone, Calendar, UserPlus, Send } from "lucide-react";
+import { Globe, Mail, Phone, Calendar, UserPlus, Send, ExternalLink } from "lucide-react";
 import { CardData } from "@/hooks/useCardData";
 import { useToast } from "@/hooks/use-toast";
 
@@ -57,6 +57,7 @@ END:VCARD`;
 
   return (
     <div className="flex flex-col gap-2 w-full">
+      {/* Default buttons */}
       <Button
         variant="outline"
         className="w-full gap-2"
@@ -66,6 +67,20 @@ END:VCARD`;
         <UserPlus className="h-4 w-4" />
         Add to Contacts
       </Button>
+
+      {/* Custom buttons */}
+      {cardData.customButtons?.map((button) => (
+        <Button
+          key={button.id}
+          variant="outline"
+          className="w-full gap-2"
+          style={{ color: textColor, borderColor: textColor }}
+          onClick={() => handleClick(button.url)}
+        >
+          <ExternalLink className="h-4 w-4" />
+          {button.label}
+        </Button>
+      ))}
 
       <Button
         variant="outline"

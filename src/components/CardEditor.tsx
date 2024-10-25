@@ -11,6 +11,7 @@ import { useCardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
+import { CustomButtonsManager } from "./CustomButtonsManager";
 import { CardData } from "@/hooks/useCardData";
 
 interface CardEditorProps {
@@ -56,6 +57,12 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
               handleSelectChange={handleSelectChange}
             />
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
+            <CustomButtonsManager
+              buttons={cardData.customButtons || []}
+              onChange={(buttons) => {
+                handleSelectChange('customButtons', buttons);
+              }}
+            />
             <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
           </div>
 
