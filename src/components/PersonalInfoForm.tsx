@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CardData } from "@/hooks/useCardData";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface PersonalInfoFormProps {
   cardData: CardData;
@@ -16,16 +16,58 @@ interface PersonalInfoFormProps {
   handleSelectChange: (field: keyof CardData, value: string) => void;
 }
 
-export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChange }: PersonalInfoFormProps) => {
+const PersonalInfoFields = [
+  {
+    id: "name",
+    label: "Full Name*",
+    placeholder: "John Doe",
+    required: true,
+    pattern: "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
+    title: "Please enter a valid name (letters and basic punctuation only)",
+    maxLength: 100,
+  },
+  {
+    id: "title",
+    label: "Professional Title*",
+    placeholder: "Software Engineer",
+    required: true,
+    maxLength: 100,
+    title: "Please enter your professional title",
+  },
+  {
+    id: "company",
+    label: "Company",
+    placeholder: "Company Name",
+    maxLength: 100,
+  },
+  {
+    id: "department",
+    label: "Department",
+    placeholder: "Engineering",
+    maxLength: 100,
+  },
+  {
+    id: "location",
+    label: "Location",
+    placeholder: "City, Country",
+    maxLength: 200,
+  },
+];
+
+export const PersonalInfoForm = ({ 
+  cardData, 
+  handleInputChange, 
+  handleSelectChange 
+}: PersonalInfoFormProps) => {
   const { toast } = useToast();
 
   const handleValidatedInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, validity } = e.target;
+    const { name, value, validity, title } = e.target;
     
     if (!validity.valid) {
       toast({
         title: "Invalid Input",
-        description: e.target.title,
+        description: title || `Please check the ${name} field`,
         variant: "destructive",
       });
       return;
@@ -35,31 +77,38 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Personal Information</h3>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Personal Information</h3>
+        <span className="text-sm text-muted-foreground">* Required fields</span>
+      </div>
+
       <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name" className="text-base">Full Name*</Label>
-          <Input
-            id="name"
-            name="name"
-            value={cardData.name}
-            onChange={handleValidatedInput}
-            placeholder="John Doe"
-            className="h-12 text-base"
-            required
-            minLength={2}
-            maxLength={100}
-            pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$"
-            title="Please enter a valid name (2-100 characters, letters and basic punctuation only)"
-          />
-        </div>
+        {PersonalInfoFields.map((field) => (
+          <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id} className="text-base">
+              {field.label}
+            </Label>
+            <Input
+              id={field.id}
+              name={field.id}
+              value={cardData[field.id as keyof CardData] || ''}
+              onChange={handleValidatedInput}
+              placeholder={field.placeholder}
+              className="h-12 text-base transition-colors"
+              required={field.required}
+              maxLength={field.maxLength}
+              pattern={field.pattern}
+              title={field.title}
+            />
+          </div>
+        ))}
 
         <div className="space-y-2">
           <Label htmlFor="pronouns" className="text-base">Pronouns</Label>
           <Select 
             onValueChange={(value) => handleSelectChange('pronouns', value)}
-            value={cardData.pronouns}
+            value={cardData.pronouns || ''}
           >
             <SelectTrigger className="h-12">
               <SelectValue placeholder="Select your pronouns" />
@@ -71,64 +120,6 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
               <SelectItem value="prefer-not">Prefer not to say</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="title" className="text-base">Professional Title*</Label>
-          <Input
-            id="title"
-            name="title"
-            value={cardData.title}
-            onChange={handleValidatedInput}
-            placeholder="Software Engineer"
-            className="h-12 text-base"
-            required
-            minLength={2}
-            maxLength={100}
-            title="Please enter your professional title (2-100 characters)"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="company" className="text-base">Company</Label>
-          <Input
-            id="company"
-            name="company"
-            value={cardData.company}
-            onChange={handleValidatedInput}
-            placeholder="Company Name"
-            className="h-12 text-base"
-            maxLength={100}
-            title="Company name (max 100 characters)"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="department" className="text-base">Department</Label>
-          <Input
-            id="department"
-            name="department"
-            value={cardData.department}
-            onChange={handleValidatedInput}
-            placeholder="Engineering"
-            className="h-12 text-base"
-            maxLength={100}
-            title="Department name (max 100 characters)"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="location" className="text-base">Location</Label>
-          <Input
-            id="location"
-            name="location"
-            value={cardData.location}
-            onChange={handleValidatedInput}
-            placeholder="City, Country"
-            className="h-12 text-base"
-            maxLength={200}
-            title="Location (max 200 characters)"
-          />
         </div>
       </div>
     </div>
