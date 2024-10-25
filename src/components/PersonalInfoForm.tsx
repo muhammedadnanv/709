@@ -19,7 +19,7 @@ interface PersonalInfoFormProps {
 const PersonalInfoFields = [
   {
     id: "name",
-    label: "Full Name*",
+    label: "Full Name",
     placeholder: "John Doe",
     required: true,
     pattern: "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
@@ -28,7 +28,7 @@ const PersonalInfoFields = [
   },
   {
     id: "title",
-    label: "Professional Title*",
+    label: "Professional Title",
     placeholder: "Software Engineer",
     required: true,
     maxLength: 100,
@@ -77,17 +77,23 @@ export const PersonalInfoForm = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Personal Information</h3>
+    <div className="space-y-8">
+      <div className="flex items-center justify-between border-b pb-4">
+        <h3 className="text-xl font-semibold">Personal Information</h3>
         <span className="text-sm text-muted-foreground">* Required fields</span>
       </div>
 
-      <div className="space-y-4">
+      <div className="grid gap-6">
         {PersonalInfoFields.map((field) => (
           <div key={field.id} className="space-y-2">
-            <Label htmlFor={field.id} className="text-base">
+            <Label 
+              htmlFor={field.id} 
+              className="text-sm font-medium flex items-center gap-1"
+            >
               {field.label}
+              {field.required && (
+                <span className="text-destructive">*</span>
+              )}
             </Label>
             <Input
               id={field.id}
@@ -95,7 +101,7 @@ export const PersonalInfoForm = ({
               value={cardData[field.id as keyof CardData] || ''}
               onChange={handleValidatedInput}
               placeholder={field.placeholder}
-              className="h-12 text-base transition-colors"
+              className="h-10 text-base transition-colors focus:ring-2 focus:ring-ring"
               required={field.required}
               maxLength={field.maxLength}
               pattern={field.pattern}
@@ -105,12 +111,14 @@ export const PersonalInfoForm = ({
         ))}
 
         <div className="space-y-2">
-          <Label htmlFor="pronouns" className="text-base">Pronouns</Label>
+          <Label htmlFor="pronouns" className="text-sm font-medium">
+            Pronouns
+          </Label>
           <Select 
             onValueChange={(value) => handleSelectChange('pronouns', value)}
             value={cardData.pronouns || ''}
           >
-            <SelectTrigger className="h-12">
+            <SelectTrigger id="pronouns" className="h-10">
               <SelectValue placeholder="Select your pronouns" />
             </SelectTrigger>
             <SelectContent>
