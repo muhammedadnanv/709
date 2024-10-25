@@ -19,7 +19,7 @@ const CardEditor = ({ onSave }: { onSave: () => void }) => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const handleSelectChange = (field: string, value: string) => {
-    setCardData((prev: any) => ({ ...prev, [field]: value }));
+    setCardData((prev) => ({ ...prev, [field]: value }));
   };
 
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({

@@ -17,40 +17,29 @@ export interface CardData {
 
 const STORAGE_KEY = 'splex-card-data';
 
+const initialCardData: CardData = {
+  name: "",
+  title: "",
+  phone: "",
+  email: "",
+  website: "",
+  linkedin: "",
+  instagram: "",
+  facebook: "",
+  company: "",
+  department: "",
+  pronouns: "",
+  location: "",
+};
+
 export const useCardData = () => {
   const [cardData, setCardData] = useState<CardData>(() => {
     try {
       const savedData = localStorage.getItem(STORAGE_KEY);
-      return savedData ? JSON.parse(savedData) : {
-        name: "",
-        title: "",
-        phone: "",
-        email: "",
-        website: "",
-        linkedin: "",
-        instagram: "",
-        facebook: "",
-        company: "",
-        department: "",
-        pronouns: "",
-        location: "",
-      };
+      return savedData ? JSON.parse(savedData) : initialCardData;
     } catch (error) {
       console.error('Error loading card data:', error);
-      return {
-        name: "",
-        title: "",
-        phone: "",
-        email: "",
-        website: "",
-        linkedin: "",
-        instagram: "",
-        facebook: "",
-        company: "",
-        department: "",
-        pronouns: "",
-        location: "",
-      };
+      return initialCardData;
     }
   });
 
@@ -71,5 +60,5 @@ export const useCardData = () => {
     cardData,
     setCardData,
     handleInputChange,
-  };
+  } as const;
 };
