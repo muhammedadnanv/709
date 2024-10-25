@@ -18,7 +18,7 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const { toast } = useToast();
   const qrCodeRef = useRef<HTMLDivElement>(null);
-  const [isPremium] = useState(false); // In a real app, this would come from your auth/payment system
+  const [isPremium] = useState(false);
   const [cardData, setCardData] = useState({
     name: "",
     title: "",
@@ -126,6 +126,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
           userName={cardData.name}
           connectivityData={connectivityData}
           cardData={cardData}
+          isPremium={isPremium}
         />
       </div>
     </div>
