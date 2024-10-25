@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { CardData } from "@/hooks/useCardData";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Linkedin, Instagram, Facebook } from "lucide-react";
+import { Linkedin, Instagram, Facebook, Nfc } from "lucide-react";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -28,12 +28,15 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         <div className="text-center space-y-4 w-full">
           {cardData.name && (
             <div className="space-y-2">
-              <Avatar className="w-24 h-24 mx-auto">
-                <AvatarImage src={profileImage || ""} alt={`${cardData.name}'s profile`} />
-                <AvatarFallback className="text-xl dark:bg-gray-700 dark:text-gray-200">
-                  {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
-                </AvatarFallback>
-              </Avatar>
+              <div className="flex items-center justify-center gap-2">
+                <Avatar className="w-24 h-24">
+                  <AvatarImage src={profileImage || ""} alt={`${cardData.name}'s profile`} />
+                  <AvatarFallback className="text-xl dark:bg-gray-700 dark:text-gray-200">
+                    {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <Nfc className="h-4 w-4" style={{ color: qrStyle.foreground }} />
+              </div>
               <h4 className="font-semibold text-lg dark:text-gray-100">{cardData.name}</h4>
               {cardData.title && (
                 <p className="text-sm opacity-80 dark:text-gray-300">{cardData.title}</p>
@@ -65,18 +68,23 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           </div>
 
           <div className="flex-1 flex items-center justify-center py-4">
-            <QRCodeSVG
-              value={vCardData}
-              size={Math.min(200, window.innerWidth * 0.4)}
-              bgColor={qrStyle.background}
-              fgColor={qrStyle.foreground}
-              level="M"
-              includeMargin={false}
-            />
+            <div className="relative">
+              <QRCodeSVG
+                value={vCardData}
+                size={Math.min(200, window.innerWidth * 0.4)}
+                bgColor={qrStyle.background}
+                fgColor={qrStyle.foreground}
+                level="M"
+                includeMargin={false}
+              />
+              <Nfc 
+                className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 h-4 w-4" 
+                style={{ color: qrStyle.foreground }}
+              />
+            </div>
           </div>
           <p className="text-sm dark:text-gray-300">Scan to Connect</p>
           
-          {/* Added branding footer */}
           <p className="text-xs opacity-70 mt-4" style={{ color: qrStyle.foreground }}>
             Powered by: Splex
           </p>
