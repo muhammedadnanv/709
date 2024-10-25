@@ -15,7 +15,7 @@ import { generateVCardData } from "@/utils/vcard";
 const CardEditor = ({ onSave }: { onSave: () => void }) => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
-  const { cardData, handleInputChange } = useCardData();
+  const { cardData, handleInputChange, setCardData } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const handleSelectChange = (field: string, value: string) => {
