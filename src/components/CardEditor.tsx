@@ -4,11 +4,15 @@ import { QRCodeSVG } from "qrcode.react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useState, useMemo } from "react";
-import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { Mail, Phone, Globe, Linkedin, Instagram, Facebook, Download } from "lucide-react";
 import QRCodeTemplates from "./QRCodeTemplates";
+import { useToast } from "@/components/ui/use-toast";
+import html2canvas from "html2canvas";
 
 const CardEditor = () => {
+  const { toast } = useToast();
+  const qrCodeRef = useRef<HTMLDivElement>(null);
   const [cardData, setCardData] = useState({
     name: "",
     title: "",
@@ -54,6 +58,30 @@ URL;type=Instagram:${cardData.instagram}
 URL;type=Facebook:${cardData.facebook}
 END:VCARD`;
   }, [cardData]);
+
+  const handleDownload = async () => {
+    if (qrCodeRef.current) {
+      try {
+        const canvas = await html2canvas(qrCodeRef.current);
+        const url = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `${cardData.name || 'qr-code'}-card.png`;
+        link.href = url;
+        link.click();
+        
+        toast({
+          title: "Success!",
+          description: "Your QR code card has been downloaded.",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to download QR code card.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
 
   return (
     <DndContext>
@@ -110,6 +138,7 @@ END:VCARD`;
                     <Input
                       id="email"
                       name="email"
+                      value={cardData.email}
                       onChange={handleInputChange}
                       className="pl-10"
                       placeholder="john@example.com"
@@ -136,19 +165,37 @@ END:VCARD`;
 
           <div className="space-y-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">QR Code Style</h3>
-              <div className="aspect-square bg-white rounded-lg flex items-center justify-center border p-4" style={{ background: selectedQRTemplate.style.background }}>
-                <QRCodeSVG
-                  value={vCardData}
-                  size={200}
-                  bgColor={selectedQRTemplate.style.background}
-                  fgColor={selectedQRTemplate.style.foreground}
-                  level="M"
-                  includeMargin={false}
-                />
+              <h3 className="text-lg font-semibold">Your Digital Card</h3>
+              <div 
+                ref={qrCodeRef}
+                className="aspect-[3/4] rounded-lg flex flex-col items-center justify-center p-8 border shadow-lg"
+                style={{ 
+                  background: selectedQRTemplate.style.background,
+                  color: selectedQRTemplate.style.foreground 
+                }}
+              >
+                <div className="text-center space-y-4">
+                  {cardData.name && (
+                    <h4 className="font-semibold">{cardData.name}</h4>
+                  )}
+                  <QRCodeSVG
+                    value={vCardData}
+                    size={200}
+                    bgColor={selectedQRTemplate.style.background}
+                    fgColor={selectedQRTemplate.style.foreground}
+                    level="M"
+                    includeMargin={false}
+                  />
+                  <p className="text-sm">Scan to Connect</p>
+                </div>
               </div>
-              <Button className="w-full" variant="outline">
-                Download QR Code
+              <Button 
+                onClick={handleDownload} 
+                className="w-full gap-2"
+                variant="outline"
+              >
+                <Download className="h-4 w-4" />
+                Download Card
               </Button>
             </div>
 
@@ -156,6 +203,7 @@ END:VCARD`;
               value={vCardData}
               onSelectTemplate={setSelectedQRTemplate}
               selectedTemplate={selectedQRTemplate}
+              userName={cardData.name}
             />
           </div>
         </div>

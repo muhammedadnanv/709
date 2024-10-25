@@ -46,10 +46,11 @@ const qrTemplates = generateQRTemplates();
 interface QRCodeTemplatesProps {
   value: string;
   onSelectTemplate: (template: QRTemplate) => void;
-  selectedTemplate?: QRTemplate;
+  selectedTemplate: QRTemplate;
+  userName?: string;
 }
 
-const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate }: QRCodeTemplatesProps) => {
+const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }: QRCodeTemplatesProps) => {
   return (
     <Card className="p-4">
       <h3 className="font-semibold mb-4">Choose QR Code Style</h3>
@@ -59,12 +60,13 @@ const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate }: QRCodeTe
             <Button
               key={template.id}
               variant="outline"
-              className={`h-32 p-2 ${
+              className={`h-40 p-2 ${
                 selectedTemplate?.id === template.id ? "ring-2 ring-primary" : ""
               }`}
               onClick={() => onSelectTemplate(template)}
             >
-              <div className="w-full h-full flex items-center justify-center" style={{ background: template.style.background }}>
+              <div className="w-full h-full flex flex-col items-center justify-center space-y-2 rounded-lg" 
+                   style={{ background: template.style.background }}>
                 <QRCodeSVG
                   value={value}
                   size={80}
@@ -73,6 +75,9 @@ const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate }: QRCodeTe
                   level="M"
                   includeMargin={false}
                 />
+                <span className="text-xs" style={{ color: template.style.foreground }}>
+                  {userName || 'Scan to Connect'}
+                </span>
               </div>
             </Button>
           ))}
