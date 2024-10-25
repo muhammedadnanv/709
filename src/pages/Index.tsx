@@ -84,6 +84,46 @@ END:VCARD`;
     });
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        // Generate image for sharing
+        if (qrCodeRef.current) {
+          const canvas = await html2canvas(qrCodeRef.current);
+          const blob = await new Promise<Blob>((resolve) => 
+            canvas.toBlob((blob) => resolve(blob!), 'image/png')
+          );
+          const file = new File([blob], 'digital-card.png', { type: 'image/png' });
+
+          await navigator.share({
+            title: `${cardData.name}'s Digital Card`,
+            text: 'Check out my digital business card!',
+            files: [file]
+          });
+
+          toast({
+            title: "Success!",
+            description: "Your card has been shared successfully.",
+          });
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          toast({
+            title: "Error",
+            description: "Unable to share the card. Try saving and sharing manually.",
+            variant: "destructive",
+          });
+        }
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      toast({
+        title: "Info",
+        description: "Please use the Save button and share the saved file manually.",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm dark:bg-gray-950/80">
@@ -106,7 +146,11 @@ END:VCARD`;
                       <Save className="h-4 w-4" />
                       Save
                     </Button>
-                    <Button variant="outline" className="w-full gap-2">
+                    <Button 
+                      variant="outline" 
+                      className="w-full gap-2"
+                      onClick={handleShare}
+                    >
                       <Share2 className="h-4 w-4" />
                       Share
                     </Button>
@@ -132,7 +176,11 @@ END:VCARD`;
                 <Save className="h-4 w-4" />
                 Save
               </Button>
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={handleShare}
+              >
                 <Share2 className="h-4 w-4" />
                 Share
               </Button>
