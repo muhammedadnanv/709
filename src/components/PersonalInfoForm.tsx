@@ -9,12 +9,7 @@ import {
 } from "@/components/ui/select";
 import { CardData } from "@/hooks/useCardData";
 import { useToast } from "@/hooks/use-toast";
-
-interface PersonalInfoFormProps {
-  cardData: CardData;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSelectChange: (field: keyof CardData, value: string) => void;
-}
+import { useCallback, memo } from "react";
 
 const PersonalInfoFields = [
   {
@@ -54,6 +49,41 @@ const PersonalInfoFields = [
   },
 ];
 
+const FormField = memo(({ 
+  field, 
+  value, 
+  onValidatedInput 
+}: { 
+  field: typeof PersonalInfoFields[0],
+  value: string,
+  onValidatedInput: (e: React.ChangeEvent<HTMLInputElement>) => void
+}) => (
+  <div className="space-y-2">
+    <Label 
+      htmlFor={field.id} 
+      className="text-sm font-medium flex items-center gap-1"
+    >
+      {field.label}
+      {field.required && (
+        <span className="text-destructive">*</span>
+      )}
+    </Label>
+    <Input
+      id={field.id}
+      name={field.id}
+      value={value}
+      onChange={onValidatedInput}
+      placeholder={field.placeholder}
+      className="h-10 text-base transition-colors focus:ring-2 focus:ring-ring"
+      required={field.required}
+      maxLength={field.maxLength}
+      pattern={field.pattern}
+      title={field.title}
+    />
+  </div>
+));
+FormField.displayName = "FormField";
+
 export const PersonalInfoForm = ({ 
   cardData, 
   handleInputChange, 
@@ -61,20 +91,20 @@ export const PersonalInfoForm = ({
 }: PersonalInfoFormProps) => {
   const { toast } = useToast();
 
-  const handleValidatedInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, validity, title } = e.target;
+  const handleValidatedInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { validity, title } = e.target;
     
     if (!validity.valid) {
       toast({
         title: "Invalid Input",
-        description: title || `Please check the ${name} field`,
+        description: title || `Please check the field`,
         variant: "destructive",
       });
       return;
     }
     
     handleInputChange(e);
-  };
+  }, [handleInputChange, toast]);
 
   return (
     <div className="space-y-8">
@@ -85,29 +115,12 @@ export const PersonalInfoForm = ({
 
       <div className="grid gap-6">
         {PersonalInfoFields.map((field) => (
-          <div key={field.id} className="space-y-2">
-            <Label 
-              htmlFor={field.id} 
-              className="text-sm font-medium flex items-center gap-1"
-            >
-              {field.label}
-              {field.required && (
-                <span className="text-destructive">*</span>
-              )}
-            </Label>
-            <Input
-              id={field.id}
-              name={field.id}
-              value={cardData[field.id as keyof CardData] || ''}
-              onChange={handleValidatedInput}
-              placeholder={field.placeholder}
-              className="h-10 text-base transition-colors focus:ring-2 focus:ring-ring"
-              required={field.required}
-              maxLength={field.maxLength}
-              pattern={field.pattern}
-              title={field.title}
-            />
-          </div>
+          <FormField
+            key={field.id}
+            field={field}
+            value={cardData[field.id as keyof CardData] || ''}
+            onValidatedInput={handleValidatedInput}
+          />
         ))}
 
         <div className="space-y-2">
