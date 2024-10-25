@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
-import { CardData } from "@/types/qrTypes";
+import { CardData } from "@/hooks/useCardData";
 import { useToast } from "@/components/ui/use-toast";
 
 interface ContactInfoFormProps {

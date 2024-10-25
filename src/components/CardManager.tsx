@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import CardEditor from "./CardEditor";
-import { CardData } from "@/types/qrTypes";
+import { CardData } from "@/hooks/useCardData";
 import { Link } from "react-router-dom";
 
 export const CardManager = () => {

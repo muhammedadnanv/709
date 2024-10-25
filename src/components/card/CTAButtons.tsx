@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
-import { CardData } from "@/types/qrTypes";
+import { CardData } from "@/hooks/useCardData";
 
 interface CTAButtonsProps {
   cardData: CardData;

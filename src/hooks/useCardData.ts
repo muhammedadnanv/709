@@ -1,10 +1,32 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { CustomButton, CardData } from '@/types/qrTypes';  // Import from types file
+
+export interface CustomButton {
+  id: string;
+  label: string;
+  url: string;
+}
+
+export interface CardData {
+  id: string;
+  name: string;
+  title: string;
+  phone: string;
+  email: string;
+  website: string;
+  linkedin: string;
+  instagram: string;
+  facebook: string;
+  company?: string;
+  department?: string;
+  pronouns?: string;
+  location?: string;
+  customButtons: CustomButton[];
+}
 
 const STORAGE_KEY = 'splex-card-data';
 
 const initialCardData: CardData = {
-  id: crypto.randomUUID(),  // Ensure id is always present
+  id: crypto.randomUUID(),
   name: "",
   title: "",
   phone: "",
