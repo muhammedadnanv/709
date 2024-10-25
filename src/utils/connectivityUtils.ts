@@ -12,6 +12,7 @@ export const generateVCard = (cardData: any) => {
     cardData?.linkedin && `URL;type=LinkedIn:${cardData.linkedin}`,
     cardData?.instagram && `URL;type=Instagram:${cardData.instagram}`,
     cardData?.facebook && `URL;type=Facebook:${cardData.facebook}`,
+    'NOTE:Professional Networking Contact',
     'END:VCARD'
   ].filter(Boolean).join('\n');
   
@@ -22,18 +23,28 @@ export const generateWiFiConfig = (ssid: string, password: string) =>
   `WIFI:T:WPA;S:${ssid};P:${password};;`;
 
 export const generateBluetoothConfig = (deviceName: string, mac: string) =>
-  `bluetooth:${deviceName}|${mac}`;
+  `BT:DN:${deviceName};MAC:${mac};;`;
 
 export const generateQRData = (cardData: any, connectivityData: any, isPremium: boolean) => {
-  const data = {
-    vcard: generateVCard(cardData),
-    ...(isPremium && connectivityData?.wifi?.ssid && {
-      wifi: generateWiFiConfig(connectivityData.wifi.ssid, connectivityData.wifi.password)
-    }),
-    ...(isPremium && connectivityData?.bluetooth?.deviceName && {
-      bluetooth: generateBluetoothConfig(connectivityData.bluetooth.deviceName, connectivityData.bluetooth.mac)
-    })
-  };
-
-  return JSON.stringify(data);
+  const vcard = generateVCard(cardData);
+  
+  let qrData = vcard;
+  
+  if (isPremium) {
+    if (connectivityData?.wifi?.ssid) {
+      qrData += '\n\n' + generateWiFiConfig(
+        connectivityData.wifi.ssid,
+        connectivityData.wifi.password
+      );
+    }
+    
+    if (connectivityData?.bluetooth?.deviceName) {
+      qrData += '\n\n' + generateBluetoothConfig(
+        connectivityData.bluetooth.deviceName,
+        connectivityData.bluetooth.mac
+      );
+    }
+  }
+  
+  return qrData;
 };
