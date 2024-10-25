@@ -26,7 +26,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <header className="border-b bg-white dark:bg-gray-950">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-primary">CardCraft</h1>
+          <h1 className="text-2xl font-bold text-primary">Splex</h1>
           <Button variant="outline" className="gap-2">
             <User className="h-4 w-4" />
             Sign In
