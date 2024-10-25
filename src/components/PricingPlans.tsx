@@ -7,10 +7,16 @@ export const PricingPlans = () => {
   const { toast } = useToast();
 
   const handleSubscribe = (plan: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${plan} subscription will be available shortly.`,
-    });
+    if (plan === 'Enterprise') {
+      // WhatsApp redirect with predefined message
+      const whatsappUrl = `https://wa.me/919656778508?text=Hi,%20I'm%20interested%20in%20the%20Enterprise%20plan`;
+      window.open(whatsappUrl, '_blank');
+    } else {
+      toast({
+        title: "Coming Soon",
+        description: `${plan} subscription will be available shortly.`,
+      });
+    }
   };
 
   return (
