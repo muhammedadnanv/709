@@ -9,6 +9,10 @@ export interface CardData {
   linkedin: string;
   instagram: string;
   facebook: string;
+  company?: string;
+  department?: string;
+  pronouns?: string;
+  location?: string;
 }
 
 const STORAGE_KEY = 'splex-card-data';
@@ -26,6 +30,10 @@ export const useCardData = () => {
         linkedin: "",
         instagram: "",
         facebook: "",
+        company: "",
+        department: "",
+        pronouns: "",
+        location: "",
       };
     } catch (error) {
       console.error('Error loading card data:', error);
@@ -38,6 +46,10 @@ export const useCardData = () => {
         linkedin: "",
         instagram: "",
         facebook: "",
+        company: "",
+        department: "",
+        pronouns: "",
+        location: "",
       };
     }
   });
@@ -55,23 +67,9 @@ export const useCardData = () => {
     setCardData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const resetCardData = () => {
-    setCardData({
-      name: "",
-      title: "",
-      phone: "",
-      email: "",
-      website: "",
-      linkedin: "",
-      instagram: "",
-      facebook: "",
-    });
-  };
-
   return {
     cardData,
     setCardData,
     handleInputChange,
-    resetCardData,
   };
 };

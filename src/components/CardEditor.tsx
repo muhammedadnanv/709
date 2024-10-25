@@ -18,6 +18,10 @@ const CardEditor = ({ onSave }: { onSave: () => void }) => {
   const { cardData, handleInputChange } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
+  const handleSelectChange = (field: string, value: string) => {
+    setCardData((prev: any) => ({ ...prev, [field]: value }));
+  };
+
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
     id: 1,
     name: "Default",
@@ -44,7 +48,11 @@ const CardEditor = ({ onSave }: { onSave: () => void }) => {
               profileImage={profileImage}
               setProfileImage={setProfileImage}
             />
-            <PersonalInfoForm cardData={cardData} handleInputChange={handleInputChange} />
+            <PersonalInfoForm 
+              cardData={cardData} 
+              handleInputChange={handleInputChange}
+              handleSelectChange={handleSelectChange}
+            />
             <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
             <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
           </div>
