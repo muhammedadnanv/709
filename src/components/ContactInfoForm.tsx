@@ -2,6 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
 import { CardData } from "@/hooks/useCardData";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ContactInfoFormProps {
   cardData: CardData;
@@ -9,37 +10,55 @@ interface ContactInfoFormProps {
 }
 
 export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoFormProps) => {
+  const { toast } = useToast();
+
+  const handleValidatedInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { validity } = e.target;
+    
+    if (!validity.valid) {
+      toast({
+        title: "Invalid Input",
+        description: e.target.title,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    handleInputChange(e);
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Contact Information</h3>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="phone" className="text-base">Phone Number</Label>
+          <Label htmlFor="phone" className="text-base">Phone Number*</Label>
           <div className="relative">
             <Phone className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
             <Input
               id="phone"
               name="phone"
               value={cardData.phone}
-              onChange={handleInputChange}
+              onChange={handleValidatedInput}
               className="pl-10 h-12 text-base"
               placeholder="+1 (555) 000-0000"
               type="tel"
-              pattern="[0-9+\-\(\)\s]*"
-              title="Please enter a valid phone number"
+              required
+              pattern="^\+?[1-9]\d{1,14}$"
+              title="Please enter a valid phone number (E.164 format recommended, e.g., +1234567890)"
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-base">Email Address</Label>
+          <Label htmlFor="email" className="text-base">Email Address*</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
             <Input
               id="email"
               name="email"
               value={cardData.email}
-              onChange={handleInputChange}
+              onChange={handleValidatedInput}
               className="pl-10 h-12 text-base"
               placeholder="john@example.com"
               type="email"
@@ -58,12 +77,12 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               id="website"
               name="website"
               value={cardData.website}
-              onChange={handleInputChange}
+              onChange={handleValidatedInput}
               className="pl-10 h-12 text-base"
               placeholder="https://example.com"
               type="url"
               pattern="https?://.+"
-              title="Please include http:// or https://"
+              title="Please include http:// or https:// in your website URL"
             />
           </div>
         </div>
@@ -76,12 +95,12 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               id="linkedin"
               name="linkedin"
               value={cardData.linkedin}
-              onChange={handleInputChange}
+              onChange={handleValidatedInput}
               className="pl-10 h-12 text-base"
               placeholder="https://linkedin.com/in/username"
               type="url"
               pattern="https?://(www\.)?linkedin\.com/.*"
-              title="Please enter a valid LinkedIn URL"
+              title="Please enter a valid LinkedIn URL (https://linkedin.com/...)"
             />
           </div>
         </div>
@@ -94,12 +113,12 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               id="instagram"
               name="instagram"
               value={cardData.instagram}
-              onChange={handleInputChange}
+              onChange={handleValidatedInput}
               className="pl-10 h-12 text-base"
               placeholder="https://instagram.com/username"
               type="url"
               pattern="https?://(www\.)?instagram\.com/.*"
-              title="Please enter a valid Instagram URL"
+              title="Please enter a valid Instagram URL (https://instagram.com/...)"
             />
           </div>
         </div>
@@ -112,12 +131,12 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               id="facebook"
               name="facebook"
               value={cardData.facebook}
-              onChange={handleInputChange}
+              onChange={handleValidatedInput}
               className="pl-10 h-12 text-base"
               placeholder="https://facebook.com/username"
               type="url"
               pattern="https?://(www\.)?facebook\.com/.*"
-              title="Please enter a valid Facebook URL"
+              title="Please enter a valid Facebook URL (https://facebook.com/...)"
             />
           </div>
         </div>

@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CardData } from "@/hooks/useCardData";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PersonalInfoFormProps {
   cardData: CardData;
@@ -16,6 +17,23 @@ interface PersonalInfoFormProps {
 }
 
 export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChange }: PersonalInfoFormProps) => {
+  const { toast } = useToast();
+
+  const handleValidatedInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, validity } = e.target;
+    
+    if (!validity.valid) {
+      toast({
+        title: "Invalid Input",
+        description: e.target.title,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    handleInputChange(e);
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Personal Information</h3>
@@ -26,14 +44,14 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             id="name"
             name="name"
             value={cardData.name}
-            onChange={handleInputChange}
+            onChange={handleValidatedInput}
             placeholder="John Doe"
             className="h-12 text-base"
             required
             minLength={2}
             maxLength={100}
             pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$"
-            title="Please enter a valid name"
+            title="Please enter a valid name (2-100 characters, letters and basic punctuation only)"
           />
         </div>
 
@@ -61,12 +79,13 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             id="title"
             name="title"
             value={cardData.title}
-            onChange={handleInputChange}
+            onChange={handleValidatedInput}
             placeholder="Software Engineer"
             className="h-12 text-base"
             required
             minLength={2}
             maxLength={100}
+            title="Please enter your professional title (2-100 characters)"
           />
         </div>
 
@@ -76,10 +95,11 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             id="company"
             name="company"
             value={cardData.company}
-            onChange={handleInputChange}
+            onChange={handleValidatedInput}
             placeholder="Company Name"
             className="h-12 text-base"
             maxLength={100}
+            title="Company name (max 100 characters)"
           />
         </div>
 
@@ -89,10 +109,11 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             id="department"
             name="department"
             value={cardData.department}
-            onChange={handleInputChange}
+            onChange={handleValidatedInput}
             placeholder="Engineering"
             className="h-12 text-base"
             maxLength={100}
+            title="Department name (max 100 characters)"
           />
         </div>
 
@@ -102,10 +123,11 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
             id="location"
             name="location"
             value={cardData.location}
-            onChange={handleInputChange}
+            onChange={handleValidatedInput}
             placeholder="City, Country"
             className="h-12 text-base"
             maxLength={200}
+            title="Location (max 200 characters)"
           />
         </div>
       </div>
