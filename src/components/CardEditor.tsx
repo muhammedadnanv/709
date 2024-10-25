@@ -7,9 +7,11 @@ import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
 import { ProfileImageUpload } from "./ProfileImageUpload";
-import { useCardData, CardData, CustomButton } from "@/hooks/useCardData";
+import { useCardData, CardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
+import { CardAnalytics } from "./card/CardAnalytics";
+import { CardSharing } from "./card/CardSharing";
 import { generateVCardData } from "@/utils/vcard";
 import { CustomButtonsManager } from "./CustomButtonsManager";
 
@@ -42,6 +44,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
   };
 
   const vCardData = generateVCardData(cardData, hasWirelessConnectivity);
+  const cardUrl = `${window.location.origin}/card/${cardData.id}`;
 
   const handleSaveClick = () => {
     onSave(cardData);
@@ -49,52 +52,56 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
 
   return (
     <DndContext>
-      <Card className="bg-white dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="space-y-6">
-            <div className="sticky top-4">
-              <ProfileImageUpload 
-                userName={cardData.name} 
-                profileImage={profileImage}
-                setProfileImage={setProfileImage}
-              />
-              <PersonalInfoForm 
-                cardData={cardData} 
-                handleInputChange={handleInputChange}
-                handleSelectChange={handleSelectChange}
-              />
-              <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
-              <CustomButtonsManager
-                buttons={cardData.customButtons || []}
-                onChange={handleCustomButtonsChange}
-              />
-              <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="lg:sticky lg:top-4">
-              <h3 className="text-lg font-semibold mb-4">Your Digital Card</h3>
-              <div ref={qrCodeRef} className="bg-white dark:bg-gray-900 rounded-lg shadow-sm">
-                <CardPreview 
-                  cardData={cardData}
+      <div className="space-y-6">
+        <Card className="bg-white dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="space-y-6">
+              <div className="sticky top-4">
+                <ProfileImageUpload 
+                  userName={cardData.name} 
                   profileImage={profileImage}
-                  vCardData={vCardData}
-                  qrStyle={selectedQRTemplate.style}
+                  setProfileImage={setProfileImage}
+                />
+                <PersonalInfoForm 
+                  cardData={cardData} 
+                  handleInputChange={handleInputChange}
+                  handleSelectChange={handleSelectChange}
+                />
+                <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
+                <CustomButtonsManager
+                  buttons={cardData.customButtons || []}
+                  onChange={handleCustomButtonsChange}
+                />
+                <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="lg:sticky lg:top-4">
+                <h3 className="text-lg font-semibold mb-4">Your Digital Card</h3>
+                <div ref={qrCodeRef} className="bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+                  <CardPreview 
+                    cardData={cardData}
+                    profileImage={profileImage}
+                    vCardData={vCardData}
+                    qrStyle={selectedQRTemplate.style}
+                  />
+                </div>
+                <CardActions qrCodeRef={qrCodeRef} cardData={cardData} />
+                <CardAnalytics cardId={cardData.id} />
+                <CardSharing cardId={cardData.id} cardUrl={cardUrl} />
+
+                <QRCodeTemplates
+                  value={vCardData}
+                  onSelectTemplate={setSelectedQRTemplate}
+                  selectedTemplate={selectedQRTemplate}
+                  userName={cardData.name}
                 />
               </div>
-              <CardActions qrCodeRef={qrCodeRef} cardData={cardData} />
-
-              <QRCodeTemplates
-                value={vCardData}
-                onSelectTemplate={setSelectedQRTemplate}
-                selectedTemplate={selectedQRTemplate}
-                userName={cardData.name}
-              />
             </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </DndContext>
   );
 };
