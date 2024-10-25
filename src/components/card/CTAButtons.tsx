@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Globe, Mail, Phone, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { CardData } from "@/hooks/useCardData";
 
 interface CTAButtonsProps {
@@ -14,7 +14,7 @@ export const CTAButtons = ({ cardData, textColor }: CTAButtonsProps) => {
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      {/* Custom buttons */}
+      {/* Only show custom buttons */}
       {cardData.customButtons?.map((button) => (
         <Button
           key={button.id}
@@ -27,40 +27,6 @@ export const CTAButtons = ({ cardData, textColor }: CTAButtonsProps) => {
           {button.label}
         </Button>
       ))}
-
-      {cardData.website && (
-        <Button
-          variant="outline"
-          className="w-full gap-2"
-          style={{ color: textColor, borderColor: textColor }}
-          onClick={() => handleClick(cardData.website)}
-        >
-          <Globe className="h-4 w-4" />
-          Visit Website
-        </Button>
-      )}
-      {cardData.email && (
-        <Button
-          variant="outline"
-          className="w-full gap-2"
-          style={{ color: textColor, borderColor: textColor }}
-          onClick={() => handleClick(`mailto:${cardData.email}`)}
-        >
-          <Mail className="h-4 w-4" />
-          Send Email
-        </Button>
-      )}
-      {cardData.phone && (
-        <Button
-          variant="outline"
-          className="w-full gap-2"
-          style={{ color: textColor, borderColor: textColor }}
-          onClick={() => handleClick(`tel:${cardData.phone}`)}
-        >
-          <Phone className="h-4 w-4" />
-          Call Now
-        </Button>
-      )}
     </div>
   );
 };
