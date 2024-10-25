@@ -46,7 +46,7 @@ const templates = generateTemplates();
 const CardTemplates = ({ onSelectTemplate }: { onSelectTemplate: (template: Template) => void }) => {
   return (
     <Card className="p-4">
-      <h3 className="font-semibold mb-4">Choose a Template</h3>
+      <h3 className="font-semibold mb-4">Choose QR Code Style</h3>
       <ScrollArea className="h-[300px] pr-4">
         <div className="grid grid-cols-2 gap-4">
           {templates.map((template) => (
