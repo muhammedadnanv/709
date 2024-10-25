@@ -2,6 +2,8 @@ import { QRCodeSVG } from "qrcode.react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { CardData } from "@/hooks/useCardData";
 import { WalletActions } from "./WalletActions";
+import { CTAButtons } from "./CTAButtons";
+import { Linkedin, Instagram, Facebook } from "lucide-react";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -16,7 +18,8 @@ interface CardPreviewProps {
 export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: CardPreviewProps) => {
   return (
     <div className="space-y-4">
-      <div className="aspect-[3/4] rounded-lg flex flex-col items-center justify-between p-4 sm:p-8 border shadow-lg mx-auto max-w-sm"
+      <div 
+        className="aspect-[3/4] rounded-lg flex flex-col items-center justify-between p-4 sm:p-8 border shadow-lg mx-auto max-w-sm"
         style={{ 
           background: qrStyle.background,
           color: qrStyle.foreground 
@@ -35,30 +38,29 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
               {cardData.title && (
                 <p className="text-sm opacity-80">{cardData.title}</p>
               )}
+              {cardData.company && (
+                <p className="text-sm opacity-80">{cardData.company}</p>
+              )}
             </div>
           )}
           
-          <div className="grid grid-cols-1 gap-3 w-full px-4">
-            {cardData.phone && (
-              <span className="text-sm truncate">{cardData.phone}</span>
-            )}
-            {cardData.email && (
-              <span className="text-sm truncate">{cardData.email}</span>
-            )}
-            {cardData.website && (
-              <span className="text-sm truncate">{cardData.website}</span>
-            )}
-          </div>
+          <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
 
           <div className="flex justify-center gap-4">
             {cardData.linkedin && (
-              <span className="text-sm">LinkedIn</span>
+              <a href={cardData.linkedin} target="_blank" rel="noopener noreferrer" className="hover:opacity-80">
+                <Linkedin className="h-5 w-5" style={{ color: qrStyle.foreground }} />
+              </a>
             )}
             {cardData.instagram && (
-              <span className="text-sm">Instagram</span>
+              <a href={cardData.instagram} target="_blank" rel="noopener noreferrer" className="hover:opacity-80">
+                <Instagram className="h-5 w-5" style={{ color: qrStyle.foreground }} />
+              </a>
             )}
             {cardData.facebook && (
-              <span className="text-sm">Facebook</span>
+              <a href={cardData.facebook} target="_blank" rel="noopener noreferrer" className="hover:opacity-80">
+                <Facebook className="h-5 w-5" style={{ color: qrStyle.foreground }} />
+              </a>
             )}
           </div>
 
