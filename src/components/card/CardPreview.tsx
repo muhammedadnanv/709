@@ -17,7 +17,6 @@ interface CardPreviewProps {
 }
 
 export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: CardPreviewProps) => {
-  // Calculate expiration date (2 years from creation)
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
@@ -32,7 +31,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
   return (
     <div className="space-y-4">
       <div 
-        className="aspect-[3/4] rounded-lg flex flex-col items-center justify-between p-4 sm:p-8 border shadow-lg mx-auto max-w-sm dark:bg-gray-800 dark:border-gray-700"
+        className="w-full aspect-[2/3.5] rounded-lg flex flex-col items-center justify-between p-4 sm:p-8 border shadow-lg mx-auto max-w-sm dark:bg-gray-800 dark:border-gray-700"
         style={{ 
           background: qrStyle.background,
           color: qrStyle.foreground 
@@ -42,7 +41,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           {cardData.name && (
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <Avatar className="w-24 h-24">
+                <Avatar className="w-20 h-20">
                   <AvatarImage src={profileImage || ""} alt={`${cardData.name}'s profile`} />
                   <AvatarFallback className="text-xl dark:bg-gray-700 dark:text-gray-200">
                     {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
@@ -104,7 +103,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             <a href={vCardData.dataUrl} download={vCardData.downloadFilename}>
               <QRCodeSVG
                 value={vCardData.vcard}
-                size={Math.min(200, window.innerWidth * 0.4)}
+                size={Math.min(160, window.innerWidth * 0.3)}
                 bgColor={qrStyle.background}
                 fgColor={qrStyle.foreground}
                 level="M"
