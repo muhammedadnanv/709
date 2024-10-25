@@ -1,3 +1,5 @@
+import { CardData } from "@/types/qrTypes";
+
 export interface WalletPass {
   name: string;
   title: string;
@@ -8,28 +10,68 @@ export interface WalletPass {
   qrCode: string;
 }
 
-export const addToAppleWallet = async (cardData: WalletPass) => {
-  // In a real implementation, this would integrate with Apple Wallet API
-  // For now, we'll simulate the process
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        message: "Card added to Apple Wallet"
-      });
-    }, 1000);
-  });
+const APPLE_WALLET_API_URL = import.meta.env.VITE_APPLE_WALLET_API_URL;
+const GOOGLE_WALLET_API_URL = import.meta.env.VITE_GOOGLE_WALLET_API_URL;
+
+export const addToAppleWallet = async (cardData: CardData): Promise<void> => {
+  try {
+    const response = await fetch(APPLE_WALLET_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: cardData.name,
+        title: cardData.title,
+        company: cardData.company,
+        phone: cardData.phone,
+        email: cardData.email,
+        website: cardData.website,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add to Apple Wallet');
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'business-card.pkpass';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    throw new Error('Failed to add to Apple Wallet');
+  }
 };
 
-export const addToGoogleWallet = async (cardData: WalletPass) => {
-  // In a real implementation, this would integrate with Google Wallet API
-  // For now, we'll simulate the process
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        message: "Card added to Google Wallet"
-      });
-    }, 1000);
-  });
+export const addToGoogleWallet = async (cardData: CardData): Promise<void> => {
+  try {
+    const response = await fetch(GOOGLE_WALLET_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: cardData.name,
+        title: cardData.title,
+        company: cardData.company,
+        phone: cardData.phone,
+        email: cardData.email,
+        website: cardData.website,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add to Google Wallet');
+    }
+
+    const data = await response.json();
+    window.location.href = data.saveUrl;
+  } catch (error) {
+    throw new Error('Failed to add to Google Wallet');
+  }
 };

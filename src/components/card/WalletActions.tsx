@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Wallet, Loader2, Watch, Smartphone, Nfc } from "lucide-react";
 import { useState } from "react";
-import { addToAppleWallet, addToGoogleWallet, WalletPass } from "@/utils/walletIntegration";
-import { CardData } from "@/hooks/useCardData";
+import { addToAppleWallet, addToGoogleWallet } from "@/utils/walletIntegration";
+import { CardData } from "@/types/qrTypes";
 import { Card } from "@/components/ui/card";
 
 interface WalletActionsProps {
@@ -11,28 +11,16 @@ interface WalletActionsProps {
   qrCodeUrl: string;
 }
 
-export const WalletActions = ({ cardData, qrCodeUrl }: WalletActionsProps) => {
+export const WalletActions = ({ cardData }: WalletActionsProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const prepareWalletPass = (): WalletPass => ({
-    name: cardData.name,
-    title: cardData.title,
-    company: cardData.company || "",
-    phone: cardData.phone,
-    email: cardData.email,
-    website: cardData.website,
-    qrCode: qrCodeUrl,
-  });
-
   const handleAddToWallet = async (walletType: 'apple' | 'google') => {
     setIsLoading(true);
-    const pass = prepareWalletPass();
-
     try {
       await (walletType === 'apple' 
-        ? addToAppleWallet(pass) 
-        : addToGoogleWallet(pass));
+        ? addToAppleWallet(cardData) 
+        : addToGoogleWallet(cardData));
 
       toast({
         title: "Success!",
