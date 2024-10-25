@@ -172,7 +172,7 @@ END:VCARD`;
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">QR Code Preview</h3>
+              <h3 className="text-lg font-semibold">Contact Card QR Code</h3>
               <div className="aspect-square bg-white rounded-lg flex items-center justify-center border">
                 <QRCodeSVG value={vCardData} size={200} />
               </div>
