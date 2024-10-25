@@ -9,13 +9,21 @@ export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: b
 VERSION:3.0
 N:${lastName};${firstName};;;
 FN:${cardData.name}
-TITLE:${cardData.title}
-TEL;TYPE=CELL:${cardData.phone}
-EMAIL:${cardData.email}
-URL:${cardData.website}
-URL;type=LinkedIn:${cardData.linkedin}
-URL;type=Instagram:${cardData.instagram}
-URL;type=Facebook:${cardData.facebook}`;
+TITLE:${cardData.title}`;
+
+  // Only add company and department if they exist
+  if (cardData.company) {
+    vcard += `\nORG:${cardData.company}`;
+  }
+  if (cardData.department) {
+    vcard += `\nDEPARTMENT:${cardData.department}`;
+  }
+  if (cardData.pronouns) {
+    vcard += `\nNOTE:Pronouns: ${cardData.pronouns}`;
+  }
+  if (cardData.location) {
+    vcard += `\nADR:;;${cardData.location};;;;`;
+  }
 
   if (hasWirelessConnectivity) {
     vcard += '\nX-WIRELESS-ENABLED:true';
