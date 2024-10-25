@@ -20,8 +20,8 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
 
     if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: "Error",
-        description: "Image size should be less than 5MB",
+        title: "Image too large",
+        description: "Please choose an image smaller than 5MB",
         variant: "destructive",
       });
       return;
@@ -30,8 +30,8 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: "Error",
-        description: "Please upload a valid image file (JPEG, PNG, or GIF)",
+        title: "Unsupported file type",
+        description: "Please upload a JPEG, PNG, or GIF image",
         variant: "destructive",
       });
       return;
@@ -44,16 +44,16 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
       setProfileImage(e.target?.result as string);
       setIsLoading(false);
       toast({
-        title: "Success",
-        description: "Profile picture updated successfully",
+        title: "Success!",
+        description: "Your profile picture has been updated",
       });
     };
 
     reader.onerror = () => {
       setIsLoading(false);
       toast({
-        title: "Error",
-        description: "Failed to upload image. Please try again.",
+        title: "Upload failed",
+        description: "Please try uploading your image again",
         variant: "destructive",
       });
     };
@@ -63,9 +63,9 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <Avatar className="w-32 h-32">
-        <AvatarImage src={profileImage || ""} alt="Profile" />
-        <AvatarFallback className="text-lg">
+      <Avatar className="w-32 h-32 border-2 border-primary/10">
+        <AvatarImage src={profileImage || ""} alt={`${userName}'s profile`} />
+        <AvatarFallback className="text-lg bg-primary/5">
           {userName ? userName.charAt(0).toUpperCase() : "U"}
         </AvatarFallback>
       </Avatar>
@@ -75,11 +75,12 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
         onChange={handleImageUpload}
         accept="image/jpeg,image/png,image/gif"
         className="hidden"
+        aria-label="Upload profile picture"
       />
       <Button 
         variant="outline" 
         onClick={() => fileInputRef.current?.click()}
-        className="gap-2"
+        className="gap-2 w-full sm:w-auto"
         disabled={isLoading}
       >
         {isLoading ? (
@@ -89,6 +90,9 @@ export const ProfileImageUpload = ({ userName, profileImage, setProfileImage }: 
         )}
         {isLoading ? "Uploading..." : "Upload Profile Picture"}
       </Button>
+      <p className="text-sm text-muted-foreground text-center">
+        Supported formats: JPEG, PNG, GIF (max 5MB)
+      </p>
     </div>
   );
 };
