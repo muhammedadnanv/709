@@ -4,7 +4,7 @@ import { CardData } from "@/hooks/useCardData";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
 import { Linkedin, Instagram, Facebook, Nfc, Clock, Calendar } from "lucide-react";
-import { format } from "date-fns";
+import { format, addYears } from "date-fns";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -17,10 +17,9 @@ interface CardPreviewProps {
 }
 
 export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: CardPreviewProps) => {
-  // Calculate expiration date (30 days from creation)
+  // Calculate expiration date (2 years from creation)
   const creationDate = new Date();
-  const expirationDate = new Date(creationDate);
-  expirationDate.setDate(expirationDate.getDate() + 30);
+  const expirationDate = addYears(creationDate, 2);
 
   return (
     <div className="space-y-4">
@@ -56,11 +55,11 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           <div className="flex justify-center gap-4 text-xs opacity-70" style={{ color: qrStyle.foreground }}>
             <div className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {format(creationDate, 'MMM d, yyyy')}
+              Created {format(creationDate, 'MMM d, yyyy')}
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              Expires {format(expirationDate, 'MMM d, yyyy')}
+              Valid until {format(expirationDate, 'MMM d, yyyy')}
             </div>
           </div>
 
