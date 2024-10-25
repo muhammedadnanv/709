@@ -16,7 +16,7 @@ export interface QRTemplate {
 }
 
 export interface CardData {
-  id?: string;
+  id: string;  // Changed from optional to required
   name: string;
   title: string;
   phone: string;
