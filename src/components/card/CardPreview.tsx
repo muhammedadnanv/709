@@ -35,8 +35,6 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         style={{ 
           background: qrStyle.background,
           color: qrStyle.foreground,
-          // 3.5 x 2 inches at 96 DPI = 336 x 192 pixels
-          // For larger screens, we scale up to 1.5x = 504 x 288 pixels
         }}
       >
         <div className="text-center space-y-2 w-full">
@@ -117,7 +115,12 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           
           <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
           
-          <p className="text-[8px] sm:text-[10px] opacity-70 mt-1" style={{ color: qrStyle.foreground }}>
+          <p className="text-[8px] sm:text-[10px] mt-1 animate-pulse"
+             style={{ 
+               color: '#FFD700',
+               textShadow: '0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 15px #FFD700',
+               opacity: 0.9
+             }}>
             Powered by: Splex
           </p>
         </div>
