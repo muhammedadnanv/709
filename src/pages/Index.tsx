@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import CardEditor from "@/components/CardEditor";
 import { Menu, Save, Share2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -8,115 +6,34 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useRef, useState } from "react";
-import html2canvas from "html2canvas";
-import { createGIF } from 'gifshot';
 import { AuthHeader } from "@/components/AuthHeader";
+import { CardManager } from "@/components/CardManager";
 
 const Index = () => {
   const { toast } = useToast();
-  const qrCodeRef = useRef<HTMLDivElement>(null);
-  const [cardData, setCardData] = useState({
-    name: "",
-    title: "",
-    phone: "",
-    email: "",
-    website: "",
-    linkedin: "",
-    instagram: "",
-    facebook: "",
-  });
-
-  const handleSave = () => {
-    // Generate vCard data with networking focus
-    const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${cardData?.name || ''}
-TITLE:${cardData?.title || ''}
-TEL:${cardData?.phone || ''}
-EMAIL:${cardData?.email || ''}
-URL:${cardData?.website || ''}
-URL;type=LinkedIn:${cardData?.linkedin || ''}
-URL;type=Instagram:${cardData?.instagram || ''}
-URL;type=Facebook:${cardData?.facebook || ''}
-NOTE:Professional Networking Contact
-END:VCARD`;
-
-    // Create and download vCard file
-    const vCardBlob = new Blob([vCardData], { type: 'text/vcard' });
-    const vCardUrl = window.URL.createObjectURL(vCardBlob);
-    const vCardLink = document.createElement('a');
-    vCardLink.href = vCardUrl;
-    vCardLink.download = `${cardData?.name || 'contact'}.vcf`;
-    vCardLink.click();
-    window.URL.revokeObjectURL(vCardUrl);
-
-    // Save as PNG
-    if (qrCodeRef.current) {
-      html2canvas(qrCodeRef.current).then((canvas) => {
-        // Save PNG
-        const pngUrl = canvas.toDataURL("image/png");
-        const pngLink = document.createElement("a");
-        pngLink.download = `${cardData?.name || 'qr-code'}-card.png`;
-        pngLink.href = pngUrl;
-        pngLink.click();
-
-        // Create and save GIF
-        createGIF({
-          images: [canvas.toDataURL()],
-          gifWidth: canvas.width,
-          gifHeight: canvas.height,
-          interval: 1,
-        }, (obj) => {
-          if (!obj.error) {
-            const gifLink = document.createElement('a');
-            gifLink.href = obj.image;
-            gifLink.download = `${cardData?.name || 'qr-code'}-card.gif`;
-            gifLink.click();
-          }
-        });
-      });
-    }
-
-    toast({
-      title: "Success!",
-      description: "Your digital networking card has been saved in multiple formats.",
-    });
-  };
 
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        // Generate image for sharing
-        if (qrCodeRef.current) {
-          const canvas = await html2canvas(qrCodeRef.current);
-          const blob = await new Promise<Blob>((resolve) => 
-            canvas.toBlob((blob) => resolve(blob!), 'image/png')
-          );
-          const file = new File([blob], 'digital-card.png', { type: 'image/png' });
+        await navigator.share({
+          title: "My Digital Cards",
+          text: "Check out my digital business cards!",
+        });
 
-          await navigator.share({
-            title: `${cardData.name}'s Digital Card`,
-            text: 'Check out my digital business card!',
-            files: [file]
-          });
-
-          toast({
-            title: "Success!",
-            description: "Your card has been shared successfully.",
-          });
-        }
+        toast({
+          title: "Success!",
+          description: "Your cards have been shared successfully.",
+        });
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
           toast({
             title: "Error",
-            description: "Unable to share the card. Try saving and sharing manually.",
+            description: "Unable to share the cards. Try saving and sharing manually.",
             variant: "destructive",
           });
         }
       }
     } else {
-      // Fallback for browsers that don't support Web Share API
       toast({
         title: "Info",
         description: "Please use the Save button and share the saved file manually.",
@@ -142,10 +59,6 @@ END:VCARD`;
                 <SheetContent>
                   <div className="flex flex-col gap-4 mt-8">
                     <AuthHeader />
-                    <Button onClick={handleSave} className="w-full gap-2">
-                      <Save className="h-4 w-4" />
-                      Save
-                    </Button>
                     <Button 
                       variant="outline" 
                       className="w-full gap-2"
@@ -162,20 +75,6 @@ END:VCARD`;
             {/* Desktop buttons */}
             <div className="hidden md:flex gap-2">
               <AuthHeader />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-2xl sm:text-3xl font-bold">Create Your Digital Networking Card</h2>
-            <div className="hidden md:flex gap-2 self-end sm:self-auto">
-              <Button onClick={handleSave} className="gap-2">
-                <Save className="h-4 w-4" />
-                Save
-              </Button>
               <Button 
                 variant="outline" 
                 className="gap-2"
@@ -186,8 +85,16 @@ END:VCARD`;
               </Button>
             </div>
           </div>
+        </div>
+      </header>
 
-          <CardEditor onSave={handleSave} />
+      <main className="container mx-auto px-4 py-8">
+        <div className="space-y-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-2xl sm:text-3xl font-bold">Your Digital Cards</h2>
+          </div>
+
+          <CardManager />
         </div>
       </main>
     </div>
