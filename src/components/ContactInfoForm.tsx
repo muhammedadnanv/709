@@ -1,16 +1,10 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Mail, Phone, Globe } from "lucide-react";
+import { CardData } from "@/hooks/useCardData";
 
 interface ContactInfoFormProps {
-  cardData: {
-    phone: string;
-    email: string;
-    website: string;
-    linkedin: string;
-    instagram: string;
-    facebook: string;
-  };
+  cardData: CardData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -44,6 +38,7 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               onChange={handleInputChange}
               className="pl-10 h-12 text-base"
               placeholder="john@example.com"
+              type="email"
             />
           </div>
         </div>
@@ -58,6 +53,7 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               onChange={handleInputChange}
               className="pl-10 h-12 text-base"
               placeholder="https://example.com"
+              type="url"
             />
           </div>
         </div>

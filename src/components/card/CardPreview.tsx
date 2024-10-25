@@ -24,7 +24,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         {cardData.name && (
           <div className="space-y-2">
             <Avatar className="w-24 h-24 mx-auto">
-              <AvatarImage src={profileImage || ""} alt="Profile" />
+              <AvatarImage src={profileImage || ""} alt={`${cardData.name}'s profile`} />
               <AvatarFallback className="text-xl">
                 {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
               </AvatarFallback>

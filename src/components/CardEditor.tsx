@@ -1,13 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { DndContext } from "@dnd-kit/core";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState } from "react";
 import QRCodeTemplates from "./QRCodeTemplates";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
 import { QRTemplate } from "@/types/qrTypes";
 import { ProfileImageUpload } from "./ProfileImageUpload";
-import { useCardData, CardData } from "@/hooks/useCardData";
+import { useCardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
@@ -18,7 +18,7 @@ interface CardEditorProps {
 
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
-  const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
+  const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState<boolean>(false);
   const { cardData, handleInputChange, handleSelectChange } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
@@ -33,10 +33,7 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
     },
   });
 
-  const vCardData = useMemo(() => 
-    generateVCardData(cardData, hasWirelessConnectivity), 
-    [cardData, hasWirelessConnectivity]
-  );
+  const vCardData = generateVCardData(cardData, hasWirelessConnectivity);
 
   return (
     <DndContext>
