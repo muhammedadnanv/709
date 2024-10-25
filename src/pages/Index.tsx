@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import CardEditor from "@/components/CardEditor";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { QrCode, Image, Share2, Save, User } from "lucide-react";
+import CardTemplates from "@/components/CardTemplates";
+import { Save, Share2, User } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -12,6 +12,13 @@ const Index = () => {
     toast({
       title: "Card saved successfully!",
       description: "You can find it in your dashboard.",
+    });
+  };
+
+  const handleSelectTemplate = (template: any) => {
+    toast({
+      title: "Template applied!",
+      description: `You selected ${template.name}`,
     });
   };
 
@@ -48,41 +55,7 @@ const Index = () => {
           </div>
 
           <div className="space-y-6">
-            <Card className="p-4">
-              <Tabs defaultValue="elements">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="elements">Elements</TabsTrigger>
-                  <TabsTrigger value="templates">Templates</TabsTrigger>
-                </TabsList>
-                <TabsContent value="elements" className="space-y-4 mt-4">
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <QrCode className="h-4 w-4" />
-                    Add QR Code
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <Image className="h-4 w-4" />
-                    Add Image
-                  </Button>
-                </TabsContent>
-                <TabsContent value="templates" className="mt-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="aspect-[3/2] rounded-lg bg-muted hover:bg-muted/80 cursor-pointer transition-colors"
-                      />
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </Card>
-
-            <Card className="p-4">
-              <h3 className="font-semibold mb-4">Preview QR Code</h3>
-              <div className="aspect-square bg-white rounded-lg flex items-center justify-center">
-                <QrCode className="h-32 w-32 text-muted-foreground" />
-              </div>
-            </Card>
+            <CardTemplates onSelectTemplate={handleSelectTemplate} />
           </div>
         </div>
       </main>
