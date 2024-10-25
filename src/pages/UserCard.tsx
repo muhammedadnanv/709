@@ -9,6 +9,7 @@ const fetchUserCard = async (userId: string): Promise<CardData> => {
   // In a real implementation, this would fetch from your API
   // For now, we'll return mock data
   return {
+    id: userId, // Added the id property using the userId parameter
     name: "John Doe",
     title: "Software Engineer",
     company: "Tech Corp",
