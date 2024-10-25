@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocation } from "react-router-dom";
 
 interface CardActionsProps {
   qrCodeRef: React.RefObject<HTMLDivElement>;
@@ -13,7 +12,6 @@ interface CardActionsProps {
 
 export const CardActions = ({ cardData }: CardActionsProps) => {
   const { toast } = useToast();
-  const location = useLocation();
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/c/${cardData.id}`;
