@@ -68,20 +68,14 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           </div>
 
           <div className="flex-1 flex items-center justify-center py-4">
-            <div className="relative">
-              <QRCodeSVG
-                value={vCardData}
-                size={Math.min(200, window.innerWidth * 0.4)}
-                bgColor={qrStyle.background}
-                fgColor={qrStyle.foreground}
-                level="M"
-                includeMargin={false}
-              />
-              <Nfc 
-                className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 h-4 w-4" 
-                style={{ color: qrStyle.foreground }}
-              />
-            </div>
+            <QRCodeSVG
+              value={vCardData}
+              size={Math.min(200, window.innerWidth * 0.4)}
+              bgColor={qrStyle.background}
+              fgColor={qrStyle.foreground}
+              level="M"
+              includeMargin={false}
+            />
           </div>
           <p className="text-sm dark:text-gray-300">Scan to Connect</p>
           
