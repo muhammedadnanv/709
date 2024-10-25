@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { QRTemplate } from "@/types/qrTypes";
+import { generateVCard, generateWiFiConfig, generateBluetoothConfig } from "@/utils/connectivityUtils";
 
 const generateQRTemplates = (): QRTemplate[] => {
   const layouts = ["modern", "classic", "minimal", "bold"] as const;
@@ -110,9 +111,38 @@ interface QRCodeTemplatesProps {
   onSelectTemplate: (template: QRTemplate) => void;
   selectedTemplate: QRTemplate;
   userName?: string;
+  connectivityData?: {
+    wifi?: { ssid: string; password: string };
+    bluetooth?: { deviceName: string; mac: string };
+  };
 }
 
-const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }: QRCodeTemplatesProps) => {
+const QRCodeTemplates = ({ 
+  value, 
+  onSelectTemplate, 
+  selectedTemplate, 
+  userName,
+  connectivityData 
+}: QRCodeTemplatesProps) => {
+  const getEnhancedQRValue = (baseValue: string) => {
+    const data = {
+      vcard: baseValue,
+      ...(connectivityData?.wifi && {
+        wifi: generateWiFiConfig(
+          connectivityData.wifi.ssid,
+          connectivityData.wifi.password
+        )
+      }),
+      ...(connectivityData?.bluetooth && {
+        bluetooth: generateBluetoothConfig(
+          connectivityData.bluetooth.deviceName,
+          connectivityData.bluetooth.mac
+        )
+      })
+    };
+    return JSON.stringify(data);
+  };
+
   return (
     <Card className="p-4">
       <h3 className="font-semibold mb-4">Choose from 440 QR Code Styles</h3>
@@ -130,11 +160,11 @@ const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }
               <div className="w-full h-full flex flex-col items-center justify-center space-y-2 rounded-lg" 
                    style={{ background: template.style.background }}>
                 <QRCodeSVG
-                  value={value}
+                  value={getEnhancedQRValue(value)}
                   size={80}
                   bgColor={template.style.background}
                   fgColor={template.style.foreground}
-                  level="M"
+                  level="H"
                   includeMargin={false}
                 />
                 <span className="text-xs" style={{ color: template.style.foreground }}>

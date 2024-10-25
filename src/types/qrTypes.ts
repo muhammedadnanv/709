@@ -8,3 +8,14 @@ export interface QRTemplate {
     layout: "modern" | "classic" | "minimal" | "bold";
   };
 }
+
+export interface ConnectivityData {
+  wifi?: {
+    ssid: string;
+    password: string;
+  };
+  bluetooth?: {
+    deviceName: string;
+    mac: string;
+  };
+}
