@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Lock, Palette } from "lucide-react";
+import { Lock, Palette, Clock } from "lucide-react";
 
 interface PremiumFeaturesProps {
   onUnlock: () => void;
@@ -21,15 +21,32 @@ interface PremiumFeaturesProps {
 const PremiumFeatures = ({ onUnlock }: PremiumFeaturesProps) => {
   const { toast } = useToast();
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
-  const handleUnlock = () => {
+  const handlePayment = () => {
     toast({
       title: "Payment Details",
       description: "UPI: adnanmuhammad4393@okicici - Please pay ₹699 to unlock premium features",
       duration: 10000,
     });
+    setIsPending(true);
+    toast({
+      title: "Payment Under Review",
+      description: "Your payment is being verified by admin. Features will be unlocked once approved.",
+      duration: 5000,
+    });
+  };
+
+  // This would typically be called by an admin through a separate interface
+  const handleAdminApproval = () => {
+    setIsPending(false);
     setIsUnlocked(true);
     onUnlock();
+    toast({
+      title: "Features Unlocked!",
+      description: "Custom branding features are now available.",
+      duration: 5000,
+    });
   };
 
   return (
@@ -47,15 +64,24 @@ const PremiumFeatures = ({ onUnlock }: PremiumFeaturesProps) => {
             disabled={isUnlocked}
           >
             <div className="flex items-center gap-2 w-full">
-              <Palette className="h-4 w-4 shrink-0" />
-              <span className="font-medium">Custom Branding</span>
+              {isPending ? (
+                <Clock className="h-4 w-4 shrink-0 animate-pulse" />
+              ) : (
+                <Palette className="h-4 w-4 shrink-0" />
+              )}
+              <span className="font-medium">
+                {isPending ? "Approval Pending" : "Custom Branding"}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
-              Add your logo and brand colors
+              {isPending 
+                ? "Your payment is being verified by admin"
+                : "Add your logo and brand colors"
+              }
             </p>
           </Button>
         </AlertDialogTrigger>
-        {!isUnlocked && (
+        {!isUnlocked && !isPending && (
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Unlock Premium Features</AlertDialogTitle>
@@ -66,7 +92,7 @@ const PremiumFeatures = ({ onUnlock }: PremiumFeaturesProps) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleUnlock}>Unlock Now</AlertDialogAction>
+              <AlertDialogAction onClick={handlePayment}>Make Payment</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         )}
@@ -78,6 +104,17 @@ const PremiumFeatures = ({ onUnlock }: PremiumFeaturesProps) => {
           and brand color schemes.
         </p>
       </div>
+
+      {/* This button is temporary for demo purposes - would be in admin panel */}
+      {isPending && (
+        <Button 
+          variant="outline" 
+          className="w-full mt-4"
+          onClick={handleAdminApproval}
+        >
+          (Demo) Admin Approve Payment
+        </Button>
+      )}
     </div>
   );
 };
