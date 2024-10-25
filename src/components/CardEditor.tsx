@@ -12,6 +12,7 @@ import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
 import { CustomButtonsManager } from "./CustomButtonsManager";
+import { CustomButton } from "@/types/qrTypes";
 
 interface CardEditorProps {
   onSave: (cardData: CardData) => void;
