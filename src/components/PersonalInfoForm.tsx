@@ -7,18 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CardData } from "@/hooks/useCardData";
 
 interface PersonalInfoFormProps {
-  cardData: {
-    name: string;
-    title: string;
-    company?: string;
-    department?: string;
-    pronouns?: string;
-    location?: string;
-  };
+  cardData: CardData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSelectChange?: (field: string, value: string) => void;
+  handleSelectChange: (field: keyof CardData, value: string) => void;
 }
 
 export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChange }: PersonalInfoFormProps) => {
@@ -42,7 +36,7 @@ export const PersonalInfoForm = ({ cardData, handleInputChange, handleSelectChan
         <div className="space-y-2">
           <Label htmlFor="pronouns" className="text-base">Pronouns</Label>
           <Select 
-            onValueChange={(value) => handleSelectChange?.('pronouns', value)}
+            onValueChange={(value) => handleSelectChange('pronouns', value)}
             value={cardData.pronouns}
           >
             <SelectTrigger className="h-12">

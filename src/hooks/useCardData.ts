@@ -36,6 +36,7 @@ interface UseCardDataReturn {
   cardData: CardData;
   setCardData: Dispatch<SetStateAction<CardData>>;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSelectChange: (field: keyof CardData, value: string) => void;
 }
 
 export const useCardData = (): UseCardDataReturn => {
@@ -62,9 +63,14 @@ export const useCardData = (): UseCardDataReturn => {
     setCardData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSelectChange = (field: keyof CardData, value: string) => {
+    setCardData((prev) => ({ ...prev, [field]: value }));
+  };
+
   return {
     cardData,
     setCardData,
     handleInputChange,
+    handleSelectChange,
   };
 };

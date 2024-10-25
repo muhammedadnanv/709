@@ -19,12 +19,8 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const [hasWirelessConnectivity, setHasWirelessConnectivity] = useState(false);
-  const { cardData, handleInputChange, setCardData } = useCardData();
+  const { cardData, handleInputChange, handleSelectChange } = useCardData();
   const [profileImage, setProfileImage] = useState<string | null>(null);
-
-  const handleSelectChange = (field: string, value: string) => {
-    setCardData((prev: CardData) => ({ ...prev, [field]: value }));
-  };
 
   const [selectedQRTemplate, setSelectedQRTemplate] = useState<QRTemplate>({
     id: 1,
