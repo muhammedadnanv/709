@@ -15,13 +15,6 @@ const Index = () => {
     });
   };
 
-  const handleSelectTemplate = (template: any) => {
-    toast({
-      title: "Template applied!",
-      description: `You selected ${template.name}`,
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <header className="border-b bg-white dark:bg-gray-950">
@@ -55,7 +48,7 @@ const Index = () => {
           </div>
 
           <div className="space-y-6">
-            <CardTemplates onSelectTemplate={handleSelectTemplate} />
+            <CardTemplates />
           </div>
         </div>
       </main>
