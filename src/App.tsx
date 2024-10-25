@@ -22,7 +22,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/users/:userId" element={<UserCard />} />
+            <Route path="/c/:cardId" element={<UserCard />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

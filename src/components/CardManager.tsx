@@ -17,7 +17,6 @@ export const CardManager = () => {
   };
 
   const handleSaveCard = (cardData: CardData) => {
-    // In a real implementation, this would also save the userId
     const cardWithId = { ...cardData, id: crypto.randomUUID() };
     setCards([...cards, cardWithId]);
     setIsCreating(false);
@@ -43,7 +42,7 @@ export const CardManager = () => {
           {cards.map((card) => (
             <Link 
               key={card.id} 
-              to={`/users/${card.id}`}
+              to={`/c/${card.id}`}
               className="block hover:opacity-80 transition-opacity"
             >
               <Card className="p-6">

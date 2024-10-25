@@ -5,10 +5,11 @@ import { generateVCardData } from "@/utils/vcard";
 import { CardData } from "@/hooks/useCardData";
 import { WalletActions } from "@/components/card/WalletActions";
 
-const fetchUserCard = async (userId: string): Promise<CardData> => {
+const fetchUserCard = async (cardId: string): Promise<CardData> => {
   // In a real implementation, this would fetch from your API
   // For now, we'll return mock data
   return {
+    id: cardId,
     name: "John Doe",
     title: "Software Engineer",
     company: "Tech Corp",
@@ -26,12 +27,12 @@ const fetchUserCard = async (userId: string): Promise<CardData> => {
 };
 
 const UserCard = () => {
-  const { userId } = useParams();
+  const { cardId } = useParams();
 
   const { data: cardData, isLoading } = useQuery({
-    queryKey: ['userCard', userId],
-    queryFn: () => fetchUserCard(userId!),
-    enabled: !!userId,
+    queryKey: ['userCard', cardId],
+    queryFn: () => fetchUserCard(cardId!),
+    enabled: !!cardId,
   });
 
   if (isLoading) {
