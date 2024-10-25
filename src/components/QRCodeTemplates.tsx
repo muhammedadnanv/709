@@ -52,7 +52,9 @@ const QRCodeTemplates = ({
             <Button
               key={template.id}
               variant="outline"
-              className={selectedTemplate?.id === template.id ? "h-40 p-2 ring-2 ring-primary" : "h-40 p-2"}
+              className={`h-40 p-2 ${
+                selectedTemplate?.id === template.id ? "ring-2 ring-primary" : ""
+              }`}
               onClick={() => onSelectTemplate(template)}
             >
               <div 

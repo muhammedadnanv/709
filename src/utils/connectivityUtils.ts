@@ -26,20 +26,18 @@ export const generateBluetoothConfig = (deviceName: string, mac: string) =>
   `BT:DN:${deviceName};MAC:${mac};;`;
 
 export const generateQRData = (cardData: any, connectivityData: any, isPremium: boolean) => {
-  const vcard = generateVCard(cardData);
+  let qrData = generateVCard(cardData);
   
-  let qrData = vcard;
-  
-  if (isPremium) {
-    if (connectivityData?.wifi?.ssid) {
-      qrData += '\n\n' + generateWiFiConfig(
+  if (isPremium && connectivityData) {
+    if (connectivityData.wifi?.ssid) {
+      qrData += '\n---WIFI---\n' + generateWiFiConfig(
         connectivityData.wifi.ssid,
         connectivityData.wifi.password
       );
     }
     
-    if (connectivityData?.bluetooth?.deviceName) {
-      qrData += '\n\n' + generateBluetoothConfig(
+    if (connectivityData.bluetooth?.deviceName) {
+      qrData += '\n---BLUETOOTH---\n' + generateBluetoothConfig(
         connectivityData.bluetooth.deviceName,
         connectivityData.bluetooth.mac
       );
