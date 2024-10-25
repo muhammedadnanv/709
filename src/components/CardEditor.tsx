@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import QRCodeTemplates from "./QRCodeTemplates";
 import { PersonalInfoForm } from "./PersonalInfoForm";
@@ -18,6 +18,7 @@ interface CardEditorProps {
 const CardEditor = ({ onSave }: CardEditorProps) => {
   const { toast } = useToast();
   const qrCodeRef = useRef<HTMLDivElement>(null);
+  const [isPremium] = useState(false); // In a real app, this would come from your auth/payment system
   const [cardData, setCardData] = useState({
     name: "",
     title: "",
@@ -98,7 +99,8 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
         <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
         <ConnectivityForm 
           connectivityData={connectivityData} 
-          handleConnectivityChange={handleConnectivityChange} 
+          handleConnectivityChange={handleConnectivityChange}
+          isPremium={isPremium}
         />
       </div>
 
