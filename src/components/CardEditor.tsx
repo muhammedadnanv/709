@@ -49,31 +49,33 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
 
   return (
     <DndContext>
-      <Card className="aspect-auto bg-white dark:bg-gray-950 p-4 sm:p-8">
+      <Card className="bg-white dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-6">
-            <ProfileImageUpload 
-              userName={cardData.name} 
-              profileImage={profileImage}
-              setProfileImage={setProfileImage}
-            />
-            <PersonalInfoForm 
-              cardData={cardData} 
-              handleInputChange={handleInputChange}
-              handleSelectChange={handleSelectChange}
-            />
-            <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
-            <CustomButtonsManager
-              buttons={cardData.customButtons || []}
-              onChange={handleCustomButtonsChange}
-            />
-            <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
+            <div className="sticky top-4">
+              <ProfileImageUpload 
+                userName={cardData.name} 
+                profileImage={profileImage}
+                setProfileImage={setProfileImage}
+              />
+              <PersonalInfoForm 
+                cardData={cardData} 
+                handleInputChange={handleInputChange}
+                handleSelectChange={handleSelectChange}
+              />
+              <ContactInfoForm cardData={cardData} handleInputChange={handleInputChange} />
+              <CustomButtonsManager
+                buttons={cardData.customButtons || []}
+                onChange={handleCustomButtonsChange}
+              />
+              <PremiumFeatures onUnlock={() => setHasWirelessConnectivity(true)} />
+            </div>
           </div>
 
           <div className="space-y-6">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Your Digital Card</h3>
-              <div ref={qrCodeRef}>
+            <div className="lg:sticky lg:top-4">
+              <h3 className="text-lg font-semibold mb-4">Your Digital Card</h3>
+              <div ref={qrCodeRef} className="bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <CardPreview 
                   cardData={cardData}
                   profileImage={profileImage}
@@ -82,14 +84,14 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
                 />
               </div>
               <CardActions qrCodeRef={qrCodeRef} cardData={cardData} />
-            </div>
 
-            <QRCodeTemplates
-              value={vCardData}
-              onSelectTemplate={setSelectedQRTemplate}
-              selectedTemplate={selectedQRTemplate}
-              userName={cardData.name}
-            />
+              <QRCodeTemplates
+                value={vCardData}
+                onSelectTemplate={setSelectedQRTemplate}
+                selectedTemplate={selectedQRTemplate}
+                userName={cardData.name}
+              />
+            </div>
           </div>
         </div>
       </Card>

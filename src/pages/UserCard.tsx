@@ -35,17 +35,28 @@ const UserCard = () => {
   });
 
   if (isLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen p-4">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    );
   }
 
   if (!cardData) {
-    return <div className="flex justify-center items-center min-h-screen">Card not found</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen p-4">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">Card not found</h2>
+          <p className="text-muted-foreground mt-2">This card may have been deleted or doesn't exist.</p>
+        </div>
+      </div>
+    );
   }
 
   const vCardData = generateVCardData(cardData, false);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 sm:px-6 py-8">
       <div className="max-w-md mx-auto space-y-6">
         <CardPreview
           cardData={cardData}
