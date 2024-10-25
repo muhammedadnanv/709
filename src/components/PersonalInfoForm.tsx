@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CardData } from "@/hooks/useCardData";
+import { CardData } from "@/types/qrTypes";
 
 interface PersonalInfoFormProps {
   cardData: CardData;

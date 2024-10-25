@@ -5,13 +5,14 @@ import QRCodeTemplates from "./QRCodeTemplates";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
-import { QRTemplate } from "@/types/qrTypes";
+import { QRTemplate, CardData } from "@/types/qrTypes";
 import { ProfileImageUpload } from "./ProfileImageUpload";
-import { useCardData, CardData } from "@/hooks/useCardData";
+import { useCardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
 import { generateVCardData } from "@/utils/vcard";
 import { CustomButtonsManager } from "./CustomButtonsManager";
+
 import { CustomButton } from "@/types/qrTypes";
 
 interface CardEditorProps {
