@@ -1,61 +1,74 @@
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { QRCodeSVG } from "qrcode.react";
+import { QRTemplate } from "@/types/qrTypes";
 
-interface Template {
-  id: number;
-  name: string;
-  style: {
-    background: string;
-    textColor: string;
-    accentColor: string;
-    layout: "modern" | "classic" | "minimal" | "bold";
-  };
-}
-
-// Generate 1000 unique templates
-const generateTemplates = (): Template[] => {
+const generateQRTemplates = (): QRTemplate[] => {
   const layouts = ["modern", "classic", "minimal", "bold"] as const;
   const colors = [
-    { bg: "bg-blue-50", text: "text-blue-900", accent: "bg-blue-500" },
-    { bg: "bg-green-50", text: "text-green-900", accent: "bg-green-500" },
-    { bg: "bg-purple-50", text: "text-purple-900", accent: "bg-purple-500" },
-    { bg: "bg-rose-50", text: "text-rose-900", accent: "bg-rose-500" },
-    { bg: "bg-orange-50", text: "text-orange-900", accent: "bg-orange-500" },
-    { bg: "bg-teal-50", text: "text-teal-900", accent: "bg-teal-500" },
-    { bg: "bg-gray-50", text: "text-gray-900", accent: "bg-gray-500" },
-    { bg: "bg-slate-50", text: "text-slate-900", accent: "bg-slate-500" },
-    { bg: "bg-zinc-50", text: "text-zinc-900", accent: "bg-zinc-500" },
-    { bg: "bg-neutral-50", text: "text-neutral-900", accent: "bg-neutral-500" },
+    { bg: "#FFFFFF", fg: "#000000", corner: "#000000" },
+    { bg: "#001F3F", fg: "#FFFFFF", corner: "#7FDBFF" },
+    { bg: "#2ECC40", fg: "#FFFFFF", corner: "#01FF70" },
+    { bg: "#FF4136", fg: "#FFFFFF", corner: "#FF851B" },
+    { bg: "#B10DC9", fg: "#FFFFFF", corner: "#F012BE" },
+    { bg: "#FFDC00", fg: "#000000", corner: "#FF851B" },
+    { bg: "#7FDBFF", fg: "#000000", corner: "#001F3F" },
+    { bg: "#F012BE", fg: "#FFFFFF", corner: "#B10DC9" },
+    { bg: "#01FF70", fg: "#000000", corner: "#2ECC40" },
+    { bg: "#FF851B", fg: "#000000", corner: "#FF4136" },
   ];
 
   return Array.from({ length: 1000 }, (_, i) => ({
     id: i + 1,
-    name: `Template ${i + 1}`,
+    name: `QR Style ${i + 1}`,
     style: {
       background: colors[i % colors.length].bg,
-      textColor: colors[i % colors.length].text,
-      accentColor: colors[i % colors.length].accent,
+      foreground: colors[i % colors.length].fg,
+      cornerColor: colors[i % colors.length].corner,
       layout: layouts[i % layouts.length],
     },
   }));
 };
 
-const templates = generateTemplates();
+const qrTemplates = generateQRTemplates();
 
-const CardTemplates = ({ onSelectTemplate }: { onSelectTemplate: (template: Template) => void }) => {
+interface QRCodeTemplatesProps {
+  value: string;
+  onSelectTemplate: (template: QRTemplate) => void;
+  selectedTemplate: QRTemplate;
+  userName?: string;
+}
+
+const CardTemplates = ({ onSelectTemplate, selectedTemplate, value, userName }: QRCodeTemplatesProps) => {
   return (
     <Card className="p-4">
+      <h3 className="font-semibold mb-4">Choose QR Code Style</h3>
       <ScrollArea className="h-[300px] pr-4">
         <div className="grid grid-cols-2 gap-4">
-          {templates.map((template) => (
+          {qrTemplates.map((template) => (
             <Button
               key={template.id}
               variant="outline"
-              className={`h-24 ${template.style.background} ${template.style.textColor} hover:${template.style.accentColor} transition-colors`}
+              className={`h-40 p-2 ${
+                selectedTemplate?.id === template.id ? "ring-2 ring-primary" : ""
+              }`}
               onClick={() => onSelectTemplate(template)}
             >
-              {template.name}
+              <div className="w-full h-full flex flex-col items-center justify-center space-y-2 rounded-lg" 
+                   style={{ background: template.style.background }}>
+                <QRCodeSVG
+                  value={value}
+                  size={80}
+                  bgColor={template.style.background}
+                  fgColor={template.style.foreground}
+                  level="M"
+                  includeMargin={false}
+                />
+                <span className="text-xs" style={{ color: template.style.foreground }}>
+                  {userName || 'Scan to Connect'}
+                </span>
+              </div>
             </Button>
           ))}
         </div>
