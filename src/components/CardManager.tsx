@@ -5,6 +5,7 @@ import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import CardEditor from "./CardEditor";
 import { CardData } from "@/hooks/useCardData";
+import { Link } from "react-router-dom";
 
 export const CardManager = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -16,7 +17,9 @@ export const CardManager = () => {
   };
 
   const handleSaveCard = (cardData: CardData) => {
-    setCards([...cards, cardData]);
+    // In a real implementation, this would also save the userId
+    const cardWithId = { ...cardData, id: crypto.randomUUID() };
+    setCards([...cards, cardWithId]);
     setIsCreating(false);
     toast({
       title: "Success!",
@@ -37,11 +40,17 @@ export const CardManager = () => {
         <CardEditor onSave={handleSaveCard} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {cards.map((card, index) => (
-            <Card key={index} className="p-6">
-              <h3 className="font-semibold">{card.name}</h3>
-              <p className="text-sm text-muted-foreground">{card.title}</p>
-            </Card>
+          {cards.map((card) => (
+            <Link 
+              key={card.id} 
+              to={`/users/${card.id}`}
+              className="block hover:opacity-80 transition-opacity"
+            >
+              <Card className="p-6">
+                <h3 className="font-semibold">{card.name}</h3>
+                <p className="text-sm text-muted-foreground">{card.title}</p>
+              </Card>
+            </Link>
           ))}
         </div>
       )}
