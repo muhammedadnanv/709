@@ -1,11 +1,13 @@
 import { QRCodeSVG } from "qrcode.react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { CardData, VCardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Linkedin, Instagram, Facebook, Nfc, Clock, Calendar, MessageCircle, Star } from "lucide-react";
-import { format, addYears } from "date-fns";
+import { Star } from "lucide-react";
+import { addYears } from "date-fns";
 import { motion } from "framer-motion";
+import { CardHeader } from "./CardHeader";
+import { CardTimestamp } from "./CardTimestamp";
+import { SocialLinks } from "./SocialLinks";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -44,120 +46,33 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700 sm:max-w-[504px] sm:p-6 relative overflow-hidden"
+        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-shadow duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6"
         style={{ 
           background: qrStyle.background,
           color: qrStyle.foreground,
         }}
       >
         <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-gradient-to-br from-white/10 to-transparent rounded-full blur-xl" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 -ml-8 -mb-8 bg-gradient-to-tr from-black/5 to-transparent rounded-full blur-xl" />
         
         <div className="text-center space-y-2 w-full relative z-10">
-          <div className="flex items-center justify-between">
-            {cardData.name && (
-              <motion.div 
-                className="flex items-center gap-2"
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
-                <Avatar className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-white/20">
-                  <AvatarImage src={profileImage || ""} alt={`${cardData.name}'s profile`} />
-                  <AvatarFallback className="text-sm sm:text-base dark:bg-gray-700 dark:text-gray-200">
-                    {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="text-left">
-                  <h4 className="font-semibold text-sm sm:text-base dark:text-gray-100">{cardData.name}</h4>
-                  {cardData.title && (
-                    <p className="text-xs sm:text-sm opacity-80 dark:text-gray-300">{cardData.title}</p>
-                  )}
-                  {cardData.company && (
-                    <p className="text-xs sm:text-sm opacity-80 dark:text-gray-300">{cardData.company}</p>
-                  )}
-                </div>
-              </motion.div>
-            )}
-            <motion.div
-              initial={{ rotate: -180, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Nfc className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: qrStyle.foreground }} />
-            </motion.div>
-          </div>
+          <CardHeader 
+            cardData={cardData}
+            profileImage={profileImage}
+            foregroundColor={qrStyle.foreground}
+          />
 
-          <motion.div 
-            className="flex justify-center gap-4 text-[10px] sm:text-xs opacity-70 mt-1" 
-            style={{ color: qrStyle.foreground }}
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              Created {format(creationDate, 'MMM d, yyyy')}
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              Valid until {format(expirationDate, 'MMM d, yyyy')}
-            </div>
-          </motion.div>
+          <CardTimestamp 
+            creationDate={creationDate}
+            expirationDate={expirationDate}
+            foregroundColor={qrStyle.foreground}
+          />
 
-          <motion.div 
-            className="flex justify-center gap-3 mt-2"
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            {cardData.phone && (
-              <motion.button 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleWhatsAppClick}
-                className="hover:opacity-80 dark:text-gray-200 transition-opacity"
-                title="Connect on WhatsApp"
-              >
-                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: qrStyle.foreground }} />
-              </motion.button>
-            )}
-            {cardData.linkedin && (
-              <motion.a 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                href={cardData.linkedin} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:opacity-80 dark:text-gray-200 transition-opacity"
-              >
-                <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: qrStyle.foreground }} />
-              </motion.a>
-            )}
-            {cardData.instagram && (
-              <motion.a 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                href={cardData.instagram} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:opacity-80 dark:text-gray-200 transition-opacity"
-              >
-                <Instagram className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: qrStyle.foreground }} />
-              </motion.a>
-            )}
-            {cardData.facebook && (
-              <motion.a 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                href={cardData.facebook} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:opacity-80 dark:text-gray-200 transition-opacity"
-              >
-                <Facebook className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: qrStyle.foreground }} />
-              </motion.a>
-            )}
-          </motion.div>
+          <SocialLinks 
+            cardData={cardData}
+            foregroundColor={qrStyle.foreground}
+            onWhatsAppClick={handleWhatsAppClick}
+          />
 
           <motion.div 
             className="flex items-center justify-center py-2"
@@ -165,7 +80,13 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <a href={vCardData.dataUrl} download={vCardData.downloadFilename}>
+            <motion.a 
+              href={vCardData.dataUrl} 
+              download={vCardData.downloadFilename}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="hover:opacity-90 transition-opacity"
+            >
               <QRCodeSVG
                 value={vCardData.vcard}
                 size={Math.min(80, window.innerWidth * 0.15)}
@@ -174,9 +95,9 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
                 level="M"
                 includeMargin={false}
               />
-            </a>
+            </motion.a>
           </motion.div>
-          <p className="text-[10px] sm:text-xs dark:text-gray-300">Scan to save contact</p>
+          <p className="text-[10px] sm:text-xs">Scan to save contact</p>
           
           <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
           
