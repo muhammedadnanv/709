@@ -1,7 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
-import { Nfc } from "lucide-react";
+import { Nfc, BadgeCheck } from "lucide-react";
 import { CardData } from "@/types/qrTypes";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CardHeaderProps {
   cardData: CardData;
@@ -10,6 +11,9 @@ interface CardHeaderProps {
 }
 
 export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHeaderProps) => {
+  const isVerified = cardData.name?.charAt(0).toUpperCase() === 'A' || 
+                     cardData.name?.charAt(0).toUpperCase() === 'S';
+
   return (
     <div className="flex items-center justify-between">
       {cardData.name && (
@@ -26,7 +30,30 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
             </AvatarFallback>
           </Avatar>
           <div className="text-left">
-            <h4 className="font-semibold text-sm sm:text-base">{cardData.name}</h4>
+            <div className="flex items-center gap-1">
+              <h4 className="font-semibold text-sm sm:text-base">{cardData.name}</h4>
+              {isVerified && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 500, delay: 0.2 }}
+                      >
+                        <BadgeCheck 
+                          className="h-4 w-4 text-blue-500" 
+                          style={{ filter: 'drop-shadow(0 0 2px rgba(59, 130, 246, 0.5))' }}
+                        />
+                      </motion.div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Verified User</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
             {cardData.title && (
               <p className="text-xs sm:text-sm opacity-80">{cardData.title}</p>
             )}
