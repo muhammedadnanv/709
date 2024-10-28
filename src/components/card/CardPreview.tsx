@@ -1,7 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
-import { Camera } from "lucide-react";
+import { Camera, ScanLine } from "lucide-react";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
 import { CardTimestamp } from "./CardTimestamp";
@@ -135,7 +135,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           />
 
           <motion.div 
-            className="flex items-center justify-center py-2 relative"
+            className="flex flex-col items-center justify-center py-2 relative"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -146,21 +146,47 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowQRDialog(true)}
             >
-              <QRCodeSVG
-                value={qrCodeData}
-                size={Math.min(80, window.innerWidth * 0.15)}
-                bgColor={qrStyle.background}
-                fgColor={qrStyle.foreground}
-                level="L"
-                includeMargin={false}
-              />
+              <div className="relative">
+                <QRCodeSVG
+                  value={qrCodeData}
+                  size={Math.min(80, window.innerWidth * 0.15)}
+                  bgColor={qrStyle.background}
+                  fgColor={qrStyle.foreground}
+                  level="L"
+                  includeMargin={false}
+                />
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  animate={{
+                    y: ["-100%", "100%"],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                >
+                  <ScanLine className="w-full h-1 text-primary/50" />
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="mt-2 space-y-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              <p className="text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5">
+                <Camera className="h-4 w-4" />
+                Scan QR Code with Phone Camera
+              </p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
+                No app needed - works with any phone
+              </p>
             </motion.div>
           </motion.div>
-
-          <p className="text-[10px] sm:text-xs flex items-center justify-center gap-1">
-            <Camera className="h-3 w-3" />
-            Scan to save digital card
-          </p>
 
           <WalletActions 
             cardData={cardData}
