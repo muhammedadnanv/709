@@ -12,10 +12,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { QRCodeDialog } from "./QRCodeDialog";
 import { addYears } from "date-fns";
-import { QRCodeCustomizer } from "./QRCodeCustomizer";
 import { SocialShare } from "./SocialShare";
-import { DigitalSignature } from "./DigitalSignature";
-import { PrintService } from "../print/PrintService"; // Importing PrintService
+import { PrintService } from "../print/PrintService";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -26,13 +24,12 @@ interface CardPreviewProps {
   };
 }
 
-export const CardPreview = ({ cardData, profileImage, qrStyle: initialQrStyle }: CardPreviewProps) => {
+export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProps) => {
   const { toast } = useToast();
   const [showQRDialog, setShowQRDialog] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [scanSuccess, setScanSuccess] = useState<boolean | null>(null);
-  const [qrStyle, setQrStyle] = useState(initialQrStyle);
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
@@ -169,28 +166,12 @@ export const CardPreview = ({ cardData, profileImage, qrStyle: initialQrStyle }:
         </div>
       </motion.div>
 
-      <QRCodeCustomizer
-        value={qrCodeData}
-        onStyleChange={setQrStyle}
-        currentStyle={qrStyle}
-      />
-
       <SocialShare
         cardUrl={window.location.href}
         cardName={cardData.name}
       />
 
-      <DigitalSignature
-        onSignatureAdd={(signature) => {
-          // Handle signature addition
-          toast({
-            title: "Signature Added",
-            description: "Your digital signature has been added to the card.",
-          });
-        }}
-      />
-
-      <PrintService cardData={cardData} /> {/* Added PrintService component */}
+      <PrintService cardData={cardData} />
 
       <QRCodeDialog
         showDialog={showQRDialog}
