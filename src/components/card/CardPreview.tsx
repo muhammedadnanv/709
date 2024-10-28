@@ -198,7 +198,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
           {/* QR Code Section with Enhanced Styling */}
           <motion.div 
-            className="flex flex-col items-center justify-center py-2 relative"
+            className="flex flex-col items-center justify-center -mt-4 relative"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
