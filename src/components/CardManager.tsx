@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Star } from "lucide-react";
 import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import CardEditor from "./CardEditor";
 import { CardData } from "@/types/qrTypes";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const CardManager = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -17,7 +18,6 @@ export const CardManager = () => {
   };
 
   const handleSaveCard = (cardData: CardData) => {
-    // In a real implementation, this would also save the userId
     const cardWithId = { ...cardData, id: crypto.randomUUID() };
     setCards([...cards, cardWithId]);
     setIsCreating(false);
@@ -46,9 +46,18 @@ export const CardManager = () => {
               to={`/users/${card.id}`}
               className="block hover:opacity-80 transition-opacity"
             >
-              <Card className="p-6">
+              <Card className="p-6 relative">
                 <h3 className="font-semibold">{card.name}</h3>
                 <p className="text-sm text-muted-foreground">{card.title}</p>
+                <motion.p 
+                  className="text-[8px] sm:text-[10px] mt-4 text-muted-foreground/70 absolute bottom-2 right-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.9 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <Star className="inline-block h-3 w-3 mr-1 text-yellow-500" /> 
+                  Powered by: Splex
+                </motion.p>
               </Card>
             </Link>
           ))}
