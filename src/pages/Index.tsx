@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useUser } from "@clerk/clerk-react";
 import { Loader2 } from "lucide-react";
+import { ChatBot } from "@/components/chat/ChatBot";
 
 const Index = () => {
   const [showAuthDialog, setShowAuthDialog] = useState(true);
@@ -34,6 +35,8 @@ const Index = () => {
           <PricingPlans />
         </div>
       </main>
+      
+      <ChatBot />
     </div>
   );
 };

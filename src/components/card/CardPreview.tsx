@@ -15,6 +15,7 @@ import { addYears } from "date-fns";
 import { QRCodeCustomizer } from "./QRCodeCustomizer";
 import { SocialShare } from "./SocialShare";
 import { DigitalSignature } from "./DigitalSignature";
+import { PrintService } from "../print/PrintService"; // Importing PrintService
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -188,6 +189,8 @@ export const CardPreview = ({ cardData, profileImage, qrStyle: initialQrStyle }:
           });
         }}
       />
+
+      <PrintService cardData={cardData} /> {/* Added PrintService component */}
 
       <QRCodeDialog
         showDialog={showQRDialog}
