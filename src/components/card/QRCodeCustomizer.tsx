@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { ColorPicker } from "@/components/ui/color-picker";
-import { Qrcode, Palette, Link as LinkIcon } from "lucide-react";
+import { QrCode, Palette, Link as LinkIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface QRCodeCustomizerProps {
@@ -45,7 +45,7 @@ export const QRCodeCustomizer = ({
   return (
     <Card className="p-4 space-y-4">
       <div className="flex items-center gap-2">
-        <Qrcode className="h-5 w-5" />
+        <QrCode className="h-5 w-5" />
         <h3 className="font-semibold">Customize QR Code</h3>
       </div>
 

@@ -25,12 +25,13 @@ interface CardPreviewProps {
   };
 }
 
-export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProps) => {
+export const CardPreview = ({ cardData, profileImage, qrStyle: initialQrStyle }: CardPreviewProps) => {
   const { toast } = useToast();
   const [showQRDialog, setShowQRDialog] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [scanSuccess, setScanSuccess] = useState<boolean | null>(null);
+  const [qrStyle, setQrStyle] = useState(initialQrStyle);
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
@@ -169,7 +170,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
       <QRCodeCustomizer
         value={qrCodeData}
-        onStyleChange={(style) => setQrStyle(style)}
+        onStyleChange={setQrStyle}
         currentStyle={qrStyle}
       />
 
