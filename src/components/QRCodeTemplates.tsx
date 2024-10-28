@@ -188,7 +188,7 @@ const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }
             <Button
               key={template.id}
               variant="outline"
-              className={`h-40 p-2 relative ${
+              className={`h-40 p-2 relative flex items-center justify-center ${
                 selectedTemplate?.id === template.id ? "ring-2 ring-primary" : ""
               }`}
               onClick={() => handleTemplateClick(template)}
@@ -199,7 +199,7 @@ const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }
               >
                 <QRCodeSVG
                   value={value}
-                  size={80}
+                  size={60}
                   bgColor={template.style.background}
                   fgColor={template.style.foreground}
                   level="M"

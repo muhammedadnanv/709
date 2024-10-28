@@ -102,7 +102,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6 group"
+        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-center p-4 border shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6 group"
         style={{ 
           background: `linear-gradient(135deg, ${qrStyle.background}, ${qrStyle.background}ee)`,
           color: qrStyle.foreground,
@@ -123,19 +123,8 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
             foregroundColor={qrStyle.foreground}
           />
 
-          <CardTimestamp 
-            creationDate={creationDate}
-            expirationDate={expirationDate}
-            foregroundColor={qrStyle.foreground}
-          />
-
-          <SocialLinks 
-            cardData={cardData}
-            foregroundColor={qrStyle.foreground}
-          />
-
           <motion.div 
-            className="flex flex-col items-center justify-center py-4 relative mx-auto max-w-[250px]"
+            className="flex flex-col items-center justify-center py-4 relative mx-auto"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -149,7 +138,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               <div className="relative">
                 <QRCodeSVG
                   value={qrCodeData}
-                  size={Math.min(80, window.innerWidth * 0.15)}
+                  size={Math.min(120, window.innerWidth * 0.2)}
                   bgColor={qrStyle.background}
                   fgColor={qrStyle.foreground}
                   level="L"
@@ -215,9 +204,6 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               </p>
               <p className="text-[10px] sm:text-xs text-muted-foreground/80">
                 No app needed - works with any phone
-              </p>
-              <p className="text-[9px] sm:text-[10px] font-medium text-muted-foreground/60 italic">
-                Powered by Digital Business Card
               </p>
             </motion.div>
           </motion.div>
