@@ -7,9 +7,7 @@ const urlsToCache = [
   '/manifest.json',
   '/offline.html',
   '/icon-192x192.png',
-  '/icon-512x512.png',
-  '/src/index.css',
-  '/src/App.css'
+  '/icon-512x512.png'
 ];
 
 // Enhanced install event with precaching
@@ -55,9 +53,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Network first, falling back to cache
   event.respondWith(
     fetch(event.request)
       .then((response) => {
+        // Cache successful responses
         if (response.status === 200) {
           const responseClone = response.clone();
           caches.open(DYNAMIC_CACHE)
@@ -80,15 +80,6 @@ self.addEventListener('sync', (event) => {
     event.waitUntil(syncCards());
   }
 });
-
-async function syncCards() {
-  try {
-    const offlineCards = await getOfflineCards();
-    await Promise.all(offlineCards.map(card => syncCard(card)));
-  } catch (error) {
-    console.error('Error syncing cards:', error);
-  }
-}
 
 // Push notification handling
 self.addEventListener('push', (event) => {
@@ -125,3 +116,62 @@ self.addEventListener('notificationclick', (event) => {
     event.waitUntil(clients.openWindow('/'));
   }
 });
+
+// Helper function for syncing cards
+async function syncCards() {
+  try {
+    const offlineData = await getOfflineData();
+    if (offlineData && offlineData.length > 0) {
+      await Promise.all(offlineData.map(data => syncItem(data)));
+      await clearOfflineData();
+    }
+  } catch (error) {
+    console.error('Error syncing data:', error);
+  }
+}
+
+// Helper functions for offline data management
+async function getOfflineData() {
+  const cache = await caches.open(DYNAMIC_CACHE);
+  const keys = await cache.keys();
+  const offlineData = [];
+  
+  for (const key of keys) {
+    if (key.url.includes('/api/')) {
+      const response = await cache.match(key);
+      const data = await response.json();
+      offlineData.push(data);
+    }
+  }
+  
+  return offlineData;
+}
+
+async function syncItem(data) {
+  const response = await fetch('/api/sync', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  
+  if (!response.ok) {
+    throw new Error('Sync failed');
+  }
+  
+  return response.json();
+}
+
+async function clearOfflineData() {
+  const cache = await caches.open(DYNAMIC_CACHE);
+  const keys = await cache.keys();
+  
+  return Promise.all(
+    keys.map(key => {
+      if (key.url.includes('/api/')) {
+        return cache.delete(key);
+      }
+    })
+  );
+}
