@@ -1,15 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Download, FileImage, File, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import { useState } from "react";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import jsPDF from "jspdf";
 
 interface CardActionsProps {
   qrCodeRef: React.RefObject<HTMLDivElement>;
@@ -22,7 +15,7 @@ export const CardActions = ({ qrCodeRef, cardData }: CardActionsProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDownload = async (format: 'png' | 'jpeg' | 'pdf') => {
+  const handleDownload = async () => {
     if (!qrCodeRef.current) {
       toast({
         title: "Error",
@@ -35,31 +28,20 @@ export const CardActions = ({ qrCodeRef, cardData }: CardActionsProps) => {
     setIsLoading(true);
     try {
       const canvas = await html2canvas(qrCodeRef.current, {
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
         logging: false,
       });
 
-      if (format === 'pdf') {
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        const pdf = new jsPDF({
-          orientation: 'landscape',
-          unit: 'px',
-          format: [canvas.width, canvas.height]
-        });
-        pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
-        pdf.save(`${cardData.name || 'digital-card'}.pdf`);
-      } else {
-        const url = canvas.toDataURL(`image/${format}`, 1.0);
-        const link = document.createElement("a");
-        link.download = `${cardData.name || 'digital-card'}.${format}`;
-        link.href = url;
-        link.click();
-      }
+      const url = canvas.toDataURL('image/png', 1.0);
+      const link = document.createElement("a");
+      link.download = `${cardData.name || 'digital-card'}.png`;
+      link.href = url;
+      link.click();
       
       toast({
         title: "Success!",
-        description: `Your card has been downloaded as ${format.toUpperCase()}.`,
+        description: "Your card has been downloaded.",
       });
     } catch (error) {
       toast({
@@ -73,35 +55,18 @@ export const CardActions = ({ qrCodeRef, cardData }: CardActionsProps) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          className="w-full gap-2"
-          variant="outline"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-          {isLoading ? "Downloading..." : "Download Card"}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => handleDownload('png')}>
-          <FileImage className="h-4 w-4 mr-2" />
-          PNG Image
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleDownload('jpeg')}>
-          <FileImage className="h-4 w-4 mr-2" />
-          JPEG Image
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleDownload('pdf')}>
-          <File className="h-4 w-4 mr-2" />
-          PDF Document
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button 
+      className="w-full gap-2"
+      variant="outline"
+      onClick={handleDownload}
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Download className="h-4 w-4" />
+      )}
+      {isLoading ? "Downloading..." : "Download Card"}
+    </Button>
   );
 };
