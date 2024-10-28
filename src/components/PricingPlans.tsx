@@ -1,15 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, Database, Share2, Shield, Check } from "lucide-react";
+import { Users, Database, Share2, Shield, Check, User, Building2, Buildings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export const PricingPlans = () => {
   const { toast } = useToast();
 
   const handleSubscribe = (plan: string) => {
-    if (plan === 'Enterprise') {
-      // WhatsApp redirect with predefined message
-      const whatsappUrl = `https://wa.me/919656778508?text=Hi,%20I'm%20interested%20in%20the%20Enterprise%20plan`;
+    if (plan === 'Business+') {
+      const whatsappUrl = `https://wa.me/919656778508?text=Hi,%20I'm%20interested%20in%20the%20${plan}%20plan`;
       window.open(whatsappUrl, '_blank');
     } else {
       toast({
@@ -18,6 +17,59 @@ export const PricingPlans = () => {
       });
     }
   };
+
+  const plans = [
+    {
+      name: "Solo",
+      description: "Perfect for individuals",
+      price: "$6",
+      icon: User,
+      features: [
+        "Single user license",
+        "Basic customization",
+        "QR code sharing",
+        "Email support"
+      ]
+    },
+    {
+      name: "Team",
+      description: "For growing teams",
+      price: "$5",
+      icon: Users,
+      features: [
+        "Per user/month",
+        "Team management",
+        "Advanced customization",
+        "Priority support"
+      ]
+    },
+    {
+      name: "Business",
+      description: "For organizations",
+      price: "$4",
+      icon: Building2,
+      features: [
+        "Per user/month",
+        "Advanced analytics",
+        "Custom branding",
+        "API access",
+        "24/7 support"
+      ]
+    },
+    {
+      name: "Business+",
+      description: "Enterprise solution",
+      price: "Custom",
+      icon: Buildings,
+      features: [
+        "Custom user limit",
+        "Dedicated support",
+        "Custom integration",
+        "SLA guarantee",
+        "On-premise option"
+      ]
+    }
+  ];
 
   return (
     <div className="py-12">
@@ -28,83 +80,43 @@ export const PricingPlans = () => {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto px-4">
-        {/* Pro Plan */}
-        <Card className="p-6 space-y-6">
-          <div className="space-y-2">
-            <h3 className="text-2xl font-bold">Pro</h3>
-            <p className="text-muted-foreground">For growing businesses</p>
-          </div>
-          
-          <div className="text-3xl font-bold">$29/mo</div>
-          
-          <ul className="space-y-4">
-            <li className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              <span>Team management features</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-primary" />
-              <span>CRM integrations</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Share2 className="h-5 w-5 text-primary" />
-              <span>Unlimited sharing</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-primary" />
-              <span>Priority support</span>
-            </li>
-          </ul>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
+        {plans.map((plan) => {
+          const Icon = plan.icon;
+          return (
+            <Card key={plan.name} className="p-6 space-y-6 hover:shadow-lg transition-shadow">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Icon className="h-5 w-5 text-primary" />
+                  <h3 className="text-2xl font-bold">{plan.name}</h3>
+                </div>
+                <p className="text-muted-foreground">{plan.description}</p>
+              </div>
+              
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold">{plan.price}</span>
+                {plan.price !== "Custom" && <span className="text-muted-foreground">per user/month</span>}
+              </div>
+              
+              <ul className="space-y-3">
+                {plan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-primary" />
+                    <span className="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
 
-          <Button 
-            className="w-full" 
-            onClick={() => handleSubscribe('Pro')}
-          >
-            Subscribe to Pro
-          </Button>
-        </Card>
-
-        {/* Enterprise Plan */}
-        <Card className="p-6 space-y-6 border-primary">
-          <div className="space-y-2">
-            <h3 className="text-2xl font-bold">Enterprise</h3>
-            <p className="text-muted-foreground">For large organizations</p>
-          </div>
-          
-          <div className="text-3xl font-bold">Custom</div>
-          
-          <ul className="space-y-4">
-            <li className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              <span>Advanced team management</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-primary" />
-              <span>Custom CRM integrations</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Share2 className="h-5 w-5 text-primary" />
-              <span>Enterprise-grade sharing</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
-              <span>Enhanced security features</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-primary" />
-              <span>Dedicated onboarding support</span>
-            </li>
-          </ul>
-
-          <Button 
-            variant="outline" 
-            className="w-full"
-            onClick={() => handleSubscribe('Enterprise')}
-          >
-            Contact Sales
-          </Button>
-        </Card>
+              <Button 
+                variant={plan.name === "Business+" ? "outline" : "default"}
+                className="w-full"
+                onClick={() => handleSubscribe(plan.name)}
+              >
+                {plan.name === "Business+" ? "Contact Sales" : "Subscribe"}
+              </Button>
+            </Card>
+          )}
+        )}
       </div>
     </div>
   );
