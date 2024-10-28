@@ -16,14 +16,14 @@ export const SocialShare = ({ cardUrl, cardName }: SocialShareProps) => {
     const text = `Check out my digital card: ${cardName}`;
     const url = encodeURIComponent(cardUrl);
 
-    const platforms = {
+    const platforms: Record<string, string> = {
       whatsapp: `https://wa.me/?text=${encodeURIComponent(text + "\n" + cardUrl)}`,
-      instagram: `https://www.instagram.com/share?url=${url}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      instagram: `instagram://share?text=${encodeURIComponent(text)}&url=${url}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encodeURIComponent(text)}`
     };
 
-    if (navigator.share && platform === "native") {
-      try {
+    try {
+      if (navigator.share && platform === "native") {
         await navigator.share({
           title: cardName,
           text,
@@ -31,13 +31,24 @@ export const SocialShare = ({ cardUrl, cardName }: SocialShareProps) => {
         });
         toast({
           title: "Shared Successfully",
-          description: "Your card has been shared.",
+          description: "Your referral link has been shared.",
         });
-      } catch (error) {
-        window.open(platforms.whatsapp, "_blank");
+      } else {
+        const shareUrl = platforms[platform];
+        if (shareUrl) {
+          window.open(shareUrl, "_blank", "noopener,noreferrer");
+          toast({
+            title: "Opening Share Dialog",
+            description: `Opening ${platform} to share your referral link.`,
+          });
+        }
       }
-    } else {
-      window.open(platforms[platform as keyof typeof platforms], "_blank");
+    } catch (error) {
+      toast({
+        title: "Sharing Failed",
+        description: "Unable to share. Please try another method.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -45,7 +56,7 @@ export const SocialShare = ({ cardUrl, cardName }: SocialShareProps) => {
     <Card className="p-4">
       <div className="flex items-center gap-2 mb-4">
         <Share2 className="h-5 w-5" />
-        <h3 className="font-semibold">Share Your Card</h3>
+        <h3 className="font-semibold">Referral</h3>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
