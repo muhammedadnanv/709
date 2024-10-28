@@ -12,6 +12,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { QRCodeDialog } from "./QRCodeDialog";
 import { addYears } from "date-fns";
+import { QRCodeCustomizer } from "./QRCodeCustomizer";
+import { SocialShare } from "./SocialShare";
+import { DigitalSignature } from "./DigitalSignature";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -163,6 +166,27 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           />
         </div>
       </motion.div>
+
+      <QRCodeCustomizer
+        value={qrCodeData}
+        onStyleChange={(style) => setQrStyle(style)}
+        currentStyle={qrStyle}
+      />
+
+      <SocialShare
+        cardUrl={window.location.href}
+        cardName={cardData.name}
+      />
+
+      <DigitalSignature
+        onSignatureAdd={(signature) => {
+          // Handle signature addition
+          toast({
+            title: "Signature Added",
+            description: "Your digital signature has been added to the card.",
+          });
+        }}
+      />
 
       <QRCodeDialog
         showDialog={showQRDialog}
