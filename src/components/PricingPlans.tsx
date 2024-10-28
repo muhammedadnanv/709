@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, Database, Share2, Shield, Check, User, Building2, Buildings } from "lucide-react";
+import { Users, Database, Share2, Shield, Check, User, Building2, Building } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export const PricingPlans = () => {
@@ -60,7 +60,7 @@ export const PricingPlans = () => {
       name: "Business+",
       description: "Enterprise solution",
       price: "Custom",
-      icon: Buildings,
+      icon: Building,
       features: [
         "Custom user limit",
         "Dedicated support",
