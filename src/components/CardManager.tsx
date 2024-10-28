@@ -1,17 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { Plus, Star } from "lucide-react";
+import { Plus, Star, Copy, Trash2 } from "lucide-react";
 import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import CardEditor from "./CardEditor";
 import { CardData } from "@/types/qrTypes";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useHotkeys } from "react-hotkeys-hook";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const CardManager = () => {
   const [cards, setCards] = useState<CardData[]>([]);
+  const [selectedCards, setSelectedCards] = useState<string[]>([]);
   const { toast } = useToast();
   const [isCreating, setIsCreating] = useState(false);
+
+  // Keyboard shortcuts
+  useHotkeys('ctrl+n', (e) => {
+    e.preventDefault();
+    handleCreateCard();
+  });
+
+  useHotkeys('ctrl+d', (e) => {
+    e.preventDefault();
+    handleDuplicateSelected();
+  });
+
+  useHotkeys('delete', (e) => {
+    e.preventDefault();
+    handleDeleteSelected();
+  });
 
   const handleCreateCard = () => {
     setIsCreating(true);
@@ -42,13 +66,86 @@ export const CardManager = () => {
     });
   };
 
+  const handleCardSelect = (cardId: string) => {
+    setSelectedCards(prev => {
+      if (prev.includes(cardId)) {
+        return prev.filter(id => id !== cardId);
+      }
+      return [...prev, cardId];
+    });
+  };
+
+  const handleDuplicateSelected = () => {
+    if (selectedCards.length === 0) {
+      toast({
+        title: "No Cards Selected",
+        description: "Please select cards to duplicate.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newCards = selectedCards.map(id => {
+      const originalCard = cards.find(card => card.id === id);
+      if (!originalCard) return null;
+      
+      return {
+        ...originalCard,
+        id: crypto.randomUUID(),
+        name: `${originalCard.name} (Copy)`,
+      };
+    }).filter((card): card is CardData => card !== null);
+
+    setCards(prev => [...prev, ...newCards]);
+    setSelectedCards([]);
+    
+    toast({
+      title: "Success!",
+      description: `Duplicated ${newCards.length} cards.`,
+    });
+  };
+
+  const handleDeleteSelected = () => {
+    if (selectedCards.length === 0) {
+      toast({
+        title: "No Cards Selected",
+        description: "Please select cards to delete.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setCards(prev => prev.filter(card => !selectedCards.includes(card.id)));
+    setSelectedCards([]);
+    
+    toast({
+      title: "Success!",
+      description: `Deleted ${selectedCards.length} cards.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       {!isCreating && (
-        <Button onClick={handleCreateCard} className="w-full sm:w-auto gap-2">
-          <Plus className="h-4 w-4" />
-          Create New Card
-        </Button>
+        <div className="flex items-center justify-between gap-4">
+          <Button onClick={handleCreateCard} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Create New Card (Ctrl+N)
+          </Button>
+          
+          {selectedCards.length > 0 && (
+            <div className="flex gap-2">
+              <Button onClick={handleDuplicateSelected} variant="outline" className="gap-2">
+                <Copy className="h-4 w-4" />
+                Duplicate ({selectedCards.length})
+              </Button>
+              <Button onClick={handleDeleteSelected} variant="destructive" className="gap-2">
+                <Trash2 className="h-4 w-4" />
+                Delete ({selectedCards.length})
+              </Button>
+            </div>
+          )}
+        </div>
       )}
 
       {isCreating ? (
@@ -63,12 +160,15 @@ export const CardManager = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
+                className={`relative ${selectedCards.includes(card.id) ? 'ring-2 ring-primary' : ''}`}
+                onClick={() => handleCardSelect(card.id)}
               >
                 <Link 
                   to={`/users/${card.id}`}
                   className="block hover:opacity-80 transition-opacity"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Card className="p-6 relative min-h-[120px]">
+                  <Card className="p-6 relative min-h-[120px] cursor-pointer">
                     <h3 className="font-semibold line-clamp-1">{card.name}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">{card.title}</p>
                     <motion.p 
