@@ -149,7 +149,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               <div className="relative">
                 <QRCodeSVG
                   value={qrCodeData}
-                  size={Math.min(120, window.innerWidth * 0.2)}
+                  size={Math.min(80, window.innerWidth * 0.15)}
                   bgColor={qrStyle.background}
                   fgColor={qrStyle.foreground}
                   level="L"
