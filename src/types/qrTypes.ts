@@ -16,7 +16,7 @@ export interface QRTemplate {
 }
 
 export interface CardData {
-  id: string;  // Changed from optional to required
+  id: string;
   name: string;
   title: string;
   phone: string;
@@ -29,6 +29,7 @@ export interface CardData {
   department?: string;
   pronouns?: string;
   location?: string;
+  interests?: string[];
   customButtons: CustomButton[];
 }
 

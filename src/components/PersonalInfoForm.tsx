@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardData } from "@/types/qrTypes";
+import { ProfessionalInterests } from "./ProfessionalInterests";
 
 interface PersonalInfoFormProps {
   cardData: CardData;
@@ -81,6 +82,14 @@ export const PersonalInfoForm = ({
             value={cardData.location}
             onChange={handleInputChange}
             placeholder="San Francisco, CA"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Professional Interests</Label>
+          <ProfessionalInterests
+            interests={cardData.interests || []}
+            onChange={(interests) => handleSelectChange('interests', interests)}
           />
         </div>
       </div>
