@@ -1,27 +1,35 @@
 import { QRCodeSVG } from "qrcode.react";
-import { CardData, VCardData } from "@/types/qrTypes";
+import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera } from "lucide-react";
+import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera, AlertCircle } from "lucide-react";
 import { addYears } from "date-fns";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
 import { CardTimestamp } from "./CardTimestamp";
 import { SocialLinks } from "./SocialLinks";
+import { validateCardData, generateVCFContent, generateDataUrl } from "@/utils/vcfGenerator";
+import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface CardPreviewProps {
   cardData: CardData;
   profileImage: string | null;
-  vCardData: VCardData;
   qrStyle: {
     background: string;
     foreground: string;
   };
 }
 
-export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: CardPreviewProps) => {
+export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProps) => {
+  const { toast } = useToast();
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
+
+  // Validate card data
+  const validationErrors = validateCardData(cardData);
+  const vcfContent = generateVCFContent(cardData);
+  const dataUrl = generateDataUrl(vcfContent);
 
   const handleWhatsAppClick = () => {
     if (cardData.phone) {
@@ -31,13 +39,28 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
     }
   };
 
-  const getGoldShade = () => {
-    const hex = qrStyle.background.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness > 128 ? '#B8860B' : '#FFD700';
+  const handleDownload = () => {
+    if (validationErrors.length > 0) {
+      toast({
+        title: "Invalid Contact Data",
+        description: validationErrors.join(". "),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `${cardData.name?.replace(/\s+/g, '_')}_contact.vcf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(dataUrl);
+
+    toast({
+      title: "Contact Downloaded",
+      description: "The contact card has been downloaded successfully.",
+    });
   };
 
   return (
@@ -52,41 +75,15 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           color: qrStyle.foreground,
         }}
       >
-        {/* Enhanced Decorative Elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-xl group-hover:scale-110 transition-transform" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 -ml-8 -mb-8 bg-gradient-to-tr from-black/10 to-transparent rounded-full blur-xl group-hover:scale-110 transition-transform" />
-        
-        {/* Animated Decorative Icons */}
-        <motion.div
-          className="absolute top-4 right-4"
-          initial={{ rotate: -180, scale: 0 }}
-          animate={{ rotate: 0, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          whileHover={{ rotate: 15, scale: 1.2 }}
-        >
-          <Sparkles className="w-4 h-4 text-yellow-500/50" />
-        </motion.div>
-        
-        <motion.div
-          className="absolute bottom-4 left-4"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          whileHover={{ scale: 1.2 }}
-        >
-          <CircleDot className="w-3 h-3 text-primary/30" />
-        </motion.div>
+        {validationErrors.length > 0 && (
+          <Alert variant="destructive" className="absolute top-2 left-2 right-2 z-50">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Please fix the following: {validationErrors[0]}
+            </AlertDescription>
+          </Alert>
+        )}
 
-        <motion.div
-          className="absolute top-4 left-4"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          whileHover={{ rotate: -15, scale: 1.2 }}
-        >
-          <Gem className="w-3 h-3 text-primary/30" />
-        </motion.div>
-        
         <div className="text-center space-y-2 w-full relative z-10">
           <CardHeader 
             cardData={cardData}
@@ -112,12 +109,20 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-20 rounded-full group-hover:opacity-30 transition-opacity" />
             <motion.div
-              className="relative group"
+              className="relative group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleDownload}
             >
+              <QRCodeSVG
+                value={vcfContent}
+                size={Math.min(80, window.innerWidth * 0.15)}
+                bgColor={qrStyle.background}
+                fgColor={qrStyle.foreground}
+                level="H"
+                includeMargin={true}
+              />
               <motion.div
                 className="absolute -top-2 -right-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full shadow-lg"
                 initial={{ opacity: 0, scale: 0 }}
@@ -125,33 +130,19 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
                 transition={{ delay: 0.6 }}
               >
                 <Camera className="h-3 w-3 inline-block mr-1" />
-                <span className="text-[10px]">Camera Ready</span>
+                <span className="text-[10px]">Scan to Save</span>
               </motion.div>
-              <a 
-                href={vCardData.dataUrl} 
-                download={vCardData.downloadFilename}
-                className="block hover:opacity-90 transition-all duration-300"
-              >
-                <QRCodeSVG
-                  value={vCardData.vcard}
-                  size={Math.min(80, window.innerWidth * 0.15)}
-                  bgColor={qrStyle.background}
-                  fgColor={qrStyle.foreground}
-                  level="M"
-                  includeMargin={false}
-                />
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-20 rounded-sm group-hover:opacity-30 transition-opacity" />
-              </a>
             </motion.div>
           </motion.div>
+
           <p className="text-[10px] sm:text-xs flex items-center justify-center gap-1">
             <Camera className="h-3 w-3" />
-            Just open your phone camera
+            Open your camera app to scan
           </p>
 
           <WalletActions 
             cardData={cardData}
-            qrCodeUrl={vCardData.vcard}
+            qrCodeUrl={dataUrl}
           />
         </div>
       </motion.div>
