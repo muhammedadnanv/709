@@ -190,7 +190,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
           <p className="text-[10px] sm:text-xs flex items-center justify-center gap-1">
             <Camera className="h-3 w-3" />
-            Open your camera app to scan or click to download
+            Click to scan or download
           </p>
 
           <WalletActions 
