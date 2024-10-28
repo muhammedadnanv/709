@@ -3,7 +3,6 @@ import { CardData, VCardData } from "@/types/qrTypes";
 export const validateCardData = (cardData: CardData): string[] => {
   const errors: string[] = [];
   
-  // Only add validation errors for fields that are both required and empty
   if (!cardData.name?.trim()) {
     errors.push("Name is required");
   } else if (cardData.name.length < 2) {
@@ -18,7 +17,6 @@ export const validateCardData = (cardData: CardData): string[] => {
     errors.push("Please enter a valid email address");
   }
   
-  // URL validations only if provided
   const urlFields = {
     website: cardData.website,
     linkedin: cardData.linkedin,
@@ -49,9 +47,11 @@ export const generateVCFContent = (cardData: CardData): VCardData => {
                   .replace(/>/g, '')
                   .trim() : '';
   
+  // Required fields
   vcard += `N:${encodeField(lastName)};${encodeField(firstName)};;;\n`;
   vcard += `FN:${encodeField(cardData.name)}\n`;
   
+  // Optional fields with proper encoding
   if (cardData.title) vcard += `TITLE:${encodeField(cardData.title)}\n`;
   if (cardData.company) vcard += `ORG:${encodeField(cardData.company)}\n`;
   if (cardData.department) vcard += `DEPARTMENT:${encodeField(cardData.department)}\n`;
@@ -60,18 +60,26 @@ export const generateVCFContent = (cardData: CardData): VCardData => {
   if (cardData.phone) vcard += `TEL;TYPE=CELL:${encodeField(cardData.phone)}\n`;
   if (cardData.email) vcard += `EMAIL;TYPE=WORK:${encodeField(cardData.email)}\n`;
   if (cardData.website) vcard += `URL:${encodeField(cardData.website)}\n`;
+  
+  // Social media profiles with proper encoding
   if (cardData.linkedin) vcard += `X-SOCIALPROFILE;TYPE=linkedin:${encodeField(cardData.linkedin)}\n`;
   if (cardData.instagram) vcard += `X-SOCIALPROFILE;TYPE=instagram:${encodeField(cardData.instagram)}\n`;
   if (cardData.facebook) vcard += `X-SOCIALPROFILE;TYPE=facebook:${encodeField(cardData.facebook)}\n`;
 
+  // Add custom fields for digital wallet compatibility
+  vcard += `X-DIGITAL-CARD:true\n`;
+  vcard += `X-WALLET-COMPATIBLE:true\n`;
+  
   vcard += `END:VCARD`;
 
   const cleanName = (cardData.name || 'contact')
     .replace(/[^a-z0-9]/gi, '_')
     .toLowerCase();
-  const downloadFilename = `${cleanName}_contact.vcf`;
+  const downloadFilename = `${cleanName}_digital_card.vcf`;
 
-  const vcardBlob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+  const vcardBlob = new Blob([vcard], { 
+    type: 'text/vcard;charset=utf-8'
+  });
   const dataUrl = URL.createObjectURL(vcardBlob);
   
   return {
@@ -90,6 +98,14 @@ export const generateQRCodeData = (cardData: CardData): string => {
     ? `\nWhatsApp: https://wa.me/${cardData.phone.replace(/\D/g, '')}`
     : '';
   
+  const emailLink = cardData.email
+    ? `\nEmail: mailto:${cardData.email}`
+    : '';
+    
+  const websiteLink = cardData.website
+    ? `\nWebsite: ${cardData.website}`
+    : '';
+
   return `BEGIN:VCARD
 VERSION:3.0
 FN:${cardData.name}
@@ -97,6 +113,6 @@ TITLE:${cardData.title || ''}
 ORG:${cardData.company || ''}
 TEL:${cardData.phone || ''}
 EMAIL:${cardData.email || ''}
-URL:${cardData.website || ''}${linkedInDeepLink}${whatsAppLink}
+URL:${cardData.website || ''}${linkedInDeepLink}${whatsAppLink}${emailLink}${websiteLink}
 END:VCARD`;
 };

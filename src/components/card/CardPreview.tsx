@@ -50,7 +50,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
     if (navigator.share) {
       navigator.share({
-        title: `${cardData.name}'s Contact Card`,
+        title: `${cardData.name}'s Digital Business Card`,
         text: 'Check out my digital business card',
         url: window.location.href
       }).catch(() => {
@@ -77,15 +77,15 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
     const link = document.createElement('a');
     link.href = vcfData.dataUrl;
-    link.download = `${cardData.name?.replace(/\s+/g, '_')}_contact.vcf`;
+    link.download = vcfData.downloadFilename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(vcfData.dataUrl);
 
     toast({
-      title: "Contact Downloaded",
-      description: "The contact card has been downloaded successfully.",
+      title: "Digital Card Downloaded",
+      description: "Your digital business card has been downloaded successfully.",
     });
     setShowQRDialog(false);
   };
@@ -154,7 +154,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
           <p className="text-[10px] sm:text-xs flex items-center justify-center gap-1">
             <Camera className="h-3 w-3" />
-            Click to scan or download
+            Scan to save digital card
           </p>
 
           <WalletActions 
