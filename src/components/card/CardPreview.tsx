@@ -153,7 +153,6 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
                 fgColor={qrStyle.foreground}
                 level="L"
                 includeMargin={false}
-                renderAs="svg"
               />
             </motion.div>
           </motion.div>
