@@ -8,12 +8,6 @@ import { CardData } from "@/types/qrTypes";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const CardManager = () => {
   const [cards, setCards] = useState<CardData[]>([]);
