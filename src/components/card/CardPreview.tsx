@@ -1,7 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
-import { Camera, ScanLine } from "lucide-react";
+import { Camera, ScanLine, Sparkle, Crown, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
 import { CardTimestamp } from "./CardTimestamp";
@@ -102,12 +102,74 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6 group"
+        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6 group"
         style={{ 
-          background: `linear-gradient(135deg, ${qrStyle.background}, ${qrStyle.background}ee)`,
+          background: `linear-gradient(135deg, ${qrStyle.background}ee, ${qrStyle.background}dd)`,
           color: qrStyle.foreground,
+          boxShadow: `0 4px 20px -2px ${qrStyle.foreground}20`,
+          borderColor: `${qrStyle.foreground}30`,
         }}
       >
+        {/* Luxury Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.03 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1518770660439-4636190af475')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              mixBlendMode: 'overlay'
+            }}
+          />
+          {/* Decorative Elements */}
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="absolute -top-20 -right-20 opacity-5"
+          >
+            <Crown className="w-40 h-40" style={{ color: qrStyle.foreground }} />
+          </motion.div>
+          <motion.div
+            animate={{ 
+              y: [0, -10, 0],
+              opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{ 
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/2 left-4 transform -translate-y-1/2"
+          >
+            <Star className="w-6 h-6" style={{ color: qrStyle.foreground }} />
+          </motion.div>
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.15, 0.1]
+            }}
+            transition={{ 
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute bottom-4 right-4"
+          >
+            <Sparkle className="w-5 h-5" style={{ color: qrStyle.foreground }} />
+          </motion.div>
+        </div>
+
+        {/* Main Content */}
         {validationErrors.length > 0 && validationErrors.some(error => !error.includes("required")) && (
           <Alert variant="destructive" className="absolute top-2 left-2 right-2 z-50">
             <AlertDescription>
@@ -116,7 +178,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           </Alert>
         )}
 
-        <div className="text-center space-y-2 w-full relative z-10">
+        <div className="text-center space-y-2 w-full relative z-10 backdrop-blur-sm">
           <CardHeader 
             cardData={cardData}
             profileImage={profileImage}
@@ -134,6 +196,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
             foregroundColor={qrStyle.foreground}
           />
 
+          {/* QR Code Section with Enhanced Styling */}
           <motion.div 
             className="flex flex-col items-center justify-center py-2 relative"
             initial={{ scale: 0.5, opacity: 0 }}
@@ -141,10 +204,14 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
             transition={{ delay: 0.4 }}
           >
             <motion.div
-              className="relative group cursor-pointer"
+              className="relative group cursor-pointer backdrop-blur-md p-3 rounded-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowQRDialog(true)}
+              style={{
+                background: `${qrStyle.background}20`,
+                boxShadow: `0 4px 15px -3px ${qrStyle.foreground}10`
+              }}
             >
               <div className="relative">
                 <QRCodeSVG
