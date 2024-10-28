@@ -20,25 +20,25 @@ export const PricingPlans = () => {
 
   const plans = [
     {
-      name: "Solo",
+      name: "Free",
       description: "Perfect for individuals",
-      price: "$6",
+      price: "$0",
       icon: User,
       features: [
-        "Single user license",
+        "Up to 3 digital cards",
         "Basic customization",
         "QR code sharing",
         "Email support"
       ]
     },
     {
-      name: "Team",
-      description: "For growing teams",
+      name: "Pro",
+      description: "For professionals",
       price: "$5",
       icon: Users,
       features: [
-        "Per user/month",
-        "Team management",
+        "Unlimited digital cards",
+        "Premium templates",
         "Advanced customization",
         "Priority support"
       ]
@@ -95,7 +95,7 @@ export const PricingPlans = () => {
               
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold">{plan.price}</span>
-                {plan.price !== "Custom" && <span className="text-muted-foreground">per user/month</span>}
+                {plan.price !== "Custom" && plan.price !== "$0" && <span className="text-muted-foreground">per user/month</span>}
               </div>
               
               <ul className="space-y-3">
@@ -112,7 +112,7 @@ export const PricingPlans = () => {
                 className="w-full"
                 onClick={() => handleSubscribe(plan.name)}
               >
-                {plan.name === "Business+" ? "Contact Sales" : "Subscribe"}
+                {plan.name === "Free" ? "Current Plan" : plan.name === "Business+" ? "Contact Sales" : "Subscribe"}
               </Button>
             </Card>
           )}

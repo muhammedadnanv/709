@@ -1,6 +1,6 @@
 import { useState, Suspense } from "react";
 import { Button } from "./ui/button";
-import { Plus, Star, Copy, Trash2, Loader2 } from "lucide-react";
+import { Plus, Star, Copy, Trash2, Loader2, Lock } from "lucide-react";
 import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { CardData } from "@/types/qrTypes";
@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
 import { lazy } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 // Lazy load the CardEditor
 const CardEditor = lazy(() => import("./CardEditor"));
@@ -29,24 +30,20 @@ export const CardManager = () => {
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
   const { toast } = useToast();
   const [isCreating, setIsCreating] = useState(false);
+  const { user } = useUser();
 
-  // Keyboard shortcuts
-  useHotkeys('ctrl+n', (e) => {
-    e.preventDefault();
-    handleCreateCard();
-  });
-
-  useHotkeys('ctrl+d', (e) => {
-    e.preventDefault();
-    handleDuplicateSelected();
-  });
-
-  useHotkeys('delete', (e) => {
-    e.preventDefault();
-    handleDeleteSelected();
-  });
+  // Check if user has reached the free limit
+  const hasReachedLimit = cards.length >= 3 && !user?.publicMetadata?.isPremium;
 
   const handleCreateCard = () => {
+    if (hasReachedLimit) {
+      toast({
+        title: "Card Limit Reached",
+        description: "Free users can create up to 3 cards. Upgrade to create more!",
+        variant: "destructive",
+      });
+      return;
+    }
     setIsCreating(true);
   };
 
@@ -139,9 +136,22 @@ export const CardManager = () => {
     <div className="space-y-6">
       {!isCreating && (
         <div className="flex items-center justify-between gap-4">
-          <Button onClick={handleCreateCard} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create New Card (Ctrl+N)
+          <Button 
+            onClick={handleCreateCard} 
+            className="gap-2"
+            disabled={hasReachedLimit}
+          >
+            {hasReachedLimit ? (
+              <>
+                <Lock className="h-4 w-4" />
+                Upgrade to Create More
+              </>
+            ) : (
+              <>
+                <Plus className="h-4 w-4" />
+                Create New Card (Ctrl+N)
+              </>
+            )}
           </Button>
           
           {selectedCards.length > 0 && (
