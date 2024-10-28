@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Download, FileImage, FilePdf, Loader2 } from "lucide-react";
+import { Download, FileImage, File, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import { useState } from "react";
@@ -98,7 +98,7 @@ export const CardActions = ({ qrCodeRef, cardData }: CardActionsProps) => {
           JPEG Image
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleDownload('pdf')}>
-          <FilePdf className="h-4 w-4 mr-2" />
+          <File className="h-4 w-4 mr-2" />
           PDF Document
         </DropdownMenuItem>
       </DropdownMenuContent>
