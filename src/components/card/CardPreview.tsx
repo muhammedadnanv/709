@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { CardData, VCardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { addYears } from "date-fns";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
@@ -41,12 +41,12 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full px-2 sm:px-0">
       <motion.div 
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-xl flex flex-col items-center justify-between p-4 border-2 shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6"
+        className="mx-auto w-full max-w-[90vw] sm:max-w-[504px] aspect-[1.75/1] rounded-xl flex flex-col items-center justify-between p-3 sm:p-4 md:p-6 border-2 shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-hidden backdrop-blur-sm"
         style={{ 
           background: `linear-gradient(135deg, ${qrStyle.background}ee, ${qrStyle.background})`,
           color: qrStyle.foreground,
@@ -76,7 +76,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           />
 
           <motion.div 
-            className="flex items-center justify-center py-3"
+            className="flex items-center justify-center py-2 sm:py-3"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -91,7 +91,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <QRCodeSVG
                 value={vCardData.vcard}
-                size={Math.min(90, window.innerWidth * 0.15)}
+                size={Math.min(80, window.innerWidth * 0.12)}
                 bgColor={qrStyle.background}
                 fgColor={qrStyle.foreground}
                 level="Q"
@@ -99,6 +99,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
               />
             </motion.a>
           </motion.div>
+          
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -108,7 +109,9 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             Scan to save contact
           </motion.p>
           
-          <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
+          <div className="px-2 sm:px-4">
+            <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
+          </div>
           
           <motion.p 
             className="text-[8px] sm:text-[10px] mt-2 font-semibold tracking-wider"
@@ -122,10 +125,12 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         </div>
       </motion.div>
       
-      <WalletActions 
-        cardData={cardData}
-        qrCodeUrl={vCardData.vcard}
-      />
+      <div className="w-full max-w-[90vw] sm:max-w-[504px] mx-auto">
+        <WalletActions 
+          cardData={cardData}
+          qrCodeUrl={vCardData.vcard}
+        />
+      </div>
     </div>
   );
 };
