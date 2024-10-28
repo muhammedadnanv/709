@@ -2,9 +2,9 @@ import { QRCodeSVG } from "qrcode.react";
 import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera, AlertCircle, Download } from "lucide-react";
+import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera, AlertCircle, Download, Scan, CheckCircle2, XCircle } from "lucide-react";
 import { addYears } from "date-fns";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CardHeader } from "./CardHeader";
 import { CardTimestamp } from "./CardTimestamp";
 import { SocialLinks } from "./SocialLinks";
@@ -13,7 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useState } from "react";
+import { Progress } from "@/components/ui/progress";
+import { useState, useEffect } from "react";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -27,6 +28,9 @@ interface CardPreviewProps {
 export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProps) => {
   const { toast } = useToast();
   const [showQRDialog, setShowQRDialog] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scanSuccess, setScanSuccess] = useState<boolean | null>(null);
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
@@ -34,11 +38,51 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
   const vcfContent = generateVCFContent(cardData);
   const dataUrl = generateDataUrl(vcfContent);
 
+  useEffect(() => {
+    if (isScanning) {
+      const interval = setInterval(() => {
+        setScanProgress(prev => {
+          if (prev >= 100) {
+            setIsScanning(false);
+            setScanSuccess(true);
+            clearInterval(interval);
+            handleDownload();
+            return 0;
+          }
+          return prev + 10;
+        });
+      }, 200);
+
+      return () => clearInterval(interval);
+    }
+  }, [isScanning]);
+
   const handleWhatsAppClick = () => {
     if (cardData.phone) {
       const cleanPhone = cardData.phone.replace(/\D/g, '');
       const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I got your contact from your digital business card.`;
       window.open(whatsappUrl, '_blank');
+    }
+  };
+
+  const handleScanAttempt = () => {
+    setIsScanning(true);
+    setScanProgress(0);
+    setScanSuccess(null);
+
+    // Check if the device supports the Web Share API
+    if (navigator.share) {
+      navigator.share({
+        title: `${cardData.name}'s Contact Card`,
+        text: 'Check out my digital business card',
+        url: window.location.href
+      }).catch(() => {
+        // If sharing fails, fall back to download
+        handleDownload();
+      });
+    } else {
+      // If Web Share API is not supported, proceed with download
+      handleDownload();
     }
   };
 
@@ -50,6 +94,11 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
         variant: "destructive",
       });
       return;
+    }
+
+    // Trigger device vibration if supported
+    if (navigator.vibrate) {
+      navigator.vibrate(200);
     }
 
     const link = document.createElement('a');
@@ -156,22 +205,83 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           <DialogHeader>
             <DialogTitle>Save Contact</DialogTitle>
             <DialogDescription>
-              Scan the QR code with your phone's camera or click the download button below.
+              Scan the QR code with your phone's camera or click the button below to download.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col items-center justify-center gap-4 py-4">
-            <QRCodeSVG
-              value={vcfContent}
-              size={200}
-              bgColor={qrStyle.background}
-              fgColor={qrStyle.foreground}
-              level="H"
-              includeMargin={true}
-            />
-            <Button onClick={handleDownload} className="w-full gap-2">
-              <Download className="h-4 w-4" />
-              Download Contact
-            </Button>
+            <div className="relative">
+              <QRCodeSVG
+                value={vcfContent}
+                size={200}
+                bgColor={qrStyle.background}
+                fgColor={qrStyle.foreground}
+                level="H"
+                includeMargin={true}
+              />
+              <AnimatePresence>
+                {isScanning && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center"
+                  >
+                    <div className="text-white text-center space-y-2">
+                      <Scan className="h-8 w-8 animate-pulse mx-auto" />
+                      <Progress value={scanProgress} className="w-32" />
+                    </div>
+                  </motion.div>
+                )}
+                {scanSuccess === true && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-green-500/50 rounded-lg flex items-center justify-center"
+                  >
+                    <CheckCircle2 className="h-12 w-12 text-white" />
+                  </motion.div>
+                )}
+                {scanSuccess === false && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-red-500/50 rounded-lg flex items-center justify-center"
+                  >
+                    <XCircle className="h-12 w-12 text-white" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <div className="space-y-2 w-full">
+              <Button 
+                onClick={handleScanAttempt} 
+                className="w-full gap-2"
+                disabled={isScanning}
+              >
+                {isScanning ? (
+                  <>
+                    <Scan className="h-4 w-4 animate-pulse" />
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    <Camera className="h-4 w-4" />
+                    Scan & Download
+                  </>
+                )}
+              </Button>
+              <Button 
+                onClick={handleDownload} 
+                variant="outline" 
+                className="w-full gap-2"
+                disabled={isScanning}
+              >
+                <Download className="h-4 w-4" />
+                Download Directly
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
