@@ -90,23 +90,26 @@ export const generateVCFContent = (cardData: CardData): VCardData => {
 };
 
 export const generateQRCodeData = (cardData: CardData): string => {
-  // Format personal information in a readable way
-  const personalInfo = [
-    `Name: ${cardData.name || ''}`,
-    `Title: ${cardData.title || ''}`,
-    `Company: ${cardData.company || ''}`,
-    cardData.department && `Department: ${cardData.department}`,
-    cardData.pronouns && `Pronouns: ${cardData.pronouns}`,
-    cardData.location && `Location: ${cardData.location}`,
-    cardData.phone && `Phone: ${cardData.phone}`,
-    cardData.email && `Email: ${cardData.email}`,
-    cardData.website && `Website: ${cardData.website}`,
-    cardData.linkedin && `LinkedIn: ${cardData.linkedin}`,
-    cardData.instagram && `Instagram: ${cardData.instagram}`,
-    cardData.facebook && `Facebook: ${cardData.facebook}`
+  // Generate a properly formatted vCard string for better device compatibility
+  const vCardString = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `FN:${cardData.name || ''}`,
+    `TITLE:${cardData.title || ''}`,
+    `ORG:${cardData.company || ''}`,
+    cardData.department && `ORG-UNIT:${cardData.department}`,
+    cardData.phone && `TEL;TYPE=WORK,VOICE:${cardData.phone}`,
+    cardData.email && `EMAIL;TYPE=WORK:${cardData.email}`,
+    cardData.website && `URL:${cardData.website}`,
+    cardData.linkedin && `X-SOCIALPROFILE;TYPE=linkedin:${cardData.linkedin}`,
+    cardData.instagram && `X-SOCIALPROFILE;TYPE=instagram:${cardData.instagram}`,
+    cardData.facebook && `X-SOCIALPROFILE;TYPE=facebook:${cardData.facebook}`,
+    cardData.location && `ADR;TYPE=WORK:;;${cardData.location}`,
+    cardData.pronouns && `NOTE:Pronouns: ${cardData.pronouns}`,
+    'END:VCARD'
   ]
     .filter(Boolean) // Remove undefined entries
     .join('\n');
 
-  return personalInfo;
+  return vCardString;
 };
