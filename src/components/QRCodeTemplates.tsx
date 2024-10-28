@@ -3,6 +3,45 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { QRTemplate } from "@/types/qrTypes";
+import { Lock } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
+import { useToast } from "@/hooks/use-toast";
+
+// Generate a smaller set of default templates for free users
+const generateDefaultTemplates = (): QRTemplate[] => {
+  return [
+    {
+      id: 1,
+      name: "Classic Black",
+      style: {
+        background: "#FFFFFF",
+        foreground: "#000000",
+        cornerColor: "#000000",
+        layout: "classic"
+      }
+    },
+    {
+      id: 2,
+      name: "Modern Blue",
+      style: {
+        background: "#FFFFFF",
+        foreground: "#0074D9",
+        cornerColor: "#7FDBFF",
+        layout: "modern"
+      }
+    },
+    {
+      id: 3,
+      name: "Professional Green",
+      style: {
+        background: "#FFFFFF",
+        foreground: "#2ECC40",
+        cornerColor: "#01FF70",
+        layout: "minimal"
+      }
+    }
+  ];
+};
 
 const generateQRTemplates = (): QRTemplate[] => {
   const layouts = ["modern", "classic", "minimal", "bold"] as const;
@@ -113,22 +152,51 @@ interface QRCodeTemplatesProps {
 }
 
 const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }: QRCodeTemplatesProps) => {
+  const { user } = useUser();
+  const { toast } = useToast();
+  const isPremium = user?.publicMetadata?.isPremium;
+  const templates = isPremium ? qrTemplates : generateDefaultTemplates();
+
+  const handleTemplateClick = (template: QRTemplate) => {
+    if (!isPremium && template.id > 3) {
+      toast({
+        title: "Premium Feature",
+        description: "Upgrade to access 440+ QR code styles!",
+        variant: "destructive",
+      });
+      return;
+    }
+    onSelectTemplate(template);
+  };
+
   return (
     <Card className="p-4">
-      <h3 className="font-semibold mb-4">Choose from 440 QR Code Styles</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-semibold">
+          {isPremium ? "Choose from 440 QR Code Styles" : "Choose QR Code Style"}
+        </h3>
+        {!isPremium && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Lock className="h-4 w-4" />
+            <span>437 styles locked</span>
+          </div>
+        )}
+      </div>
       <ScrollArea className="h-[300px] pr-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {qrTemplates.map((template) => (
+          {templates.map((template) => (
             <Button
               key={template.id}
               variant="outline"
-              className={`h-40 p-2 ${
+              className={`h-40 p-2 relative ${
                 selectedTemplate?.id === template.id ? "ring-2 ring-primary" : ""
               }`}
-              onClick={() => onSelectTemplate(template)}
+              onClick={() => handleTemplateClick(template)}
             >
-              <div className="w-full h-full flex flex-col items-center justify-center space-y-2 rounded-lg" 
-                   style={{ background: template.style.background }}>
+              <div 
+                className="w-full h-full flex flex-col items-center justify-center space-y-2 rounded-lg" 
+                style={{ background: template.style.background }}
+              >
                 <QRCodeSVG
                   value={value}
                   size={80}
@@ -137,10 +205,18 @@ const QRCodeTemplates = ({ value, onSelectTemplate, selectedTemplate, userName }
                   level="M"
                   includeMargin={false}
                 />
-                <span className="text-xs" style={{ color: template.style.foreground }}>
+                <span 
+                  className="text-xs"
+                  style={{ color: template.style.foreground }}
+                >
                   {userName || 'Style ' + template.id}
                 </span>
               </div>
+              {!isPremium && template.id > 3 && (
+                <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
+                  <Lock className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
             </Button>
           ))}
         </div>

@@ -5,15 +5,22 @@ import { CardData } from "@/types/qrTypes";
 interface SocialLinksProps {
   cardData: CardData;
   foregroundColor: string;
-  onWhatsAppClick: () => void;
 }
 
-export const SocialLinks = ({ cardData, foregroundColor, onWhatsAppClick }: SocialLinksProps) => {
+export const SocialLinks = ({ cardData, foregroundColor }: SocialLinksProps) => {
+  const handleWhatsAppClick = () => {
+    if (cardData.phone) {
+      const cleanPhone = cardData.phone.replace(/\D/g, '');
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I got your contact from your digital business card.`;
+      window.open(whatsappUrl, '_blank');
+    }
+  };
+
   const socialIcons = [
     {
       condition: cardData.phone,
       icon: MessageCircle,
-      action: onWhatsAppClick,
+      action: handleWhatsAppClick,
       isButton: true,
       title: "Connect on WhatsApp"
     }
