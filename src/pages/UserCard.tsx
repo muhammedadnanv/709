@@ -18,9 +18,6 @@ const fetchUserCard = async (userId: string): Promise<CardData> => {
     phone: "+1 (555) 123-4567",
     email: "john@example.com",
     website: "https://example.com",
-    linkedin: "https://linkedin.com/in/johndoe",
-    instagram: "https://instagram.com/johndoe",
-    facebook: "https://facebook.com/johndoe",
     customButtons: []
   };
 };

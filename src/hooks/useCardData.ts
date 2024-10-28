@@ -1,18 +1,15 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { CustomButton, CardData } from '@/types/qrTypes';  // Import from types file
+import { CustomButton, CardData } from '@/types/qrTypes';
 
 const STORAGE_KEY = 'splex-card-data';
 
 const initialCardData: CardData = {
-  id: crypto.randomUUID(),  // Ensure id is always present
+  id: crypto.randomUUID(),
   name: "",
   title: "",
   phone: "",
   email: "",
   website: "",
-  linkedin: "",
-  instagram: "",
-  facebook: "",
   company: "",
   department: "",
   pronouns: "",

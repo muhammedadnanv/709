@@ -39,15 +39,6 @@ export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: b
   if (cardData.website) {
     vcard += `URL:${encodeField(cardData.website)}\n`;
   }
-  if (cardData.linkedin) {
-    vcard += `X-SOCIALPROFILE;TYPE=linkedin:${encodeField(cardData.linkedin)}\n`;
-  }
-  if (cardData.instagram) {
-    vcard += `X-SOCIALPROFILE;TYPE=instagram:${encodeField(cardData.instagram)}\n`;
-  }
-  if (cardData.facebook) {
-    vcard += `X-SOCIALPROFILE;TYPE=facebook:${encodeField(cardData.facebook)}\n`;
-  }
 
   if (hasWirelessConnectivity) {
     vcard += `X-WIRELESS-ENABLED:true\n`;
@@ -63,12 +54,8 @@ export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: b
   const vcardBlob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
   const dataUrl = URL.createObjectURL(vcardBlob);
   
-  // Add headers to force download
-  const vcardWithHeaders = 
-    `data:text/vcard;charset=utf-8;headers=Content-Type%3A%20text%2Fvcard%3B%20charset%3Dutf-8%2CContent-Disposition%3A%20attachment%3B%20filename%3D${encodeURIComponent(downloadFilename)},${encodeURIComponent(vcard)}`;
-
   return {
-    vcard: vcardWithHeaders,
+    vcard,
     dataUrl,
     downloadFilename
   };

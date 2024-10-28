@@ -38,9 +38,6 @@ export const SocialLinks = ({ cardData, foregroundColor, onWhatsAppClick }: Soci
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={social.action}
-            href={social.href}
-            target={social.href ? "_blank" : undefined}
-            rel={social.href ? "noopener noreferrer" : undefined}
             className="hover:opacity-80 transition-opacity relative group"
             title={social.title}
           >
