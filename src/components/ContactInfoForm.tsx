@@ -1,8 +1,8 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, Globe, Linkedin, Instagram, Facebook } from "lucide-react";
+import { Mail, Phone, Globe } from "lucide-react";
 import { CardData } from "@/types/qrTypes";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ContactInfoFormProps {
   cardData: CardData;
@@ -83,60 +83,6 @@ export const ContactInfoForm = ({ cardData, handleInputChange }: ContactInfoForm
               type="url"
               pattern="https?://.+"
               title="Please include http:// or https:// in your website URL"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="linkedin" className="text-base">LinkedIn Profile</Label>
-          <div className="relative">
-            <Linkedin className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="linkedin"
-              name="linkedin"
-              value={cardData.linkedin}
-              onChange={handleValidatedInput}
-              className="pl-10 h-12 text-base"
-              placeholder="https://linkedin.com/in/username"
-              type="url"
-              pattern="https?://(www\.)?linkedin\.com/.*"
-              title="Please enter a valid LinkedIn URL (https://linkedin.com/...)"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="instagram" className="text-base">Instagram Profile</Label>
-          <div className="relative">
-            <Instagram className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="instagram"
-              name="instagram"
-              value={cardData.instagram}
-              onChange={handleValidatedInput}
-              className="pl-10 h-12 text-base"
-              placeholder="https://instagram.com/username"
-              type="url"
-              pattern="https?://(www\.)?instagram\.com/.*"
-              title="Please enter a valid Instagram URL (https://instagram.com/...)"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="facebook" className="text-base">Facebook Profile</Label>
-          <div className="relative">
-            <Facebook className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="facebook"
-              name="facebook"
-              value={cardData.facebook}
-              onChange={handleValidatedInput}
-              className="pl-10 h-12 text-base"
-              placeholder="https://facebook.com/username"
-              type="url"
-              pattern="https?://(www\.)?facebook\.com/.*"
-              title="Please enter a valid Facebook URL (https://facebook.com/...)"
             />
           </div>
         </div>

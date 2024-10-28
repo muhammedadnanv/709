@@ -17,18 +17,9 @@ export const validateCardData = (cardData: CardData): string[] => {
     errors.push("Please enter a valid email address");
   }
   
-  const urlFields = {
-    website: cardData.website,
-    linkedin: cardData.linkedin,
-    instagram: cardData.instagram,
-    facebook: cardData.facebook
-  };
-
-  Object.entries(urlFields).forEach(([field, url]) => {
-    if (url && !url.trim().startsWith('http')) {
-      errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} URL must start with http:// or https://`);
-    }
-  });
+  if (cardData.website && !cardData.website.trim().startsWith('http')) {
+    errors.push("Website URL must start with http:// or https://");
+  }
 
   return errors;
 };
@@ -60,11 +51,6 @@ export const generateVCFContent = (cardData: CardData): VCardData => {
   if (cardData.phone) vcard += `TEL;TYPE=CELL:${encodeField(cardData.phone)}\n`;
   if (cardData.email) vcard += `EMAIL;TYPE=WORK:${encodeField(cardData.email)}\n`;
   if (cardData.website) vcard += `URL:${encodeField(cardData.website)}\n`;
-  
-  // Social media profiles with proper encoding
-  if (cardData.linkedin) vcard += `X-SOCIALPROFILE;TYPE=linkedin:${encodeField(cardData.linkedin)}\n`;
-  if (cardData.instagram) vcard += `X-SOCIALPROFILE;TYPE=instagram:${encodeField(cardData.instagram)}\n`;
-  if (cardData.facebook) vcard += `X-SOCIALPROFILE;TYPE=facebook:${encodeField(cardData.facebook)}\n`;
 
   // Add custom fields for digital wallet compatibility
   vcard += `X-DIGITAL-CARD:true\n`;
@@ -90,7 +76,6 @@ export const generateVCFContent = (cardData: CardData): VCardData => {
 };
 
 export const generateQRCodeData = (cardData: CardData): string => {
-  // Generate a properly formatted vCard string for better device compatibility
   const vCardString = [
     'BEGIN:VCARD',
     'VERSION:3.0',
@@ -101,14 +86,11 @@ export const generateQRCodeData = (cardData: CardData): string => {
     cardData.phone && `TEL;TYPE=WORK,VOICE:${cardData.phone}`,
     cardData.email && `EMAIL;TYPE=WORK:${cardData.email}`,
     cardData.website && `URL:${cardData.website}`,
-    cardData.linkedin && `X-SOCIALPROFILE;TYPE=linkedin:${cardData.linkedin}`,
-    cardData.instagram && `X-SOCIALPROFILE;TYPE=instagram:${cardData.instagram}`,
-    cardData.facebook && `X-SOCIALPROFILE;TYPE=facebook:${cardData.facebook}`,
     cardData.location && `ADR;TYPE=WORK:;;${cardData.location}`,
     cardData.pronouns && `NOTE:Pronouns: ${cardData.pronouns}`,
     'END:VCARD'
   ]
-    .filter(Boolean) // Remove undefined entries
+    .filter(Boolean)
     .join('\n');
 
   return vCardString;

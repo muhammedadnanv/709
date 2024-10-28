@@ -22,9 +22,6 @@ export interface CardData {
   phone: string;
   email: string;
   website: string;
-  linkedin: string;
-  instagram: string;
-  facebook: string;
   company?: string;
   department?: string;
   pronouns?: string;

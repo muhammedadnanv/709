@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Linkedin, Instagram, Facebook, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { CardData } from "@/types/qrTypes";
 
 interface SocialLinksProps {
@@ -16,24 +16,6 @@ export const SocialLinks = ({ cardData, foregroundColor, onWhatsAppClick }: Soci
       action: onWhatsAppClick,
       isButton: true,
       title: "Connect on WhatsApp"
-    },
-    {
-      condition: cardData.linkedin,
-      icon: Linkedin,
-      href: cardData.linkedin,
-      title: "LinkedIn Profile"
-    },
-    {
-      condition: cardData.instagram,
-      icon: Instagram,
-      href: cardData.instagram,
-      title: "Instagram Profile"
-    },
-    {
-      condition: cardData.facebook,
-      icon: Facebook,
-      href: cardData.facebook,
-      title: "Facebook Profile"
     }
   ];
 
