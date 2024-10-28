@@ -90,29 +90,23 @@ export const generateVCFContent = (cardData: CardData): VCardData => {
 };
 
 export const generateQRCodeData = (cardData: CardData): string => {
-  const linkedInDeepLink = cardData.linkedin 
-    ? `\nLinkedIn: ${cardData.linkedin}`
-    : '';
-  
-  const whatsAppLink = cardData.phone
-    ? `\nWhatsApp: https://wa.me/${cardData.phone.replace(/\D/g, '')}`
-    : '';
-  
-  const emailLink = cardData.email
-    ? `\nEmail: mailto:${cardData.email}`
-    : '';
-    
-  const websiteLink = cardData.website
-    ? `\nWebsite: ${cardData.website}`
-    : '';
+  // Format personal information in a readable way
+  const personalInfo = [
+    `Name: ${cardData.name || ''}`,
+    `Title: ${cardData.title || ''}`,
+    `Company: ${cardData.company || ''}`,
+    cardData.department && `Department: ${cardData.department}`,
+    cardData.pronouns && `Pronouns: ${cardData.pronouns}`,
+    cardData.location && `Location: ${cardData.location}`,
+    cardData.phone && `Phone: ${cardData.phone}`,
+    cardData.email && `Email: ${cardData.email}`,
+    cardData.website && `Website: ${cardData.website}`,
+    cardData.linkedin && `LinkedIn: ${cardData.linkedin}`,
+    cardData.instagram && `Instagram: ${cardData.instagram}`,
+    cardData.facebook && `Facebook: ${cardData.facebook}`
+  ]
+    .filter(Boolean) // Remove undefined entries
+    .join('\n');
 
-  return `BEGIN:VCARD
-VERSION:3.0
-FN:${cardData.name}
-TITLE:${cardData.title || ''}
-ORG:${cardData.company || ''}
-TEL:${cardData.phone || ''}
-EMAIL:${cardData.email || ''}
-URL:${cardData.website || ''}${linkedInDeepLink}${whatsAppLink}${emailLink}${websiteLink}
-END:VCARD`;
+  return personalInfo;
 };
