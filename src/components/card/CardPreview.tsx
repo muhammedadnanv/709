@@ -9,7 +9,7 @@ import { SocialLinks } from "./SocialLinks";
 import { validateCardData, generateVCFContent, generateQRCodeData } from "@/utils/vcfGenerator";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { QRCodeDialog } from "./QRCodeDialog";
 import { addYears } from "date-fns";
 import { SocialShare } from "./SocialShare";
@@ -33,17 +33,21 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
-  const validationErrors = validateCardData(cardData);
-  const vcfData = generateVCFContent(cardData);
-  const qrCodeData = generateQRCodeData(cardData);
+  // Memoize QR code data generation
+  const qrCodeData = useMemo(() => generateQRCodeData(cardData), [
+    cardData.name,
+    cardData.title,
+    cardData.phone,
+    cardData.email,
+    cardData.website,
+    cardData.company,
+    cardData.department,
+    cardData.pronouns,
+    cardData.location
+  ]);
 
-  const handleWhatsAppClick = () => {
-    if (cardData.phone) {
-      const cleanPhone = cardData.phone.replace(/\D/g, '');
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I got your contact from your digital business card.`;
-      window.open(whatsappUrl, '_blank');
-    }
-  };
+  const validationErrors = validateCardData(cardData);
+  const vcfData = useMemo(() => generateVCFContent(cardData), [cardData]);
 
   const handleScanAttempt = () => {
     setIsScanning(true);
@@ -128,7 +132,6 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           <SocialLinks 
             cardData={cardData}
             foregroundColor={qrStyle.foreground}
-            onWhatsAppClick={handleWhatsAppClick}
           />
 
           <motion.div 
@@ -148,8 +151,9 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
                 size={Math.min(80, window.innerWidth * 0.15)}
                 bgColor={qrStyle.background}
                 fgColor={qrStyle.foreground}
-                level="H"
-                includeMargin={true}
+                level="L"
+                includeMargin={false}
+                renderAs="svg"
               />
             </motion.div>
           </motion.div>
