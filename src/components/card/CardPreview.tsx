@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { CardData, VCardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star, Sparkles, CircleDot, GripHorizontal, Gem } from "lucide-react";
+import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera } from "lucide-react";
 import { addYears } from "date-fns";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
@@ -113,50 +113,48 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             transition={{ delay: 0.4 }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-20 rounded-full group-hover:opacity-30 transition-opacity" />
-            <motion.a 
-              href={vCardData.dataUrl} 
-              download={vCardData.downloadFilename}
+            <motion.div
+              className="relative group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hover:opacity-90 transition-all duration-300 relative group"
             >
-              <QRCodeSVG
-                value={vCardData.vcard}
-                size={Math.min(80, window.innerWidth * 0.15)}
-                bgColor={qrStyle.background}
-                fgColor={qrStyle.foreground}
-                level="M"
-                includeMargin={false}
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-20 rounded-sm group-hover:opacity-30 transition-opacity" />
-            </motion.a>
+              <motion.div
+                className="absolute -top-2 -right-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full shadow-lg"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Camera className="h-3 w-3 inline-block mr-1" />
+                <span className="text-[10px]">Camera Ready</span>
+              </motion.div>
+              <a 
+                href={vCardData.dataUrl} 
+                download={vCardData.downloadFilename}
+                className="block hover:opacity-90 transition-all duration-300"
+              >
+                <QRCodeSVG
+                  value={vCardData.vcard}
+                  size={Math.min(80, window.innerWidth * 0.15)}
+                  bgColor={qrStyle.background}
+                  fgColor={qrStyle.foreground}
+                  level="M"
+                  includeMargin={false}
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-20 rounded-sm group-hover:opacity-30 transition-opacity" />
+              </a>
+            </motion.div>
           </motion.div>
-          <p className="text-[10px] sm:text-xs">Scan to save contact</p>
-          
-          <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
-          
-          <motion.div 
-            className="mt-1 flex items-center justify-center gap-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.9 }}
-            transition={{ delay: 0.5 }}
-            style={{ color: getGoldShade() }}
-          >
-            <GripHorizontal className="h-3 w-3 opacity-50" />
-            <Star className="h-3 w-3" />
-            <span className="text-[8px] sm:text-[10px] font-semibold tracking-wide">
-              Powered by Splex
-            </span>
-            <Star className="h-3 w-3" />
-            <GripHorizontal className="h-3 w-3 opacity-50" />
-          </motion.div>
+          <p className="text-[10px] sm:text-xs flex items-center justify-center gap-1">
+            <Camera className="h-3 w-3" />
+            Just open your phone camera
+          </p>
+
+          <WalletActions 
+            cardData={cardData}
+            qrCodeUrl={vCardData.vcard}
+          />
         </div>
       </motion.div>
-      
-      <WalletActions 
-        cardData={cardData}
-        qrCodeUrl={vCardData.vcard}
-      />
     </div>
   );
 };
