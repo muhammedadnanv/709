@@ -1,8 +1,9 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
-import { Nfc, BadgeCheck } from "lucide-react";
+import { Nfc, BadgeCheck, AlertCircle } from "lucide-react";
 import { CardData } from "@/types/qrTypes";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
 
 interface CardHeaderProps {
   cardData: CardData;
@@ -11,12 +12,27 @@ interface CardHeaderProps {
 }
 
 export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHeaderProps) => {
+  const { toast } = useToast();
   const isVerified = cardData.name?.charAt(0).toUpperCase() === 'A' || 
                      cardData.name?.charAt(0).toUpperCase() === 'S';
 
+  const handleImageError = () => {
+    toast({
+      title: "Image Load Error",
+      description: "Unable to load profile image",
+      variant: "destructive",
+    });
+  };
+
+  const handleAvatarClick = () => {
+    if (profileImage) {
+      window.open(profileImage, '_blank');
+    }
+  };
+
   return (
     <div className="flex items-center justify-between">
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {cardData.name && (
           <motion.div 
             className="flex items-center gap-2"
@@ -30,11 +46,15 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              <Avatar className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-white/20 transition-all duration-300">
+              <Avatar 
+                className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-white/20 transition-all duration-300 cursor-pointer"
+                onClick={handleAvatarClick}
+              >
                 <AvatarImage 
                   src={profileImage || ""} 
                   alt={`${cardData.name}'s profile`}
                   className="object-cover"
+                  onError={handleImageError}
                 />
                 <AvatarFallback className="text-sm sm:text-base bg-gradient-to-br from-primary/20 to-primary/10">
                   {cardData.name ? cardData.name.charAt(0).toUpperCase() : "U"}
@@ -62,6 +82,7 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
                             rotate: 15,
                             transition: { duration: 0.2 }
                           }}
+                          whileTap={{ scale: 0.9 }}
                         >
                           <BadgeCheck 
                             className="h-4 w-4 text-blue-500" 
@@ -74,15 +95,18 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
                       </TooltipTrigger>
                       <TooltipContent 
                         sideOffset={5}
-                        className="bg-blue-500 text-white"
+                        className="bg-blue-500 text-white shadow-lg"
                       >
-                        <p>Verified User</p>
+                        <p className="flex items-center gap-1">
+                          <BadgeCheck className="h-3 w-3" />
+                          Verified User
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 )}
               </div>
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {cardData.title && (
                   <motion.p 
                     initial={{ y: -10, opacity: 0 }}
