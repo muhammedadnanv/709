@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Button } from "./ui/button";
-import { Plus, Star, Copy, Trash2 } from "lucide-react";
+import { Plus, Star, Copy, Trash2, Loader2 } from "lucide-react";
 import { Card } from "./ui/card";
 import { useToast } from "@/hooks/use-toast";
-import CardEditor from "./CardEditor";
 import { CardData } from "@/types/qrTypes";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
+import { lazy } from "react";
+
+// Lazy load the CardEditor
+const CardEditor = lazy(() => import("./CardEditor"));
+
+const LoadingCard = () => (
+  <Card className="p-6 relative min-h-[120px]">
+    <div className="animate-pulse space-y-3">
+      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+      <div className="absolute bottom-2 right-4">
+        <div className="h-3 w-20 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  </Card>
+);
 
 export const CardManager = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -145,17 +160,27 @@ export const CardManager = () => {
       )}
 
       {isCreating ? (
-        <CardEditor onSave={handleSaveCard} />
+        <Suspense fallback={
+          <div className="flex items-center justify-center p-8">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <span className="ml-2">Loading editor...</span>
+          </div>
+        }>
+          <CardEditor onSave={handleSaveCard} />
+        </Suspense>
       ) : (
         <AnimatePresence>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {cards.map((card) => (
+            {cards.map((card, index) => (
               <motion.div
                 key={card.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}
+                transition={{ 
+                  duration: 0.3,
+                  delay: index * 0.1 // Progressive loading delay
+                }}
                 className={`relative ${selectedCards.includes(card.id) ? 'ring-2 ring-primary' : ''}`}
                 onClick={() => handleCardSelect(card.id)}
               >
@@ -164,19 +189,21 @@ export const CardManager = () => {
                   className="block hover:opacity-80 transition-opacity"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <Card className="p-6 relative min-h-[120px] cursor-pointer">
-                    <h3 className="font-semibold line-clamp-1">{card.name}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{card.title}</p>
-                    <motion.p 
-                      className="text-[8px] sm:text-[10px] mt-4 text-muted-foreground/70 absolute bottom-2 right-4"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.9 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <Star className="inline-block h-3 w-3 mr-1 text-yellow-500" /> 
-                      Powered by: Splex
-                    </motion.p>
-                  </Card>
+                  <Suspense fallback={<LoadingCard />}>
+                    <Card className="p-6 relative min-h-[120px] cursor-pointer">
+                      <h3 className="font-semibold line-clamp-1">{card.name}</h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2">{card.title}</p>
+                      <motion.p 
+                        className="text-[8px] sm:text-[10px] mt-4 text-muted-foreground/70 absolute bottom-2 right-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.9 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <Star className="inline-block h-3 w-3 mr-1 text-yellow-500" /> 
+                        Powered by: Splex
+                      </motion.p>
+                    </Card>
+                  </Suspense>
                 </Link>
               </motion.div>
             ))}
