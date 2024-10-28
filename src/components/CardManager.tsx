@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Plus, Star, Copy, Trash2 } from "lucide-react";
 import { Card } from "./ui/card";
@@ -35,7 +35,7 @@ export const CardManager = () => {
     setIsCreating(true);
   };
 
-  const handleSaveCard = (cardData: CardData) => {
+  const handleSaveCard = (cardData: Omit<CardData, 'id'>) => {
     if (!cardData.name || !cardData.title) {
       toast({
         title: "Missing Information",
@@ -45,9 +45,10 @@ export const CardManager = () => {
       return;
     }
 
-    const cardWithId = { 
+    const uuid = crypto.randomUUID();
+    const cardWithId: CardData = { 
       ...cardData, 
-      id: crypto.randomUUID(),
+      id: uuid as `${string}-${string}-${string}-${string}-${string}`,
       customButtons: cardData.customButtons || [] 
     };
 
@@ -83,9 +84,10 @@ export const CardManager = () => {
       const originalCard = cards.find(card => card.id === id);
       if (!originalCard) return null;
       
+      const uuid = crypto.randomUUID();
       return {
         ...originalCard,
-        id: crypto.randomUUID(),
+        id: uuid as `${string}-${string}-${string}-${string}-${string}`,
         name: `${originalCard.name} (Copy)`,
       };
     }).filter((card): card is CardData => card !== null);

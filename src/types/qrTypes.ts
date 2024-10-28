@@ -16,7 +16,7 @@ export interface QRTemplate {
 }
 
 export interface CardData {
-  id: string;
+  id: `${string}-${string}-${string}-${string}-${string}`;
   name: string;
   title: string;
   phone: string;
