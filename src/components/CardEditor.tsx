@@ -10,10 +10,7 @@ import { ProfileImageUpload } from "./ProfileImageUpload";
 import { useCardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
 import { CardActions } from "./card/CardActions";
-import { generateVCardData } from "@/utils/vcard";
 import { CustomButtonsManager } from "./CustomButtonsManager";
-
-import { CustomButton } from "@/types/qrTypes";
 
 interface CardEditorProps {
   onSave: (cardData: CardData) => void;
@@ -42,8 +39,6 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
       customButtons: buttons
     }));
   };
-
-  const vCardData = generateVCardData(cardData, hasWirelessConnectivity);
 
   const handleSaveClick = () => {
     onSave(cardData);
@@ -82,13 +77,12 @@ const CardEditor = ({ onSave }: CardEditorProps) => {
                   <CardPreview 
                     cardData={cardData}
                     profileImage={profileImage}
-                    vCardData={vCardData}
                     qrStyle={selectedQRTemplate.style}
                   />
                 </div>
                 <CardActions qrCodeRef={qrCodeRef} cardData={cardData} />
                 <QRCodeTemplates
-                  value={vCardData.vcard}
+                  value={cardData.name}
                   onSelectTemplate={setSelectedQRTemplate}
                   selectedTemplate={selectedQRTemplate}
                   userName={cardData.name}

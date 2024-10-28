@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CardPreview } from "@/components/card/CardPreview";
-import { generateVCardData } from "@/utils/vcard";
 import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "@/components/card/WalletActions";
 
@@ -54,15 +53,12 @@ const UserCard = () => {
     );
   }
 
-  const vCardData = generateVCardData(cardData, false);
-
   return (
     <div className="container mx-auto px-4 sm:px-6 py-8">
       <div className="max-w-md mx-auto space-y-6">
         <CardPreview
           cardData={cardData}
           profileImage={null}
-          vCardData={vCardData}
           qrStyle={{
             background: "#FFFFFF",
             foreground: "#000000"
@@ -70,7 +66,7 @@ const UserCard = () => {
         />
         <WalletActions
           cardData={cardData}
-          qrCodeUrl={vCardData.vcard}
+          qrCodeUrl={cardData.name}
         />
       </div>
     </div>
