@@ -1,5 +1,5 @@
-const CACHE_NAME = 'splex-cache-v1';
-const DYNAMIC_CACHE = 'splex-dynamic-v1';
+const CACHE_NAME = 'splex-cache-v2';
+const DYNAMIC_CACHE = 'splex-dynamic-v2';
 
 const urlsToCache = [
   '/',
@@ -7,21 +7,24 @@ const urlsToCache = [
   '/manifest.json',
   '/offline.html',
   '/icon-192x192.png',
-  '/icon-512x512.png'
+  '/icon-512x512.png',
+  '/src/index.css',
+  '/src/App.css'
 ];
 
-// Install event - cache static assets
+// Enhanced install event with precaching
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
+        console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate event - clean up old caches
+// Improved activate event with cache cleanup
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     Promise.all([
@@ -29,7 +32,10 @@ self.addEventListener('activate', (event) => {
       caches.keys().then((cacheNames) => {
         return Promise.all(
           cacheNames
-            .filter((cacheName) => cacheName !== CACHE_NAME && cacheName !== DYNAMIC_CACHE)
+            .filter((cacheName) => 
+              cacheName !== CACHE_NAME && 
+              cacheName !== DYNAMIC_CACHE
+            )
             .map((cacheName) => caches.delete(cacheName))
         );
       })
@@ -37,7 +43,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - network first, falling back to cache
+// Enhanced fetch event with network-first strategy
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
@@ -68,10 +74,26 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Handle push notifications
+// Background sync for offline actions
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-cards') {
+    event.waitUntil(syncCards());
+  }
+});
+
+async function syncCards() {
+  try {
+    const offlineCards = await getOfflineCards();
+    await Promise.all(offlineCards.map(card => syncCard(card)));
+  } catch (error) {
+    console.error('Error syncing cards:', error);
+  }
+}
+
+// Push notification handling
 self.addEventListener('push', (event) => {
   const options = {
-    body: event.data?.text() || 'New Update Available',
+    body: event.data?.text() || 'New update available',
     icon: '/icon-192x192.png',
     badge: '/icon-192x192.png',
     vibrate: [100, 50, 100],
@@ -81,8 +103,12 @@ self.addEventListener('push', (event) => {
     },
     actions: [
       {
-        action: 'explore',
+        action: 'open',
         title: 'Open App'
+      },
+      {
+        action: 'close',
+        title: 'Close'
       }
     ]
   };
@@ -92,10 +118,10 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(
-    clients.openWindow('/')
-  );
+  
+  if (event.action === 'open') {
+    event.waitUntil(clients.openWindow('/'));
+  }
 });
