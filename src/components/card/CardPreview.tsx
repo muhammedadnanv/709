@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
 import { CardTimestamp } from "./CardTimestamp";
 import { SocialLinks } from "./SocialLinks";
-import { validateCardData, generateVCFContent, generateDataUrl } from "@/utils/vcfGenerator";
+import { validateCardData, generateVCFContent, generateQRCodeData } from "@/utils/vcfGenerator";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
@@ -32,27 +32,8 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
   const expirationDate = addYears(creationDate, 2);
 
   const validationErrors = validateCardData(cardData);
-  const vcfContent = generateVCFContent(cardData);
-  const dataUrl = generateDataUrl(vcfContent);
-
-  useEffect(() => {
-    if (isScanning) {
-      const interval = setInterval(() => {
-        setScanProgress(prev => {
-          if (prev >= 100) {
-            setIsScanning(false);
-            setScanSuccess(true);
-            clearInterval(interval);
-            handleDownload();
-            return 0;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      return () => clearInterval(interval);
-    }
-  }, [isScanning]);
+  const vcfData = generateVCFContent(cardData);
+  const qrCodeData = generateQRCodeData(cardData);
 
   const handleWhatsAppClick = () => {
     if (cardData.phone) {
@@ -95,12 +76,12 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
     }
 
     const link = document.createElement('a');
-    link.href = dataUrl;
+    link.href = vcfData.dataUrl;
     link.download = `${cardData.name?.replace(/\s+/g, '_')}_contact.vcf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(dataUrl);
+    URL.revokeObjectURL(vcfData.dataUrl);
 
     toast({
       title: "Contact Downloaded",
@@ -161,7 +142,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               onClick={() => setShowQRDialog(true)}
             >
               <QRCodeSVG
-                value={vcfContent}
+                value={qrCodeData}
                 size={Math.min(80, window.innerWidth * 0.15)}
                 bgColor={qrStyle.background}
                 fgColor={qrStyle.foreground}
@@ -178,7 +159,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
 
           <WalletActions 
             cardData={cardData}
-            qrCodeUrl={dataUrl}
+            qrCodeUrl={vcfData.dataUrl}
           />
         </div>
       </motion.div>
@@ -186,7 +167,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
       <QRCodeDialog
         showDialog={showQRDialog}
         setShowDialog={setShowQRDialog}
-        vcfContent={vcfContent}
+        vcfContent={qrCodeData}
         qrStyle={qrStyle}
         isScanning={isScanning}
         scanProgress={scanProgress}
