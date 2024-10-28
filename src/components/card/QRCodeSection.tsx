@@ -14,29 +14,29 @@ interface QRCodeSectionProps {
 export const QRCodeSection = ({ qrCodeData, qrStyle, setShowQRDialog }: QRCodeSectionProps) => {
   return (
     <motion.div 
-      className="flex flex-col items-center justify-center py-6 relative mx-auto max-w-[250px] w-full"
+      className="flex flex-col items-center justify-center py-4 relative"
       initial={{ scale: 0.5, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 0.4 }}
     >
       <motion.div
-        className="relative group cursor-pointer backdrop-blur-md p-4 rounded-xl w-full flex justify-center"
+        className="relative group cursor-pointer backdrop-blur-md p-3 rounded-lg"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setShowQRDialog(true)}
         style={{
-          background: `${qrStyle.background}40`,
-          boxShadow: `0 8px 32px -4px ${qrStyle.foreground}20`
+          background: `${qrStyle.background}20`,
+          boxShadow: `0 4px 15px -3px ${qrStyle.foreground}10`
         }}
       >
         <div className="relative">
           <QRCodeSVG
             value={qrCodeData}
-            size={Math.min(160, window.innerWidth * 0.3)}
+            size={Math.min(100, window.innerWidth * 0.2)}
             bgColor={qrStyle.background}
             fgColor={qrStyle.foreground}
-            level="H"
-            includeMargin={true}
+            level="L"
+            includeMargin={false}
           />
           <motion.div
             className="absolute inset-0 pointer-events-none"
@@ -56,19 +56,19 @@ export const QRCodeSection = ({ qrCodeData, qrStyle, setShowQRDialog }: QRCodeSe
       </motion.div>
 
       <motion.div 
-        className="mt-4 space-y-2 text-center w-full"
+        className="mt-4 space-y-2 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
       >
-        <p className="text-sm sm:text-base font-medium flex items-center justify-center gap-2">
-          <Camera className="h-5 w-5" />
-          Scan QR Code
+        <p className="text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5">
+          <Camera className="h-4 w-4" />
+          Scan QR Code with Phone Camera
         </p>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          Works with any phone camera
+        <p className="text-[10px] sm:text-xs text-muted-foreground">
+          No app needed - works with any phone
         </p>
-        <p className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-transparent">
+        <p className="text-[10px] sm:text-xs font-semibold opacity-75">
           Powered by Digital Business Card
         </p>
       </motion.div>
