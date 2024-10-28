@@ -28,8 +28,6 @@ export const PersonalInfoForm = ({
         return !value.trim() ? "Name is required" : "";
       case "title":
         return !value.trim() ? "Job title is required" : "";
-      case "company":
-        return !value.trim() ? "Company name is required" : "";
       default:
         return "";
     }
@@ -107,10 +105,6 @@ export const PersonalInfoForm = ({
       <div className="space-y-4">
         {renderInput("name", "Full Name", "John Doe", true)}
         {renderInput("title", "Job Title", "Software Engineer", true)}
-        {renderInput("company", "Company", "Acme Inc.", true)}
-        {renderInput("department", "Department", "Engineering")}
-        {renderInput("pronouns", "Pronouns", "they/them")}
-        {renderInput("location", "Location", "San Francisco, CA")}
 
         <div className="space-y-2">
           <Label>Professional Interests</Label>
