@@ -5,7 +5,7 @@ import QRCodeTemplates from "./QRCodeTemplates";
 import { PersonalInfoForm } from "./PersonalInfoForm";
 import { ContactInfoForm } from "./ContactInfoForm";
 import PremiumFeatures from "./PremiumFeatures";
-import { QRTemplate, CardData } from "@/types/qrTypes";
+import { QRTemplate, CardData, CustomButton } from "@/types/qrTypes";
 import { ProfileImageUpload } from "./ProfileImageUpload";
 import { useCardData } from "@/hooks/useCardData";
 import { CardPreview } from "./card/CardPreview";
