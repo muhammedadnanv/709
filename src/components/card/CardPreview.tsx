@@ -1,6 +1,7 @@
+import { QRCodeSVG } from "qrcode.react";
 import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
-import { Camera, Crown, Star, Sparkle } from "lucide-react";
+import { Camera, ScanLine, Sparkle, Crown, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
 import { CardTimestamp } from "./CardTimestamp";
@@ -13,7 +14,6 @@ import { QRCodeDialog } from "./QRCodeDialog";
 import { addYears } from "date-fns";
 import { SocialShare } from "./SocialShare";
 import { PrintService } from "../print/PrintService";
-import { QRCodeSection } from "./QRCodeSection";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -33,6 +33,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
+  // Memoize QR code data generation
   const qrCodeData = useMemo(() => generateQRCodeData(cardData), [
     cardData.name,
     cardData.title,
@@ -123,6 +124,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               mixBlendMode: 'overlay'
             }}
           />
+          {/* Decorative Elements */}
           <motion.div
             animate={{ 
               rotate: [0, 360],
@@ -194,11 +196,64 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
             foregroundColor={qrStyle.foreground}
           />
 
-          <QRCodeSection 
-            qrCodeData={qrCodeData}
-            qrStyle={qrStyle}
-            setShowQRDialog={setShowQRDialog}
-          />
+          {/* QR Code Section with Enhanced Styling */}
+          <motion.div 
+            className="flex flex-col items-center justify-center py-2 relative"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <motion.div
+              className="relative group cursor-pointer backdrop-blur-md p-3 rounded-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowQRDialog(true)}
+              style={{
+                background: `${qrStyle.background}20`,
+                boxShadow: `0 4px 15px -3px ${qrStyle.foreground}10`
+              }}
+            >
+              <div className="relative">
+                <QRCodeSVG
+                  value={qrCodeData}
+                  size={Math.min(80, window.innerWidth * 0.15)}
+                  bgColor={qrStyle.background}
+                  fgColor={qrStyle.foreground}
+                  level="L"
+                  includeMargin={false}
+                />
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  animate={{
+                    y: ["-100%", "100%"],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                >
+                  <ScanLine className="w-full h-1 text-primary/50" />
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="mt-2 space-y-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              <p className="text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5">
+                <Camera className="h-4 w-4" />
+                Scan QR Code with Phone Camera
+              </p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
+                No app needed - works with any phone
+              </p>
+            </motion.div>
+          </motion.div>
 
           <WalletActions 
             cardData={cardData}
