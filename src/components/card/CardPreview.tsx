@@ -135,13 +135,13 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           />
 
           <motion.div 
-            className="flex flex-col items-center justify-center py-2 relative"
+            className="flex flex-col items-center justify-center py-4 relative mx-auto max-w-[250px]"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
             <motion.div
-              className="relative group cursor-pointer"
+              className="relative group cursor-pointer bg-gradient-to-br from-white/10 to-white/5 p-4 rounded-xl backdrop-blur-sm border border-white/20 shadow-xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowQRDialog(true)}
@@ -149,7 +149,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               <div className="relative">
                 <QRCodeSVG
                   value={qrCodeData}
-                  size={Math.min(80, window.innerWidth * 0.15)}
+                  size={Math.min(120, window.innerWidth * 0.2)}
                   bgColor={qrStyle.background}
                   fgColor={qrStyle.foreground}
                   level="L"
@@ -169,21 +169,55 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
                 >
                   <ScanLine className="w-full h-1 text-primary/50" />
                 </motion.div>
+                
+                {/* Decorative elements */}
+                <motion.div
+                  className="absolute -top-2 -right-2 text-yellow-500"
+                  animate={{ 
+                    rotate: [0, 15, -15, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <span className="text-lg">✨</span>
+                </motion.div>
+                <motion.div
+                  className="absolute -bottom-2 -left-2 text-yellow-500"
+                  animate={{ 
+                    rotate: [0, -15, 15, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5
+                  }}
+                >
+                  <span className="text-lg">✨</span>
+                </motion.div>
               </div>
             </motion.div>
 
             <motion.div 
-              className="mt-2 space-y-1"
+              className="mt-3 space-y-1.5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              <p className="text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5">
+              <p className="text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5 bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-transparent">
                 <Camera className="h-4 w-4" />
                 Scan QR Code with Phone Camera
               </p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground/80">
                 No app needed - works with any phone
+              </p>
+              <p className="text-[9px] sm:text-[10px] font-medium text-muted-foreground/60 italic">
+                Powered by Digital Business Card
               </p>
             </motion.div>
           </motion.div>
