@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { CardData, VCardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star, Sparkles, CircleDot } from "lucide-react";
+import { Star, Sparkles, CircleDot, GripHorizontal, Gem } from "lucide-react";
 import { addYears } from "date-fns";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
@@ -46,30 +46,45 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-shadow duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6"
+        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6 group"
         style={{ 
           background: `linear-gradient(135deg, ${qrStyle.background}, ${qrStyle.background}ee)`,
           color: qrStyle.foreground,
         }}
       >
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-xl" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 -ml-8 -mb-8 bg-gradient-to-tr from-black/10 to-transparent rounded-full blur-xl" />
+        {/* Enhanced Decorative Elements */}
+        <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-xl group-hover:scale-110 transition-transform" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 -ml-8 -mb-8 bg-gradient-to-tr from-black/10 to-transparent rounded-full blur-xl group-hover:scale-110 transition-transform" />
+        
+        {/* Animated Decorative Icons */}
         <motion.div
           className="absolute top-4 right-4"
           initial={{ rotate: -180, scale: 0 }}
           animate={{ rotate: 0, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          whileHover={{ rotate: 15, scale: 1.2 }}
         >
           <Sparkles className="w-4 h-4 text-yellow-500/50" />
         </motion.div>
+        
         <motion.div
           className="absolute bottom-4 left-4"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
+          whileHover={{ scale: 1.2 }}
         >
           <CircleDot className="w-3 h-3 text-primary/30" />
+        </motion.div>
+
+        <motion.div
+          className="absolute top-4 left-4"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          whileHover={{ rotate: -15, scale: 1.2 }}
+        >
+          <Gem className="w-3 h-3 text-primary/30" />
         </motion.div>
         
         <div className="text-center space-y-2 w-full relative z-10">
@@ -97,13 +112,13 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-20 rounded-full" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-20 rounded-full group-hover:opacity-30 transition-opacity" />
             <motion.a 
               href={vCardData.dataUrl} 
               download={vCardData.downloadFilename}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hover:opacity-90 transition-opacity relative"
+              className="hover:opacity-90 transition-all duration-300 relative group"
             >
               <QRCodeSVG
                 value={vCardData.vcard}
@@ -113,24 +128,28 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
                 level="M"
                 includeMargin={false}
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-20 rounded-sm" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-20 rounded-sm group-hover:opacity-30 transition-opacity" />
             </motion.a>
           </motion.div>
           <p className="text-[10px] sm:text-xs">Scan to save contact</p>
           
           <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
           
-          <motion.p 
-            className="text-[8px] sm:text-[10px] mt-1 flex items-center justify-center gap-1"
+          <motion.div 
+            className="mt-1 flex items-center justify-center gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.9 }}
             transition={{ delay: 0.5 }}
             style={{ color: getGoldShade() }}
           >
-            <Star className="inline-block h-3 w-3" />
-            <span>Powered by: Splex</span>
-            <Star className="inline-block h-3 w-3" />
-          </motion.p>
+            <GripHorizontal className="h-3 w-3 opacity-50" />
+            <Star className="h-3 w-3" />
+            <span className="text-[8px] sm:text-[10px] font-semibold tracking-wide">
+              Powered by Splex
+            </span>
+            <Star className="h-3 w-3" />
+            <GripHorizontal className="h-3 w-3 opacity-50" />
+          </motion.div>
         </div>
       </motion.div>
       
