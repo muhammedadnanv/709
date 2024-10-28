@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { CardData, VCardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star } from "lucide-react";
+import { Star, Sparkles } from "lucide-react";
 import { addYears } from "date-fns";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
@@ -26,7 +26,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
   const handleWhatsAppClick = () => {
     if (cardData.phone) {
       const cleanPhone = cardData.phone.replace(/\D/g, '');
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi, I got your contact from your digital business card.`;
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=Hi,%20I got your contact from your digital business card.`;
       window.open(whatsappUrl, '_blank');
     }
   };
@@ -46,14 +46,15 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-lg flex flex-col items-center justify-between p-4 border shadow-lg hover:shadow-xl transition-shadow duration-300 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6"
+        className="mx-auto max-w-[336px] w-full aspect-[1.75/1] rounded-xl flex flex-col items-center justify-between p-4 border-2 shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-hidden backdrop-blur-sm sm:max-w-[504px] sm:p-6"
         style={{ 
-          background: qrStyle.background,
+          background: `linear-gradient(135deg, ${qrStyle.background}ee, ${qrStyle.background})`,
           color: qrStyle.foreground,
+          borderColor: `${qrStyle.foreground}22`,
         }}
       >
-        <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-gradient-to-br from-white/10 to-transparent rounded-full blur-xl" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 -ml-8 -mb-8 bg-gradient-to-tr from-black/5 to-transparent rounded-full blur-xl" />
+        <div className="absolute top-0 right-0 w-48 h-48 -mr-16 -mt-16 bg-gradient-to-br from-white/10 to-transparent rounded-full blur-2xl" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 -ml-16 -mb-16 bg-gradient-to-tr from-black/5 to-transparent rounded-full blur-2xl" />
         
         <div className="text-center space-y-2 w-full relative z-10">
           <CardHeader 
@@ -75,7 +76,7 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
           />
 
           <motion.div 
-            className="flex items-center justify-center py-2"
+            className="flex items-center justify-center py-3"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -83,32 +84,40 @@ export const CardPreview = ({ cardData, profileImage, vCardData, qrStyle }: Card
             <motion.a 
               href={vCardData.dataUrl} 
               download={vCardData.downloadFilename}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, rotate: 2 }}
               whileTap={{ scale: 0.95 }}
-              className="hover:opacity-90 transition-opacity"
+              className="hover:opacity-90 transition-all duration-300 relative group"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <QRCodeSVG
                 value={vCardData.vcard}
-                size={Math.min(80, window.innerWidth * 0.15)}
+                size={Math.min(90, window.innerWidth * 0.15)}
                 bgColor={qrStyle.background}
                 fgColor={qrStyle.foreground}
-                level="M"
+                level="Q"
                 includeMargin={false}
               />
             </motion.a>
           </motion.div>
-          <p className="text-[10px] sm:text-xs">Scan to save contact</p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-[10px] sm:text-xs font-medium tracking-wide"
+          >
+            Scan to save contact
+          </motion.p>
           
           <CTAButtons cardData={cardData} textColor={qrStyle.foreground} />
           
           <motion.p 
-            className="text-[8px] sm:text-[10px] mt-1"
+            className="text-[8px] sm:text-[10px] mt-2 font-semibold tracking-wider"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.9 }}
             transition={{ delay: 0.5 }}
             style={{ color: getGoldShade() }}
           >
-            <Star className="inline-block h-3 w-3 mr-1" /> Powered by: Splex
+            <Sparkles className="inline-block h-3 w-3 mr-1" /> Premium Digital Card by Splex
           </motion.p>
         </div>
       </motion.div>

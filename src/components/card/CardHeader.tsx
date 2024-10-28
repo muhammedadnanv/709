@@ -1,6 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
-import { Nfc, BadgeCheck, AlertCircle } from "lucide-react";
+import { Nfc, BadgeCheck, AlertCircle, Sparkles } from "lucide-react";
 import { CardData } from "@/types/qrTypes";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
@@ -35,7 +35,7 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
       <AnimatePresence mode="wait">
         {cardData.name && (
           <motion.div 
-            className="flex items-center gap-2"
+            className="flex items-center gap-3"
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -20, opacity: 0 }}
@@ -45,9 +45,11 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400 }}
+              className="relative group"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <Avatar 
-                className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-white/20 transition-all duration-300 cursor-pointer"
+                className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-white/20 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl"
                 onClick={handleAvatarClick}
               >
                 <AvatarImage 
@@ -62,8 +64,8 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
               </Avatar>
             </motion.div>
             <div className="text-left">
-              <div className="flex items-center gap-1">
-                <h4 className="font-semibold text-sm sm:text-base">{cardData.name}</h4>
+              <div className="flex items-center gap-1.5">
+                <h4 className="font-semibold text-sm sm:text-base tracking-wide">{cardData.name}</h4>
                 {isVerified && (
                   <TooltipProvider>
                     <Tooltip>
@@ -87,7 +89,7 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
                           <BadgeCheck 
                             className="h-4 w-4 text-blue-500" 
                             style={{ 
-                              filter: 'drop-shadow(0 0 2px rgba(59, 130, 246, 0.5))',
+                              filter: 'drop-shadow(0 0 4px rgba(59, 130, 246, 0.5))',
                               transformOrigin: 'center'
                             }}
                           />
@@ -95,11 +97,11 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
                       </TooltipTrigger>
                       <TooltipContent 
                         sideOffset={5}
-                        className="bg-blue-500 text-white shadow-lg"
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
                       >
-                        <p className="flex items-center gap-1">
-                          <BadgeCheck className="h-3 w-3" />
-                          Verified User
+                        <p className="flex items-center gap-1.5 px-1">
+                          <Sparkles className="h-3 w-3" />
+                          Premium Verified User
                         </p>
                       </TooltipContent>
                     </Tooltip>
@@ -112,7 +114,7 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
                     initial={{ y: -10, opacity: 0 }}
                     animate={{ y: 0, opacity: 0.8 }}
                     exit={{ y: -10, opacity: 0 }}
-                    className="text-xs sm:text-sm"
+                    className="text-xs sm:text-sm font-medium tracking-wide"
                   >
                     {cardData.title}
                   </motion.p>
@@ -123,7 +125,7 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
                     animate={{ y: 0, opacity: 0.8 }}
                     exit={{ y: -10, opacity: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="text-xs sm:text-sm"
+                    className="text-xs sm:text-sm font-medium tracking-wide"
                   >
                     {cardData.company}
                   </motion.p>
@@ -141,7 +143,7 @@ export const CardHeader = ({ cardData, profileImage, foregroundColor }: CardHead
         whileTap={{ scale: 0.9 }}
         style={{ 
           color: foregroundColor,
-          filter: `drop-shadow(0 0 2px ${foregroundColor}40)`
+          filter: `drop-shadow(0 0 4px ${foregroundColor}40)`
         }}
       >
         <Nfc className="h-4 w-4 sm:h-5 sm:w-5" />
