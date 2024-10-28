@@ -3,26 +3,22 @@ import { CardData, VCardData } from "@/types/qrTypes";
 export const validateCardData = (cardData: CardData): string[] => {
   const errors: string[] = [];
   
-  // More comprehensive validation
+  // Only add validation errors for fields that are both required and empty
   if (!cardData.name?.trim()) {
     errors.push("Name is required");
   } else if (cardData.name.length < 2) {
     errors.push("Name must be at least 2 characters long");
   }
   
-  if (!cardData.phone?.trim()) {
-    errors.push("Phone number is required");
-  } else if (!/^\+?[1-9]\d{1,14}$/.test(cardData.phone)) {
-    errors.push("Please enter a valid phone number (e.g., +1234567890)");
+  if (cardData.phone?.trim() && !/^\+?[1-9]\d{1,14}$/.test(cardData.phone)) {
+    errors.push("Please enter a valid phone number");
   }
   
-  if (!cardData.email?.trim()) {
-    errors.push("Email is required");
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cardData.email)) {
+  if (cardData.email?.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cardData.email)) {
     errors.push("Please enter a valid email address");
   }
   
-  // URL validations
+  // URL validations only if provided
   const urlFields = {
     website: cardData.website,
     linkedin: cardData.linkedin,
@@ -90,13 +86,17 @@ export const generateQRCodeData = (cardData: CardData): string => {
     ? `\nLinkedIn: ${cardData.linkedin}`
     : '';
   
+  const whatsAppLink = cardData.phone
+    ? `\nWhatsApp: https://wa.me/${cardData.phone.replace(/\D/g, '')}`
+    : '';
+  
   return `BEGIN:VCARD
 VERSION:3.0
 FN:${cardData.name}
-TITLE:${cardData.title}
-ORG:${cardData.company}
-TEL:${cardData.phone}
-EMAIL:${cardData.email}
-URL:${cardData.website}${linkedInDeepLink}
+TITLE:${cardData.title || ''}
+ORG:${cardData.company || ''}
+TEL:${cardData.phone || ''}
+EMAIL:${cardData.email || ''}
+URL:${cardData.website || ''}${linkedInDeepLink}${whatsAppLink}
 END:VCARD`;
 };

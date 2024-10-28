@@ -9,7 +9,7 @@ import { SocialLinks } from "./SocialLinks";
 import { validateCardData, generateVCFContent, generateQRCodeData } from "@/utils/vcfGenerator";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { QRCodeDialog } from "./QRCodeDialog";
 import { addYears } from "date-fns";
 
@@ -102,10 +102,10 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           color: qrStyle.foreground,
         }}
       >
-        {validationErrors.length > 0 && (
+        {validationErrors.length > 0 && validationErrors.some(error => !error.includes("required")) && (
           <Alert variant="destructive" className="absolute top-2 left-2 right-2 z-50">
             <AlertDescription>
-              Please fix the following: {validationErrors[0]}
+              {validationErrors.filter(error => !error.includes("required"))[0]}
             </AlertDescription>
           </Alert>
         )}
