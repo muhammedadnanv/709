@@ -52,16 +52,20 @@ export const generateVCardData = (cardData: CardData, hasWirelessConnectivity: b
 
   vcard += `END:VCARD`;
 
-  // Create a data URL that will trigger immediate download
-  const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
-  const dataUrl = URL.createObjectURL(blob);
-  
-  // Generate a clean filename
+  // Generate a clean filename based on the contact's name
   const cleanName = cardData.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
   const downloadFilename = `${cleanName}_contact.vcf`;
 
+  // Create a data URL with Content-Disposition header for automatic download
+  const vcardWithHeaders = 
+    `data:text/vcard;charset=utf-8;headers=Content-Disposition%3A%20attachment%3B%20filename%3D${downloadFilename},${encodeURIComponent(vcard)}`;
+
+  // Create a blob URL as fallback for direct download
+  const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+  const dataUrl = URL.createObjectURL(blob);
+
   return {
-    vcard: `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`,
+    vcard: vcardWithHeaders,
     dataUrl,
     downloadFilename
   };
