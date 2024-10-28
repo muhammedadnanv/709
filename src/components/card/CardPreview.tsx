@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { CardData } from "@/types/qrTypes";
 import { WalletActions } from "./WalletActions";
 import { CTAButtons } from "./CTAButtons";
-import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera, AlertCircle } from "lucide-react";
+import { Star, Sparkles, CircleDot, GripHorizontal, Gem, Camera, AlertCircle, Download } from "lucide-react";
 import { addYears } from "date-fns";
 import { motion } from "framer-motion";
 import { CardHeader } from "./CardHeader";
@@ -11,6 +11,9 @@ import { SocialLinks } from "./SocialLinks";
 import { validateCardData, generateVCFContent, generateDataUrl } from "@/utils/vcfGenerator";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface CardPreviewProps {
   cardData: CardData;
@@ -23,10 +26,10 @@ interface CardPreviewProps {
 
 export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProps) => {
   const { toast } = useToast();
+  const [showQRDialog, setShowQRDialog] = useState(false);
   const creationDate = new Date();
   const expirationDate = addYears(creationDate, 2);
 
-  // Validate card data
   const validationErrors = validateCardData(cardData);
   const vcfContent = generateVCFContent(cardData);
   const dataUrl = generateDataUrl(vcfContent);
@@ -61,6 +64,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
       title: "Contact Downloaded",
       description: "The contact card has been downloaded successfully.",
     });
+    setShowQRDialog(false);
   };
 
   return (
@@ -113,7 +117,7 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
               className="relative group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={handleDownload}
+              onClick={() => setShowQRDialog(true)}
             >
               <QRCodeSVG
                 value={vcfContent}
@@ -130,14 +134,14 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
                 transition={{ delay: 0.6 }}
               >
                 <Camera className="h-3 w-3 inline-block mr-1" />
-                <span className="text-[10px]">Scan to Save</span>
+                <span className="text-[10px]">Scan or Click</span>
               </motion.div>
             </motion.div>
           </motion.div>
 
           <p className="text-[10px] sm:text-xs flex items-center justify-center gap-1">
             <Camera className="h-3 w-3" />
-            Open your camera app to scan
+            Open your camera app to scan or click to download
           </p>
 
           <WalletActions 
@@ -146,6 +150,31 @@ export const CardPreview = ({ cardData, profileImage, qrStyle }: CardPreviewProp
           />
         </div>
       </motion.div>
+
+      <Dialog open={showQRDialog} onOpenChange={setShowQRDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Save Contact</DialogTitle>
+            <DialogDescription>
+              Scan the QR code with your phone's camera or click the download button below.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center justify-center gap-4 py-4">
+            <QRCodeSVG
+              value={vcfContent}
+              size={200}
+              bgColor={qrStyle.background}
+              fgColor={qrStyle.foreground}
+              level="H"
+              includeMargin={true}
+            />
+            <Button onClick={handleDownload} className="w-full gap-2">
+              <Download className="h-4 w-4" />
+              Download Contact
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
