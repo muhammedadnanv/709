@@ -8,6 +8,7 @@ import { useUser } from "@clerk/clerk-react";
 import { Loader2 } from "lucide-react";
 import { ChatBot } from "@/components/chat/ChatBot";
 import { DonationWidget } from "@/components/donation/DonationWidget";
+import { CrossDeviceValidation } from "@/components/CrossDeviceValidation";
 
 const Index = () => {
   const [showAuthDialog, setShowAuthDialog] = useState(true);
@@ -31,6 +32,7 @@ const Index = () => {
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8 max-w-7xl mx-auto">
+          <CrossDeviceValidation />
           <WelcomeMessage />
           <CardManager />
         </div>
