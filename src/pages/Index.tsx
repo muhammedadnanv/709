@@ -1,7 +1,6 @@
 
 import { WelcomeMessage } from "@/components/WelcomeMessage";
 import { CardManager } from "@/components/CardManager";
-import { PricingPlans } from "@/components/PricingPlans";
 import { SignIn } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -34,7 +33,6 @@ const Index = () => {
         <div className="space-y-8 max-w-7xl mx-auto">
           <WelcomeMessage />
           <CardManager />
-          <PricingPlans />
         </div>
       </main>
       
