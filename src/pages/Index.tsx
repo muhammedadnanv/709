@@ -1,12 +1,14 @@
+
 import { WelcomeMessage } from "@/components/WelcomeMessage";
 import { CardManager } from "@/components/CardManager";
 import { PricingPlans } from "@/components/PricingPlans";
 import { SignIn } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useUser } from "@clerk/clerk-react";
 import { Loader2 } from "lucide-react";
 import { ChatBot } from "@/components/chat/ChatBot";
+import { DonationWidget } from "@/components/donation/DonationWidget";
 
 const Index = () => {
   const [showAuthDialog, setShowAuthDialog] = useState(true);
@@ -37,6 +39,14 @@ const Index = () => {
       </main>
       
       <ChatBot />
+      <DonationWidget 
+        upiId="adnanmuhammad4393@okicici"
+        name="Muhammed Adnan"
+        defaultAmount={199}
+        position="bottom-right"
+        primaryColor="#8B5CF6"
+        buttonText="Donate"
+      />
     </div>
   );
 };

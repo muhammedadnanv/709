@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +24,9 @@
 </head>
 <body>
   <div id="root"></div>
+  <div id="donating-widget-container"></div>
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <script type="module" src="/src/main.tsx"></script>
   <script>
     // Register service worker
     if ('serviceWorker' in navigator) {
@@ -59,9 +63,6 @@
           deferredPrompt = null;
         }
       });
-      
-      // You can add this button to your UI when appropriate
-      // document.body.appendChild(installButton);
     });
 
     // Handle successful installation
@@ -69,6 +70,5 @@
       console.log('App was successfully installed');
     });
   </script>
-  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
