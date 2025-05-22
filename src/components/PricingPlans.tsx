@@ -73,13 +73,6 @@ export const PricingPlans = () => {
 
   return (
     <div className="py-12">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold tracking-tight">Choose Your Plan</h2>
-        <p className="text-muted-foreground mt-2">
-          Select the perfect plan for your business needs
-        </p>
-      </div>
-
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
         {plans.map((plan) => {
           const Icon = plan.icon;
